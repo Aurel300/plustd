@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg"  width="30" height="30" viewBox="0 0 3 3">
+  <!-- caps -->
+  <rect width="1" height="1" x="1" y="0" fill="#dd6600" /> <!-- top -->
+  <rect width="1" height="1" x="2" y="1" fill="#aa0055" /> <!-- right -->
+  <rect width="1" height="1" x="1" y="2" fill="#aa0055" /> <!-- bottom -->
+  <rect width="1" height="1" x="0" y="1" fill="#dd6600" /> <!-- left -->
+  
+  <!-- sides -->
+  <path d="M1 0L1.5 .25L.88 .88z" fill="#ee8800" /> <!-- top -->
+  <path d="M2 0L1.5 .25L2.12 .88z" fill="#cc3300" />
+  
+  <path d="M3 1L2.75 1.5L2.12 .88z" fill="#cc0055" /> <!-- right -->
+  <path d="M3 2L2.75 1.5L2.12 2.12z" fill="#990044" />
+  
+  <path d="M1 3L1.5 2.75L.88 2.12z" fill="#cc0055" /> <!-- bottom -->
+  <path d="M2 3L1.5 2.75L2.12 2.12z" fill="#990044" />
+  
+  <path d="M0 1L.25 1.5L.88 .88z" fill="#ee8800" /> <!-- left -->
+  <path d="M0 2L.25 1.5L.88 2.12z" fill="#cc3300" />
+  
+  <!-- middle -->
+  <path d="M1.5 .25L2.75 1.5L1.5 2.75L.25 1.5z" fill="#bb2200" />
+</svg>
