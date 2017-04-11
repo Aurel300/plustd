@@ -4,7 +4,7 @@ I hope to release a usable version before Ludum Dare 38 both here and on Haxelib
 
 # plustd #
 
-<center><img src="assets/logo/logo.svg" alt="Logo" width="320"></center>
+<center><img src="https://rawgithub.com/Aurel300/plustd/assets/logo/logo.svg" alt="Logo" width="320"></center>
 
 Plustd is a Haxe library in development, aimed at 2D game development, interactive apps, and more - performance-oriented while supporting many platforms.
 
