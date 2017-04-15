@@ -21,7 +21,9 @@ Currently, the goal is to support:
    - Asset manager with hot reloading (local filesystem or Websocket connection to plustd file watchdog)
  - .audio - Code-generated audio output
  - .bmp - Bitmap objects and manipulation
+ - .crypto - Encodings and cryptography
  - .event - Simple events + listeners
+ - .format - Binary formats for various data types
  - .fsm - Finite state machine
  - .geom - Geometrical models
  - .net - Network protocols
