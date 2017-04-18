@@ -87,10 +87,10 @@ Constructs the application and initialises specific systems based on the
     statesMap = new Map<String, State>();
     for (init in inits){
       switch (init){
-        case Assets(monitor):
-        assetManager = new AssetManager();
+        case Assets(assets):
+        assetManager = new AssetManager(assets);
         if (console != null){
-          assetManager.attachConsole(console, monitor);
+          assetManager.attachConsole(console);
         }
         
         case Console:

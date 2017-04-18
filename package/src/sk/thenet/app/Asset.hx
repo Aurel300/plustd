@@ -1,15 +1,21 @@
 package sk.thenet.app;
 
 import haxe.io.Bytes;
+import sk.thenet.app.asset.Bind as AssetBind;
+import sk.thenet.app.asset.Bitmap as AssetBitmap;
+import sk.thenet.plat.Embed;
+import sk.thenet.plat.Platform;
 
 class Asset {
+  public var type    (default, null):AssetType;
+  public var id      (default, null):String;
   public var filename(default, null):String;
   public var status  (default, null):AssetStatus = AssetStatus.None;
-  public var type    (default, null):AssetType;
   
-  public function new(filename:String, type:AssetType){
+  public function new(type:AssetType, id:String, ?filename:String){
+    this.type     = type;
+    this.id       = id;
     this.filename = filename;
-    this.type = type;
   }
   
   public function update(data:Bytes):Void {}
@@ -24,6 +30,7 @@ enum AssetStatus {
 }
 
 enum AssetType {
+  Bind;
   Bitmap;
   Sound;
 }

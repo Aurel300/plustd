@@ -71,6 +71,9 @@ class Console extends Source {
   }
   
   public function monitor(file:String):Void {
+    if (remote == null){
+      return;
+    }
     remote.monitor(file);
   }
   

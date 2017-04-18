@@ -12,7 +12,7 @@ constructors below.
 @see `sk.thenet.plat.Platform`
  */
 enum ApplicationInit {
-  Assets(monitor:Array<String>);
+  Assets(assets:Array<Asset>);
   Console;
   ConsoleRemote(host:String, port:Int);
   Framerate(fps:Float);
