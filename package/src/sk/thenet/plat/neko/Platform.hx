@@ -6,9 +6,9 @@ import sk.thenet.app.Keyboard;
 import sk.thenet.app.Mouse;
 import sk.thenet.bmp.Colour;
 import sk.thenet.net.ws.Websocket;
-import sk.thenet.plat.Bitmap;
-import sk.thenet.plat.Output;
-import sk.thenet.plat.Surface;
+import sk.thenet.bmp.Bitmap;
+import sk.thenet.audio.Output;
+import sk.thenet.bmp.Surface;
 import sk.thenet.event.Source;
 
 /**

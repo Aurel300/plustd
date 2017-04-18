@@ -1,7 +1,7 @@
 package sk.thenet.plat.flash;
 
 import flash.display.Bitmap as NativeBitmap;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 /**
 Flash implementation of `sk.thenet.bmp.ISurface`.

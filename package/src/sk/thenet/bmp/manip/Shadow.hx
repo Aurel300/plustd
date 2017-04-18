@@ -2,7 +2,7 @@ package sk.thenet.bmp.manip;
 
 import sk.thenet.FM;
 import sk.thenet.bmp.Colour;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 class Shadow extends Manipulator {
   public var colour(default, null):Colour;

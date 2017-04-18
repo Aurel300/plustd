@@ -1,6 +1,6 @@
 package sk.thenet.bmp.manip;
 
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 class Copy extends Manipulator {
   public var x     (default, null):Int;

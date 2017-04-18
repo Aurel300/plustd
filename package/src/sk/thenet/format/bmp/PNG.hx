@@ -8,7 +8,7 @@ import sk.thenet.FM;
 import sk.thenet.bmp.Colour;
 import sk.thenet.crypto.hash.CRC;
 import sk.thenet.format.Format;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 import sk.thenet.plat.Platform;
 
 using sk.thenet.format.BytesTools;

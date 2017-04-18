@@ -10,7 +10,7 @@ import sk.thenet.event.Source;
 import sk.thenet.net.http.Method as HttpMethod;
 import sk.thenet.net.http.Tools as HttpTools;
 import sk.thenet.plat.Platform;
-import sk.thenet.plat.Socket;
+import sk.thenet.net.Socket;
 
 using sk.thenet.format.BytesTools;
 
@@ -20,7 +20,7 @@ using sk.thenet.format.BytesTools;
 A pure Haxe implementation of a Websocket class capable of connecting to remote
 Websocket servers as well as creating a Websocket server.
 
-The implementation depends on `sk.thenet.plat.Socket`, which is
+The implementation depends on `sk.thenet.net.Socket`, which is
 platform-dependent. Some platforms might not support socket servers.
  */
 class Websocket extends Source {

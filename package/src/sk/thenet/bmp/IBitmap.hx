@@ -1,7 +1,6 @@
 package sk.thenet.bmp;
 
 import haxe.ds.Vector;
-import sk.thenet.plat.Bitmap;
 
 /**
 ##Bitmap interface##
@@ -15,7 +14,7 @@ overhead for every single pixel.
 
 Implementations of this interface are platform-dependent. To maintain good
 performance without having to actually cast classes to this interface, there
-is a typedef available - `sk.thenet.plat.Bitmap` - which becomes an alias for
+is a typedef available - `sk.thenet.bmp.Bitmap` - which becomes an alias for
 the current platform-dependent implementation of `IBitmap` at compile time. To
 actually create a `Bitmap`, use `sk.thenet.plat.Platform.createBitmap()`.
 

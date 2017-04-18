@@ -3,8 +3,8 @@ package sk.thenet.bmp.manip;
 import haxe.ds.Vector;
 import sk.thenet.bmp.Colour;
 import sk.thenet.plat.Platform;
-import sk.thenet.plat.Bitmap;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 class Recolour extends VectorManipulator {
   public var colour(default, null):Colour;

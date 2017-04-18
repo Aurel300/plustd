@@ -1,6 +1,4 @@
-package sk.thenet.plat;
-
-import sk.thenet.audio.IOutput;
+package sk.thenet.audio;
 
 /**
 ##Audio output##

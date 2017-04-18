@@ -10,7 +10,7 @@ This interface represents a network socket for TCP communications.
 
 Implementations of this interface are platform-dependent. To maintain good
 performance without having to actually cast classes to this interface, there
-is a typedef available - `sk.thenet.plat.Socket` - which becomes an alias for
+is a typedef available - `sk.thenet.net.Socket` - which becomes an alias for
 the current platform-dependent implementation of `ISocket` at compile time. To
 actually create a `Socket`, use `sk.thenet.plat.Platform.createSocket()`.
  */

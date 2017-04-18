@@ -1,7 +1,7 @@
 package sk.thenet.bmp.manip;
 
 import sk.thenet.bmp.Colour;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 class AlphaMask extends Manipulator {
   public var bitmap(default, null):Bitmap;

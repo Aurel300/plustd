@@ -2,7 +2,7 @@ package sk.thenet.bmp;
 
 import haxe.ds.Vector;
 import sk.thenet.plat.Platform;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 class VectorManipulator extends Manipulator {
   private function new(){

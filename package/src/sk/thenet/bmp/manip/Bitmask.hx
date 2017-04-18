@@ -2,7 +2,7 @@ package sk.thenet.bmp.manip;
 
 import haxe.ds.Vector;
 import sk.thenet.plat.Platform;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 class Bitmask extends VectorManipulator {
   public var mask:UInt;

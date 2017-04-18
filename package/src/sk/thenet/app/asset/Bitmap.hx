@@ -3,7 +3,7 @@ package sk.thenet.app.asset;
 import haxe.io.Bytes;
 import sk.thenet.app.Asset;
 import sk.thenet.format.bmp.PNG;
-import sk.thenet.plat.Bitmap as PlatformBitmap;
+import sk.thenet.bmp.Bitmap as PlatformBitmap;
 import sk.thenet.plat.Platform;
 
 class Bitmap extends Asset {

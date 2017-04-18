@@ -3,7 +3,7 @@ package sk.thenet.app;
 import sk.thenet.app.asset.Bind as AssetBind;
 import sk.thenet.app.asset.Bitmap as AssetBitmap;
 import sk.thenet.event.EFile;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 /**
 ##Asset manager##

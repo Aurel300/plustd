@@ -4,10 +4,10 @@ import sk.thenet.app.Keyboard;
 import sk.thenet.app.Mouse;
 import sk.thenet.bmp.Colour;
 import sk.thenet.net.ws.Websocket;
-import sk.thenet.plat.Bitmap;
-import sk.thenet.plat.Output;
-import sk.thenet.plat.Socket;
-import sk.thenet.plat.Surface;
+import sk.thenet.bmp.Bitmap;
+import sk.thenet.audio.Output;
+import sk.thenet.net.Socket;
+import sk.thenet.bmp.Surface;
 import sk.thenet.event.Source;
 
 /**
@@ -147,7 +147,7 @@ Initialises the main window with the given parameters.
   }
   
   /**
-Creates and returns a `sk.thenet.plat.Output`.
+Creates and returns a `sk.thenet.audio.Output`.
 
 @return A platform-dependent representation of a code-generated audio output.
    */
@@ -156,7 +156,7 @@ Creates and returns a `sk.thenet.plat.Output`.
   }
   
   /**
-Creates and returns a `sk.thenet.plat.Bitmap` of the given dimensions filled
+Creates and returns a `sk.thenet.bmp.Bitmap` of the given dimensions filled
 with the specified colour.
 
 @param width Width, in pixels.
@@ -172,7 +172,7 @@ with the specified colour.
   }
   
   /**
-Creates and returns a `sk.thenet.plat.Socket`.
+Creates and returns a `sk.thenet.net.Socket`.
 
 @return A platform-dependent representation of a socket object.
    */

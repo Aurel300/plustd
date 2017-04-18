@@ -1,4 +1,4 @@
-package sk.thenet.plat;
+package sk.thenet.bmp;
 
 import sk.thenet.bmp.IBitmap;
 

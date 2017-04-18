@@ -10,8 +10,8 @@ import sk.thenet.event.EKEvent.EKUp;
 import sk.thenet.fsm.Machine as FSMMachine;
 import sk.thenet.fsm.Memory as FSMMemory;
 import sk.thenet.plat.Platform;
-import sk.thenet.plat.Bitmap;
-import sk.thenet.plat.Surface;
+import sk.thenet.bmp.Bitmap;
+import sk.thenet.bmp.Surface;
 
 /**
 ##Application##

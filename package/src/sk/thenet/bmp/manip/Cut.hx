@@ -1,7 +1,7 @@
 package sk.thenet.bmp.manip;
 
 import sk.thenet.plat.Platform;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 class Cut extends Manipulator {
   public var x     (default, null):Int;

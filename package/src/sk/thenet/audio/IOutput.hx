@@ -13,7 +13,7 @@ found in `sk.thenet.plat`. To actually create a `Output`, use
 
 Implementations of this interface are platform-dependent. To maintain good
 performance without having to actually cast classes to this interface, there
-is a typedef available - `sk.thenet.plat.Output` - which becomes an alias for
+is a typedef available - `sk.thenet.audio.Output` - which becomes an alias for
 the current platform-dependent implementation of `IOutput` at compile time. To
 actually create an `Output`, use `sk.thenet.plat.Platform.createAudioOutput()`.
  */

@@ -1,6 +1,6 @@
 package sk.thenet.bmp;
 
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 
 /**
 ##Fluent bitmap##

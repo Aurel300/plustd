@@ -1,6 +1,4 @@
-package sk.thenet.plat;
-
-import sk.thenet.net.ISocket;
+package sk.thenet.net;
 
 /**
 ##Socket##

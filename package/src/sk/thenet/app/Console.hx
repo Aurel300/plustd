@@ -11,9 +11,9 @@ import sk.thenet.event.EKEvent.EKUp;
 import sk.thenet.event.Event;
 import sk.thenet.event.Source;
 import sk.thenet.net.ws.ConsoleLink;
-import sk.thenet.plat.Bitmap;
+import sk.thenet.bmp.Bitmap;
 import sk.thenet.plat.Platform;
-import sk.thenet.plat.Surface;
+import sk.thenet.bmp.Surface;
 
 @:bitmap("graphics/font.png")
 private class AssetFont extends flash.display.BitmapData {}
