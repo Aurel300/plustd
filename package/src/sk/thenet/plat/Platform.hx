@@ -65,7 +65,7 @@ typedef Platform =
 #elseif flash
     sk.thenet.plat.flash.Platform
 #elseif js
-    sk.thenet.plat.jsca.Platform
+    sk.thenet.plat.js.canvas.Platform
 #elseif neko
     sk.thenet.plat.neko.Platform
 #else

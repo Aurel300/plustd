@@ -14,7 +14,7 @@ typedef Bitmap =
 #if flash
     sk.thenet.plat.flash.bmp.Bitmap
 #elseif js
-    sk.thenet.plat.jsca.bmp.Bitmap
+    sk.thenet.plat.js.canvas.bmp.Bitmap
 #else
     IBitmap
 #end

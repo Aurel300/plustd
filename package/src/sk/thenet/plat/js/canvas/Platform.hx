@@ -1,4 +1,4 @@
-package sk.thenet.plat.jsca;
+package sk.thenet.plat.js.canvas;
 
 #if js
 
@@ -13,12 +13,12 @@ import sk.thenet.app.Application;
 import sk.thenet.bmp.Colour;
 import sk.thenet.event.ETick;
 import sk.thenet.event.*;
-import sk.thenet.net.ws.Websocket;
-import sk.thenet.plat.jsca.app.Keyboard;
-import sk.thenet.plat.jsca.app.Mouse;
-import sk.thenet.plat.jsca.audio.Output;
-import sk.thenet.plat.jsca.bmp.Bitmap;
-import sk.thenet.plat.jsca.bmp.Surface;
+import sk.thenet.plat.js.common.app.Keyboard;
+import sk.thenet.plat.js.common.app.Mouse;
+import sk.thenet.plat.js.common.audio.Output;
+import sk.thenet.plat.js.common.net.ws.Websocket;
+import sk.thenet.plat.js.canvas.bmp.Bitmap;
+import sk.thenet.plat.js.canvas.bmp.Surface;
 
 /**
 ##Platform - JavaScript / Canvas##
@@ -145,11 +145,10 @@ class Platform extends sk.thenet.plat.PlatformBase {
     bmp.fill(colour);
     return bmp;
   }
-  /*
+  
   public static inline function createWebsocket():Websocket {
     return new Websocket();
   }
-  */
   
   public static inline function boot(func:Void->Void):Void {
     Browser.window.onload = func;

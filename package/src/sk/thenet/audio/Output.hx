@@ -14,7 +14,7 @@ typedef Output =
 #if flash
     sk.thenet.plat.flash.audio.Output
 #elseif js
-    sk.thenet.plat.jsca.audio.Output
+    sk.thenet.plat.js.common.audio.Output
 #else
     IOutput
 #end

@@ -1,4 +1,4 @@
-package sk.thenet.plat.jsca.bmp;
+package sk.thenet.plat.js.canvas.bmp;
 
 #if js
 
@@ -14,7 +14,7 @@ JavaScript / Canvas implementation of `sk.thenet.bmp.IBitmap`.
 
 @see `sk.thenet.bmp.IBitmap`
  */
-@:allow(sk.thenet.plat.jsca)
+@:allow(sk.thenet.plat.js)
 class Bitmap implements sk.thenet.bmp.IBitmap {
   public var height(default, null):Int;
   

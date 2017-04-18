@@ -1,14 +1,14 @@
-package sk.thenet.plat.jsca.audio;
+package sk.thenet.plat.js.common.audio;
 
 import haxe.ds.Vector;
 import js.html.audio.*;
 
 /**
-JavaScript / Canvas implementation of `sk.thenet.audio.IOutput`.
+JavaScript implementation of `sk.thenet.audio.IOutput`.
 
 @see `sk.thenet.audio.IOutput`
  */
-@:allow(sk.thenet.plat.jsca)
+@:allow(sk.thenet.plat.js)
 class Output implements sk.thenet.audio.IOutput {
   public var playing (default, null):Bool = false;
   public var channels(default, null):Int;

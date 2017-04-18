@@ -1,4 +1,4 @@
-package sk.thenet.plat.jsca.app;
+package sk.thenet.plat.js.common.app;
 
 import js.html.MouseEvent;
 import sk.thenet.FM;
@@ -6,11 +6,11 @@ import sk.thenet.app.Mouse as AppMouse;
 import sk.thenet.event.*;
 
 /**
-JavaScript / Canvas implementation of `sk.thenet.app.Mouse`.
+JavaScript implementation of `sk.thenet.app.Mouse`.
 
 @see `sk.thenet.app.Mouse`
  */
-@:allow(sk.thenet.plat.jsca)
+@:allow(sk.thenet.plat.js)
 class Mouse extends AppMouse {
   private function new(){
     super();

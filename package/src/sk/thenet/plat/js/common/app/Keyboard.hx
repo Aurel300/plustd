@@ -1,4 +1,4 @@
-package sk.thenet.plat.jsca.app;
+package sk.thenet.plat.js.common.app;
 
 import js.html.KeyboardEvent;
 import sk.thenet.app.Keyboard as AppKeyboard;
@@ -6,11 +6,11 @@ import sk.thenet.app.Keyboard.Key;
 import sk.thenet.event.*;
 
 /**
-JavaScript / Canvas implementation of `sk.thenet.app.Keyboard`.
+JavaScript implementation of `sk.thenet.app.Keyboard`.
 
 @see `sk.thenet.app.Keyboard`
  */
-@:allow(sk.thenet.plat.jsca)
+@:allow(sk.thenet.plat.js)
 class Keyboard extends AppKeyboard {
   private var lookup:Map<String, Key>;
   
