@@ -1,4 +1,4 @@
-package sk.thenet.plat.flash;
+package sk.thenet.plat.flash.app;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;

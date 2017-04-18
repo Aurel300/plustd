@@ -14,7 +14,7 @@ implementations.
  */
 typedef Surface =
 #if flash
-    sk.thenet.plat.flash.Surface
+    sk.thenet.plat.flash.bmp.Surface
 #else
     ISurface
 #end

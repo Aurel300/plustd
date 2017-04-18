@@ -12,7 +12,7 @@ implementations.
  */
 typedef Socket =
 #if flash
-    sk.thenet.plat.flash.Socket
+    sk.thenet.plat.flash.net.Socket
 #elseif neko
     sk.thenet.plat.neko.Socket
 #else

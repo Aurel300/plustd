@@ -12,7 +12,7 @@ implementations.
  */
 typedef Output =
 #if flash
-    sk.thenet.plat.flash.Output
+    sk.thenet.plat.flash.audio.Output
 #else
     IOutput
 #end

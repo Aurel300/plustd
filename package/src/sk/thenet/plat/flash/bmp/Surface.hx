@@ -1,4 +1,4 @@
-package sk.thenet.plat.flash;
+package sk.thenet.plat.flash.bmp;
 
 import flash.display.Bitmap as NativeBitmap;
 import sk.thenet.bmp.Bitmap;

@@ -13,6 +13,12 @@ import sk.thenet.bmp.Colour;
 import sk.thenet.event.ETick;
 import sk.thenet.event.*;
 import sk.thenet.net.ws.Websocket;
+import sk.thenet.plat.flash.app.Keyboard;
+import sk.thenet.plat.flash.app.Mouse;
+import sk.thenet.plat.flash.audio.Output;
+import sk.thenet.plat.flash.bmp.Bitmap;
+import sk.thenet.plat.flash.bmp.Surface;
+import sk.thenet.plat.flash.net.Socket;
 
 /**
 ##Platform - Flash##

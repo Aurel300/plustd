@@ -1,4 +1,4 @@
-package sk.thenet.plat.flash;
+package sk.thenet.plat.flash.app;
 
 import flash.events.MouseEvent;
 import sk.thenet.FM;

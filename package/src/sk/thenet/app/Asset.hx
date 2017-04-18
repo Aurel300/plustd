@@ -3,7 +3,7 @@ package sk.thenet.app;
 import haxe.io.Bytes;
 import sk.thenet.app.asset.Bind as AssetBind;
 import sk.thenet.app.asset.Bitmap as AssetBitmap;
-import sk.thenet.plat.Embed;
+import sk.thenet.app.Embed;
 import sk.thenet.plat.Platform;
 
 class Asset {

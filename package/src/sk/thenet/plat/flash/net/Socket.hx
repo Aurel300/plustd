@@ -1,4 +1,4 @@
-package sk.thenet.plat.flash;
+package sk.thenet.plat.flash.net;
 
 import haxe.ds.Vector;
 import haxe.io.Bytes;

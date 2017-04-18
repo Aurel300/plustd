@@ -1,4 +1,4 @@
-package sk.thenet.plat.flash;
+package sk.thenet.plat.flash.bmp;
 
 import haxe.ds.Vector;
 import flash.display.BitmapData;

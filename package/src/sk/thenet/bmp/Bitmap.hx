@@ -14,7 +14,7 @@ implementations.
  */
 typedef Bitmap =
 #if flash
-    sk.thenet.plat.flash.Bitmap
+    sk.thenet.plat.flash.bmp.Bitmap
 #else
     IBitmap
 #end
