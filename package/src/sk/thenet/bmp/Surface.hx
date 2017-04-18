@@ -15,6 +15,8 @@ implementations.
 typedef Surface =
 #if flash
     sk.thenet.plat.flash.bmp.Surface
+#elseif js
+    sk.thenet.plat.jsca.bmp.Surface
 #else
     ISurface
 #end

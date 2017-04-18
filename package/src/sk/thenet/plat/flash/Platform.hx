@@ -137,6 +137,10 @@ in favour of the ones  provided in the `-swf-header` haxe compiler option.
   public static inline function createWebsocket():Websocket {
     return new Websocket();
   }
+  
+  public static inline function boot(func:Void->Void):Void {
+    func();
+  }
 }
 
 #end

@@ -13,6 +13,8 @@ implementations.
 typedef Output =
 #if flash
     sk.thenet.plat.flash.audio.Output
+#elseif js
+    sk.thenet.plat.jsca.audio.Output
 #else
     IOutput
 #end

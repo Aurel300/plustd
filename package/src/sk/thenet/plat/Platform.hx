@@ -22,11 +22,11 @@ These have to be initialised with the `init*` methods beforehand. Similarly for
 
 Currently, plustd provides these `Platform` subclasses:
 
- - `sk.thenet.plat.cpp.Platform` - C++ with SDL and OpenGL (TODO)
- - `sk.thenet.plat.flash.Platform` - Adobe Flash / swf
- - `sk.thenet.plat.jscanvas.Platform` - Javascript with Canvas (TODO, enabled
-when `-D js-canvas`)
- - `sk.thenet.plat.jsgl.Platform` - Javascript with WebGL (TODO)
+ - `sk.thenet.plat.cppsdl.Platform` - C++ / SDL / OpenGL (TODO)
+ - `sk.thenet.plat.flash.Platform` - Adobe Flash
+ - `sk.thenet.plat.jsca.Platform` - Javascript / Canvas (TODO)
+ - `sk.thenet.plat.jsgl.Platform` - Javascript / WebGL (TODO, enabled
+when `-D js-webgl`)
  - `sk.thenet.plat.neko.Platform` - Neko VM
 
 ####Defining custom platforms####
@@ -65,7 +65,7 @@ typedef Platform =
 #elseif flash
     sk.thenet.plat.flash.Platform
 #elseif js
-    sk.thenet.plat.jsgl.Platform
+    sk.thenet.plat.jsca.Platform
 #elseif neko
     sk.thenet.plat.neko.Platform
 #else

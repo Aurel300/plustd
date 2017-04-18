@@ -11,7 +11,7 @@ Flash implementation of `sk.thenet.app.Keyboard`.
 
 @see `sk.thenet.app.Keyboard`
  */
-@:allow(sk.thenet.plat.flash.Platform)
+@:allow(sk.thenet.plat.flash)
 class Keyboard extends AppKeyboard {
   private var lookup:Vector<Key>;
   private var lookupLen:UInt;

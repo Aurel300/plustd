@@ -15,8 +15,16 @@ import sk.thenet.bmp.Bitmap;
 import sk.thenet.plat.Platform;
 import sk.thenet.bmp.Surface;
 
+#if flash
+
 @:bitmap("graphics/font.png")
 private class AssetFont extends flash.display.BitmapData {}
+
+#else
+
+private class AssetFont {}
+
+#end
 
 class Console extends Source {
   private static inline var HISTORY_SIZE:Int = 20;
@@ -205,6 +213,9 @@ class Console extends Source {
     this.surface = surface;
     height = (surface.bitmap.height >> 2) * 3; // 3/4
     createBg();
+    
+#if flash
+    
     var fdata = Platform.createBitmapFlash(new AssetFont(0, 0)).fluent;
     fdata = Font.spreadGrid(
          fdata
@@ -219,6 +230,9 @@ class Console extends Source {
         ,32
         ,-3, 0
       );
+    
+#end
+    
     renderHistory();
   }
   

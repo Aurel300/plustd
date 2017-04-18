@@ -65,7 +65,7 @@ class PlatformBase {
                ,pos: Context.currentPos()
              }}
         ]
-        ,ret: {name: "Surface", pack: ["sk", "thenet", "plat"], params: []}
+        ,ret: {name: "Surface", pack: ["sk", "thenet", "bmp"], params: []}
         ,retStrict: false
       }, {
          name: "initWindow"
@@ -76,6 +76,16 @@ class PlatformBase {
         ]
         ,ret: {name: "Void", pack: [], params: []}
         ,retStrict: true
+      }, {
+         name: "createSocket"
+        ,args: []
+        ,ret: {name: "Socket", pack: ["sk", "thenet", "net"], params: []}
+        ,retStrict: false
+      }, {
+         name: "createWebsocket"
+        ,args: []
+        ,ret: {name: "Websocket", pack: ["sk", "thenet", "net", "ws"], params: []}
+        ,retStrict: false
       }]){
       if (fieldNames.exists(init.name)){
         var field = fieldNames.get(init.name);

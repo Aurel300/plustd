@@ -13,8 +13,6 @@ Flash implementation of `sk.thenet.bmp.IBitmap`.
  */
 @:allow(sk.thenet.plat.flash)
 class Bitmap implements sk.thenet.bmp.IBitmap {
-  private var native:BitmapData;
-  
   public var height(default, null):Int;
   
   public var width(default, null):Int;
@@ -24,6 +22,8 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   public inline function get_fluent():FluentBitmap {
     return new FluentBitmap(this);
   }
+  
+  private var native:BitmapData;
   
   private function new(native:BitmapData){
     this.native = native;

@@ -18,6 +18,12 @@ the current platform-dependent implementation of `IOutput` at compile time. To
 actually create an `Output`, use `sk.thenet.plat.Platform.createAudioOutput()`.
  */
 interface IOutput {
+  public var playing (default, null):Bool;
+  
+  public var channels(default, null):Int;
+  
+  public var samples (default, null):Int;
+  
   /**
 Starts buffering data and outputting it via the system audio output.
    */

@@ -1,7 +1,5 @@
 package sk.thenet.bmp;
 
-import sk.thenet.bmp.IBitmap;
-
 /**
 ##Bitmap##
 
@@ -15,6 +13,8 @@ implementations.
 typedef Bitmap =
 #if flash
     sk.thenet.plat.flash.bmp.Bitmap
+#elseif js
+    sk.thenet.plat.jsca.bmp.Bitmap
 #else
     IBitmap
 #end

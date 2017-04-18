@@ -28,6 +28,7 @@ state passed is the default / initial state. Finally, call `mainLoop()`.
 Note that the transitions are not used in this class. To change states, use
 `Application.applyState`.
  */
+@:keepSub
 class Application
   implements FSMMachine<Application, State, Transition>
   implements FSMMemory<State>
