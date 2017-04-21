@@ -4,11 +4,15 @@ import haxe.ds.Vector;
 import sk.thenet.plat.Platform;
 import sk.thenet.bmp.Bitmap;
 
+/**
+##Bitmap manipulator - Bit mask##
+
+Applies a bit mask to every pixel of the bitmap. Can be used to select channels.
+ */
 class Bitmask extends VectorManipulator {
   public var mask:UInt;
   
   public function new(mask:UInt){
-    super();
     this.mask = mask;
   }
   

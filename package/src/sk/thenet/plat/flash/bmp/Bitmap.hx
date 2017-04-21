@@ -31,6 +31,11 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     height = native.height;
   }
   
+  public function debug():Void {
+    var b = new flash.display.Bitmap(native);
+    flash.Lib.current.addChild(b);
+  }
+  
   public inline function get(x:Int, y:Int):UInt {
     return native.getPixel32(x, y);
   }
@@ -53,7 +58,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
-    height = FM.clampI(height, 1, this.height - x);
+    height = FM.clampI(height, 1, this.height - y);
     return (cast native.getVector(
         new flash.geom.Rectangle(x, y, width, height)
       ):Vector<UInt>);
@@ -65,7 +70,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
-    height = FM.clampI(height, 1, this.height - x);
+    height = FM.clampI(height, 1, this.height - y);
     native.setVector(
         new flash.geom.Rectangle(x, y, width, height),
         (cast vector:flash.Vector<UInt>)
@@ -82,7 +87,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
-    height = FM.clampI(height, 1, this.height - x);
+    height = FM.clampI(height, 1, this.height - y);
     native.fillRect(new flash.geom.Rectangle(x, y, width, height), colour);
   }
   

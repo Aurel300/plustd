@@ -3,11 +3,16 @@ package sk.thenet.bmp.manip;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Bitmap;
 
+/**
+##Bitmap manipulator - Alpha mask##
+
+Overrides the alpha of the manipulated bitmap with the alpha of its parameter
+`bitmap`.
+ */
 class AlphaMask extends Manipulator {
   public var bitmap(default, null):Bitmap;
   
   public function new(bitmap:Bitmap){
-    super();
     this.bitmap = bitmap;
   }
   

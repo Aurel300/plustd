@@ -5,7 +5,10 @@ package sk.thenet.app;
 
 Base class for mouse handler implementations. Generally accessible through
 `sk.thenet.plat.Platform.mouse` or `sk.thenet.app.Application.mouse`,
-if using the application class.
+if using the application model.
+
+This class keeps track of where the mouse is on screen, as well as whether the
+mouse button is being held.
 
 If the application surface was initialised with a scaling factor, the
 coordinates in `Mouse.x` and `Mouse.y` contains the adjusted coordinates,

@@ -3,6 +3,11 @@ package sk.thenet.bmp.manip;
 import sk.thenet.plat.Platform;
 import sk.thenet.bmp.Bitmap;
 
+/**
+##Bitmap manipulator - Cut##
+
+Cuts out a rectangular patch of the given bitmap when extracting.
+ */
 class Cut extends Manipulator {
   public var x     (default, null):Int;
   public var y     (default, null):Int;
@@ -10,7 +15,6 @@ class Cut extends Manipulator {
   public var height(default, null):Int;
   
   public function new(x:Int, y:Int, width:Int, height:Int){
-    super();
     this.x      = x;
     this.y      = y;
     this.width  = width;

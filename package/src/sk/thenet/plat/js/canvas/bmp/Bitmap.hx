@@ -34,21 +34,28 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   private var size8:Int;
   public var changed:Bool;
   
-  private function new(native:CanvasElement){
+  private function new(native:CanvasElement, ?c2d:CanvasRenderingContext2D){
     this.native = native;
     width = native.width;
     height = native.height;
-    c2d = native.getContext2d();
-    c2d.imageSmoothingEnabled = false;
-    untyped __js__("this.c2d.webkitImageSmoothingEnabled = false");
-    untyped __js__("this.c2d.msImageSmoothingEnabled = false");
-    untyped __js__("this.c2d.mozImageSmoothingEnabled = false");
-    //fill(nfc);
+    if (c2d != null){
+      this.c2d = c2d;
+    } else {
+      this.c2d = native.getContext2d();
+    }
+    this.c2d.imageSmoothingEnabled = false;
+    untyped __js__("{0}.webkitImageSmoothingEnabled = false", this.c2d);
+    untyped __js__("{0}.msImageSmoothingEnabled = false", this.c2d);
+    untyped __js__("{0}.mozImageSmoothingEnabled = false", this.c2d);
     data = new Vector<Colour>(width * height);
     size32 = width * height;
     size8 = size32 << 2;
-    data = getVector();
-    changed = false;
+    changed = true;
+    getVector();
+  }
+  
+  public function debug():Void {
+    js.Browser.document.body.appendChild(native);
   }
   
   public inline function get(x:Int, y:Int):UInt {
@@ -67,13 +74,11 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   public inline function getVector():Vector<Colour> {
     if (changed){
       var data8 = c2d.getImageData(0, 0, width, height).data;
-      var j:Int = 0;
+      var j = 0;
       for (i in 0...size32){
-        data[i]
-          = (data8[j + 3] << 24)
-          | (data8[j    ] << 16)
-          | (data8[j + 1] << 8 )
-          | (data8[j + 2]      );
+        data[i] = Colour.fromARGBi(
+            data8[j + 3], data8[j], data8[j + 1], data8[j + 2]
+          );
         j += 4;
       }
       changed = false;
@@ -82,28 +87,20 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   }
   
   public inline function setVector(vector:Vector<Colour>):Void {
-		//data = v;
-		//var idata = c2d.createImageData(width, height);
-		//var data8 = idata.data;
-		var data8 = new js.html.Uint8ClampedArray(size8);
-		var j:Int = 0;
-		for (i in 0...size32){
-			data8[j] = (data[i] >>> 16) & 0xFF;
-			data8[j + 1] = (data[i] >>> 8) & 0xFF;
-			data8[j + 2] = data[i] & 0xFF;
-			data8[j + 3] = data[i] >>> 24;
-			//untyped __js__("debugger");
-			j += 4;
-		}
-		//trace(data8);
-		var idata = new js.html.ImageData(width, height);
-		idata.data.set(data8);
-		//untyped __js__("idata.data.set(data8)");
-		//untyped __js__("debugger");
-		c2d.putImageData(idata, 0, 0, 0, 0, width, height);
-		changed = true;
-		//changed = true;
-		//getFullVector();
+    data = vector;
+    var data8 = new js.html.Uint8ClampedArray(size8);
+    var j = 0;
+    for (i in 0...size32){
+      data8[j    ] = data[i].ri;
+      data8[j + 1] = data[i].gi;
+      data8[j + 2] = data[i].bi;
+      data8[j + 3] = data[i].ai;
+      j += 4;
+    }
+    var idata = new js.html.ImageData(width, height);
+    idata.data.set(data8);
+    c2d.putImageData(idata, 0, 0, 0, 0, width, height);
+    changed = false;
   }
   
   public function getVectorRect(
@@ -112,18 +109,49 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
-    height = FM.clampI(height, 1, this.height - x);
-    return null;
+    height = FM.clampI(height, 1, this.height - y);
+    getVector();
+    var ret = new Vector<Colour>(width * height);
+    var vi = 0;
+    var di = 0;
+    for (vy in y...y + height){
+      di = x + vy * this.width;
+      for (vx in x...x + width){
+        ret[vi] = data[di];
+        vi++;
+        di++;
+      }
+    }
+    return ret;
   }
   
   public function setVectorRect(
     x:Int, y:Int, width:Int, height:Int, vector:Vector<Colour>
   ):Void {
+    getVector();
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
-    height = FM.clampI(height, 1, this.height - x);
-    
+    height = FM.clampI(height, 1, this.height - y);
+    var data8 = new js.html.Uint8ClampedArray(width * height * 4);
+    var vi = 0;
+    var di = 0;
+    for (vy in y...y + height){
+      di = x + vy * this.width;
+      for (vx in x...x + width){
+        data[di] = vector[vi];
+        data8[(di << 2)    ] = data[di].ri;
+        data8[(di << 2) + 1] = data[di].gi;
+        data8[(di << 2) + 2] = data[di].bi;
+        data8[(di << 2) + 3] = data[di].ai;
+        vi++;
+        di++;
+      }
+    }
+    var idata = new js.html.ImageData(width, height);
+    idata.data.set(data8);
+    c2d.putImageData(idata, x, y, 0, 0, width, height);
+    changed = false;
   }
   
   public inline function fill(colour:Colour):Void {
@@ -136,7 +164,10 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
-    height = FM.clampI(height, 1, this.height - x);
+    height = FM.clampI(height, 1, this.height - y);
+    if (colour.ai != 255){
+      c2d.clearRect(x, y, width, height);
+    }
     inline function colourToDOM(c:Colour):String {
       return 'rgba(${c.ri}, ${c.gi}, ${c.bi}, ${c.af})';
     }

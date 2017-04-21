@@ -8,6 +8,7 @@ import flash.display.Stage;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
+import flash.media.Sound as NativeSound;
 import sk.thenet.U;
 import sk.thenet.bmp.Colour;
 import sk.thenet.event.ETick;
@@ -16,6 +17,7 @@ import sk.thenet.net.ws.Websocket;
 import sk.thenet.plat.flash.app.Keyboard;
 import sk.thenet.plat.flash.app.Mouse;
 import sk.thenet.plat.flash.audio.Output;
+import sk.thenet.plat.flash.audio.Sound;
 import sk.thenet.plat.flash.bmp.Bitmap;
 import sk.thenet.plat.flash.bmp.Surface;
 import sk.thenet.plat.flash.net.Socket;
@@ -126,7 +128,11 @@ in favour of the ones  provided in the `-swf-header` haxe compiler option.
     return new Bitmap(new BitmapData(width, height, true, colour));
   }
   
-  public static inline function createBitmapFlash(bd:BitmapData):Bitmap {
+  public static inline function createSoundNative(sound:NativeSound):Sound {
+    return new Sound(sound);
+  }
+  
+  public static inline function createBitmapNative(bd:BitmapData):Bitmap {
     return new Bitmap(bd);
   }
   

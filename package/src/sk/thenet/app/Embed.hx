@@ -8,4 +8,12 @@ implementation.
 
 @see `sk.thenet.plat.Platform` for details and defining custom platforms.
  */
-typedef Embed = sk.thenet.plat.flash.app.Embed;
+typedef Embed =
+#if flash
+    sk.thenet.plat.flash.app.Embed
+#elseif js
+    sk.thenet.plat.js.canvas.app.Embed
+#else
+    Void
+#end
+  ;

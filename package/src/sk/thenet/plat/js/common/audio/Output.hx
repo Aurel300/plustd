@@ -1,5 +1,7 @@
 package sk.thenet.plat.js.common.audio;
 
+#if js
+
 import haxe.ds.Vector;
 import js.html.audio.*;
 
@@ -71,3 +73,5 @@ class Output implements sk.thenet.audio.IOutput {
   
   public dynamic function sample(offset:Float, buffer:Vector<Float>):Void {}
 }
+
+#end

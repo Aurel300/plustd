@@ -8,6 +8,9 @@ import sk.thenet.plat.Platform;
 
 using sk.thenet.format.BytesTools;
 
+/**
+Used by `sk.thenet.app.Console`.
+ */
 class ConsoleLink extends Source {
   private var socket:Websocket;
   
@@ -48,6 +51,6 @@ class ConsoleLink extends Source {
     var o = Bytes.alloc(data.length + 1);
     o.set(0, 0x03);
     o.blit(1, data, 0, data.length);
-    socket.send(o);
+    socket.send(o, true);
   }
 }

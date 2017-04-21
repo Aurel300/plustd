@@ -5,6 +5,11 @@ import sk.thenet.geom.Point2DF;
 import sk.thenet.geom.Point2DI;
 import sk.thenet.stream.prng.Generator;
 
+/**
+##Perlin noise##
+
+Simple (single-octave) Perlin Noise generator.
+ */
 class PerlinNoise {
   public var generator:Generator;
   private var cachePoints:Array<Point2DI> = [];

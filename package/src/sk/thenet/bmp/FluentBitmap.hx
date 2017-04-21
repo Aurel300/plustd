@@ -33,8 +33,8 @@ Multiple operations can be chained:
       << (new Grayscale()); // make it grayscale
 ```
 
-@see `sk.thenet.bmp.Bitmap`
-@see `sk.thenet.bmp.Manipulator`
+@see `Bitmap`
+@see `Manipulator`
  */
 abstract FluentBitmap(Bitmap) from Bitmap to Bitmap {
   public inline function new(bitmap:Bitmap){

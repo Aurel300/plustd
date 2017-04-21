@@ -4,11 +4,12 @@ import haxe.ds.Vector;
 import sk.thenet.plat.Platform;
 import sk.thenet.bmp.Bitmap;
 
+/**
+##Bitmap manipulator - Invert##
+
+Inverts the RGB channels.
+ */
 class Invert extends VectorManipulator {
-  public function new(){
-    super();
-  }
-  
   override private inline function manipulatePixel(
     vector:Vector<UInt>, i:Int, original:UInt
   ):UInt {

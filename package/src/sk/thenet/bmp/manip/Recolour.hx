@@ -6,11 +6,16 @@ import sk.thenet.plat.Platform;
 import sk.thenet.bmp.Bitmap;
 import sk.thenet.bmp.Bitmap;
 
+/**
+##Bitmap manipulator - Recolour##
+
+Recolours any non-transparent pixels to the given `colour`, without modifying
+their alpha values.
+ */
 class Recolour extends VectorManipulator {
   public var colour(default, null):Colour;
   
   public function new(colour:Colour){
-    super();
     this.colour = colour;
   }
   

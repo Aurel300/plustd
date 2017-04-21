@@ -7,18 +7,30 @@ import haxe.ds.Vector;
 
 Base class for keyboard handler implementations. Generally accessible through
 `sk.thenet.plat.Platform.keyboard` or `sk.thenet.app.Application.keyboard`,
-if using the application class.
+if using the application model.
+
+This class keeps track of which keys are currently being held. It can also be
+used to tell which keys are "characters" and to get their string values. These
+characters are currently known to plustd: `0123456789`,
+`abcdefghijklmnopqrstuvwxyz`, space, newline.
 
 @see `sk.thenet.event.EKEvent`
  */
 class Keyboard {
-  private static var KEY_CHARACTERS:String = " 0123456789abcdefghijklmnopqrstuvwxyz \n";
+  private static var KEY_CHARACTERS:String
+    = " 0123456789abcdefghijklmnopqrstuvwxyz \n";
   
+  /**
+@return `true` iff the given `key` is a character.
+   */
   public inline static function isCharacter(key:Key):Bool {
     return ((cast key:Int) >= 4 && (cast key:Int) <= 40)
       || ((cast key:Int) == 42);
   }
   
+  /**
+@return String value of the given `key` or `""` if it is not a character.
+   */
   public inline static function getCharacter(key:Key):String {
     if (isCharacter(key)){
       return KEY_CHARACTERS.charAt((cast key:Int) - 4);

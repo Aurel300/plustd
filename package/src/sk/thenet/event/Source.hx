@@ -33,9 +33,16 @@ Adds a listener to an event type.
 @param listener A function which takes the event as its parameter and returns
 `true` iff the event was handled.
    */
-  public function listen<T:Event>(type:String, listener:T->Bool):Void {
-    listenTo.push(type);
-    listeners.push(listener);
+  public function listen<T:Event>(
+    type:String, listener:T->Bool, ?priority:Bool = false
+  ):Void {
+    if (priority){
+      listenTo.unshift(type);
+      listeners.unshift(listener);
+    } else {
+      listenTo.push(type);
+      listeners.push(listener);
+    }
   }
   
   /**

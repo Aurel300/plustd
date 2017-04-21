@@ -81,7 +81,9 @@ class Socket extends Source implements sk.thenet.net.ISocket {
         sendMutex.release();
         if (data != null){
           //trace("sending", data.toString());
+          socket.setBlocking(true);
           socket.output.writeFullBytes(data, 0, data.length);
+          socket.setBlocking(false);
         }
       //}
       Sys.sleep(.05);

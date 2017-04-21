@@ -1,5 +1,7 @@
 package sk.thenet.plat.js.common.app;
 
+#if js
+
 import js.html.KeyboardEvent;
 import sk.thenet.app.Keyboard as AppKeyboard;
 import sk.thenet.app.Keyboard.Key;
@@ -80,3 +82,5 @@ class Keyboard extends AppKeyboard {
     return new EKEvent.EKUp(source, key);
   }
 }
+
+#end

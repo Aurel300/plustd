@@ -7,7 +7,7 @@ This class is mostly identical to `sk.thenet.geom.Point2DF`, but it uses `Int`
 as the data type for coordinates instead of `Float`. In some cases this might
 be faster, or more desirable (for representing pixel-perfect 2D graphics).
 
-@see `sk.thenet.geom.Point2DF`
+@see `Point2DF`
  */
 class Point2DI {
   public var x(default, null):Int;

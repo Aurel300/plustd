@@ -1,5 +1,7 @@
 package sk.thenet.bmp;
 
+import sk.thenet.U;
+
 /**
 ##Colour##
 
@@ -42,7 +44,8 @@ abstract Colour(UInt) from UInt to UInt {
 Creates a colour from the given string. The string is parsed using
 `Std.parseInt`. Ideally, it should be in the format `"0xAARRGGBB"`.
    */
-  @:from public static inline function fromString(argb:String):Colour {
+  @:from
+  public static inline function fromString(argb:String):Colour {
     return new Colour(Std.parseInt(argb));
   }
   
@@ -74,6 +77,14 @@ Creates a colour from a 32-bit unsigned integer in the format 0xAARRGGBB.
    */
   public inline function new(colour:UInt){
     this = colour;
+  }
+  
+  /**
+Converts the colour to a string in the format: `0xAARRGGBB`.
+   */
+  @:to
+  public inline function toStringHex():String {
+    return "0x" + U.hex2(ai) + U.hex2(ri) + U.hex2(gi) + U.hex2(bi);
   }
   
   /**

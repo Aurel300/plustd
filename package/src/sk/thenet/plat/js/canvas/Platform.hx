@@ -44,11 +44,13 @@ class Platform extends sk.thenet.plat.PlatformBase {
   private function new(){}
   
   public static inline function initFramerate(fps:Float):Void {
-    Browser.window.setInterval(handleFrame, 1000 / fps);
+    //Browser.window.setInterval(handleFrame, 1000 / fps);
+    Browser.window.requestAnimationFrame(handleFrame);
   }
   
-  private static function handleFrame():Void {
+  private static function handleFrame(v):Void {
     source.fireEvent(new ETick(source));
+    Browser.window.requestAnimationFrame(handleFrame);
   }
   
   private static inline function addEventListener<T:NativeEvent>(

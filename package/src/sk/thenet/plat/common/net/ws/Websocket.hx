@@ -1,6 +1,7 @@
 package sk.thenet.plat.common.net.ws;
 
 import haxe.crypto.Base64;
+import haxe.crypto.Sha1;
 import haxe.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
@@ -19,6 +20,9 @@ using sk.thenet.format.BytesTools;
 
 A pure Haxe implementation of a Websocket class capable of connecting to remote
 Websocket servers as well as creating a Websocket server.
+
+This is currently a very bare implementation and does not support ping or pong
+frames. Errors are not handled gracefully.
 
 The implementation depends on `sk.thenet.net.Socket`, which is
 platform-dependent. Some platforms might not support socket servers.
@@ -57,9 +61,6 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
     
     this.socket = socket;
     socket.listen("data", handleData);
-    socket.send(Bytes.ofString(
-        "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\n\r\n"
-      ));
   }
   
   public function connect(host:String, url:String, port:Int):Void {
@@ -145,12 +146,15 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
     switch (frame.type){
       case Close:
       // close?
+      trace("remote close");
       
       case Ping:
       // pong
+      trace("remote ping");
       
       case Pong:
       // ping
+      trace("remote pong");
       
       case _:
       if (frame.fin){
@@ -239,6 +243,28 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       for (i in handshakeEnd...recvUsed){
         if (i < 3) continue;
         if (recvBuffer.readLEInt32(i - 3) == 0x0D0A0D0A){
+          if (serverMode){
+            var clientHeaders = recvBuffer.sub(0, i - 3).toString().split("\r\n");
+            var serverKey = "";
+            for (i in 1...clientHeaders.length){
+              if (clientHeaders[i] == ""){
+                break;
+              }
+              var header = clientHeaders[i].split(": ");
+              if (header[0] == "Sec-WebSocket-Key"){
+                var sha1 = Sha1.make(Bytes.ofString(
+                    header[1] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+                  ));
+                serverKey = "Sec-WebSocket-Accept: " + Base64.encode(sha1);
+              }
+            }
+            socket.send(Bytes.ofString([
+                 "HTTP/1.1 101 Switching Protocols"
+                ,"Upgrade: websocket"
+                ,"Connection: Upgrade"
+                ,serverKey
+              ].join("\r\n") + "\r\n\r\n"));
+          }
           handshake = true;
           discardRecv(i + 1);
           for (f in sendQueue){
@@ -318,8 +344,11 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
     socket.send(sendBuffer);
   }
   
-  public inline function send(data:Bytes):Void {
-    sendFrame(new WebsocketFrame(WebsocketFrameType.Text, data, true));
+  public inline function send(data:Bytes, ?binary:Bool = false):Void {
+    sendFrame(new WebsocketFrame(
+         (binary ? WebsocketFrameType.Binary : WebsocketFrameType.Text)
+        ,data, true
+      ));
   }
   
   public function close():Void {

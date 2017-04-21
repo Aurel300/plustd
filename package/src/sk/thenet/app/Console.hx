@@ -3,41 +3,96 @@ package sk.thenet.app;
 import sk.thenet.FM;
 import sk.thenet.app.Keyboard;
 import sk.thenet.app.Keyboard.Key;
+import sk.thenet.app.asset.Bind as AssetBind;
+import sk.thenet.bmp.Bitmap;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Font;
+import sk.thenet.bmp.Surface;
 import sk.thenet.bmp.manip.*;
 import sk.thenet.event.EData;
 import sk.thenet.event.EKEvent.EKUp;
 import sk.thenet.event.Event;
 import sk.thenet.event.Source;
 import sk.thenet.net.ws.ConsoleLink;
-import sk.thenet.bmp.Bitmap;
 import sk.thenet.plat.Platform;
-import sk.thenet.bmp.Surface;
 
-#if flash
+/**
+##Debugging console##
 
-@:bitmap("graphics/font.png")
-private class AssetFont extends flash.display.BitmapData {}
+This class provides an interactive console to debug your application. It is
+entered by pressing `Enter`.
 
-#else
-
-private class AssetFont {}
-
-#end
-
+For now, this class requires a `"console_font"` bitmap asset to work.
+ */
 class Console extends Source {
   private static inline var HISTORY_SIZE:Int = 20;
   
   public var applicationInits:Array<sk.thenet.app.ApplicationInit>;
   public var applicationTick(default, null):Bool = true;
   
+  public var assetManager(default, set):AssetManager;
+  
+  private function set_assetManager(assetManager:AssetManager):AssetManager {
+    if (assetManager == null){
+      return null;
+    }
+    this.assetManager = assetManager;
+    assetManager.add(new AssetBind(
+       ["console_font"]
+      ,function(assetManager:AssetManager, event:Event):Bool {
+        trace("console got font");
+        var fluent = assetManager.getBitmap("console_font").fluent;
+        fluent = Font.spreadGrid(
+             fluent
+            ,8, 16
+            ,1, 1, 1, 1
+          );
+        fluent
+          << (new Recolour(0xEEEEEE))
+          << (new Shadow(0xFF666666, 1, 0))
+          << (new Glow(0x99333333));
+        font = Font.makeMonospaced(
+             fluent
+            ,32, 160
+            ,10, 18
+            ,32
+            ,-3, 0
+          );
+        renderHistory();
+        return true;
+      }));
+    return assetManager;
+  }
+  
+  public var keyboard(default, set):Keyboard;
+  
+  private function set_keyboard(keyboard:Keyboard):Keyboard {
+    if (keyboard == null){
+      return null;
+    }
+    this.keyboard = keyboard;
+    Platform.source.listen("kup", handleKey, true);
+    return keyboard;
+  }
+  
+  public var surface(default, set):Surface;
+  
+  private function set_surface(surface:Surface):Surface {
+    if (surface == null){
+      return null;
+    }
+    this.surface = surface;
+    height = (surface.bitmap.height >> 2) * 3; // 3/4
+    createBg();
+    renderHistory();
+    return surface;
+  }
+  
   private var pause:Bool = false;
-  private var frameCount:Int = 0;
+  private var frameCount:Int;
   private var frameSlow:Int = 0;
   
   private var font:Font;
-  private var surface:Surface;
   private var bg:Bitmap;
   private var historyCache:Bitmap;
   private var lastFrame:Bitmap;
@@ -52,10 +107,6 @@ class Console extends Source {
     history[HISTORY_SIZE - 2] = "+ plustd console";
     history[HISTORY_SIZE - 1] = "  by Aurel B%l& (thenet.sk)";
     super();
-  }
-  
-  public function attachKeyboard(keyboard:Keyboard):Void {
-    Platform.source.listen("kup", handleKey);
   }
   
   public function attachRemote(host:String, port:Int):Void {
@@ -99,6 +150,9 @@ class Console extends Source {
   }
   
   private function renderHistory():Void {
+    if (font == null || surface == null){
+      return;
+    }
     if (history.length > HISTORY_SIZE){
       history = history.slice(history.length - HISTORY_SIZE);
     }
@@ -156,7 +210,8 @@ class Console extends Source {
           case "full" | "f": surface.bitmap.height;
           case "half" | "h": surface.bitmap.height >> 1;
           case "default" | "d": (surface.bitmap.height >> 2) * 3;
-          case Std.parseInt(_) => h if (h != null): h;
+          case Std.parseInt(_) => h if (h != null):
+          FM.clampI(h, 10, surface.bitmap.height);
           case _: response = ["Invalid parameter!"]; height;
         });
         createBg();
@@ -174,6 +229,7 @@ class Console extends Source {
         response = ["Unpaused!"];
         
         case "slow" | "speed" | "frame" | "f" if (words.length == 2):
+        frameCount = 0;
         frameSlow = (switch (words[1]){
           case Std.parseInt(_) => h if (h != null): h;
           case _: response = ["Invalid parameter!"]; frameSlow;
@@ -209,33 +265,6 @@ class Console extends Source {
     return true;
   }
   
-  public function attachSurface(surface:Surface):Void {
-    this.surface = surface;
-    height = (surface.bitmap.height >> 2) * 3; // 3/4
-    createBg();
-    
-#if flash
-    
-    var fdata = Platform.createBitmapFlash(new AssetFont(0, 0)).fluent;
-    fdata = Font.spreadGrid(
-         fdata
-        ,8, 16
-        ,1, 1, 1, 1
-      );
-    fdata << (new Recolour(0xEEEEEE)) << (new Shadow(0xFF666666, 1, 0)) << (new Glow(0x99333333));
-    font = Font.makeMonospaced(
-         fdata
-        ,32, 160
-        ,10, 18
-        ,32
-        ,-3, 0
-      );
-    
-#end
-    
-    renderHistory();
-  }
-  
   public function tick():Void {
     if (surface == null){
       return;
@@ -265,7 +294,9 @@ class Console extends Source {
       } else {
         true;
       });
-    frameCount++;
-    frameCount %= frameSlow;
+    if (frameSlow != 0){
+      frameCount++;
+      frameCount %= frameSlow;
+    }
   }
 }

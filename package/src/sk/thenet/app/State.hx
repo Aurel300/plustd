@@ -9,15 +9,27 @@ Base class for representing individual application states. Subclasses should
 override relevant handlers and the `to()` and `from()` methods to define the
 desired behaviour.
 
-@see `sk.thenet.app.Application`
+@see `Application`
  */
 class State implements sk.thenet.fsm.State {
+  /**
+The id of this state.
+   */
   public var id(default, null):String;
   
   /**
 Used to access the `sk.thenet.app.Application` from within states.
    */
   public var app(default, null):Application;
+  
+  /**
+Convenience shortcut for `app.assetManager`.
+   */
+  public var am(get, never):AssetManager;
+  
+  private inline function get_am():AssetManager {
+    return app.assetManager;
+  }
   
   /**
 @param id The name given to this state. Once added to the application, it will

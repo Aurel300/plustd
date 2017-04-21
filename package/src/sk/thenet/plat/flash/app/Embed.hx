@@ -3,6 +3,11 @@ package sk.thenet.plat.flash.app;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
+/**
+Flash implementation of `sk.thenet.app.Embed`.
+
+@see `sk.thenet.app.Embed`
+ */
 class Embed {
   private static var counter:Int = 0;
   
@@ -36,8 +41,38 @@ class Embed {
         //,sub
       };
     return macro {
-      new AssetBitmap(
-          $id, $file, Platform.createBitmapFlash(new $ctpath(0, 0))
+      new sk.thenet.app.asset.Bitmap(
+          $id, $file, sk.thenet.plat.flash.Platform.createBitmapNative(new $ctpath(0, 0))
+        );
+    };
+  }
+  
+  public static macro function getSound(
+    id:ExprOf<String>, file:ExprOf<String>
+  ):Expr {
+    var ctype:TypeDefinition = {
+         fields: []
+        ,kind: TypeDefKind.TDClass({
+             name: "Sound"
+            ,pack: ["flash", "media"]
+          }, [], false)
+        ,meta: [{
+             name: ":sound"
+            ,params: [macro $file]
+            ,pos: Context.currentPos()
+          }]
+        ,name: "EmbeddedSound" + counter
+        ,pack: []
+        ,pos: Context.currentPos()
+      };
+    Context.defineType(ctype);
+    var ctpath:TypePath = {
+         name: "EmbeddedSound" + counter++
+        ,pack: []
+      };
+    return macro {
+      new sk.thenet.app.asset.Sound(
+          $id, $file, sk.thenet.plat.flash.Platform.createSoundNative(new $ctpath())
         );
     };
   }

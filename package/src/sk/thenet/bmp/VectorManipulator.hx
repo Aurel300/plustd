@@ -4,11 +4,8 @@ import haxe.ds.Vector;
 import sk.thenet.plat.Platform;
 import sk.thenet.bmp.Bitmap;
 
+@:dox(hide)
 class VectorManipulator extends Manipulator {
-  private function new(){
-    super();
-  }
-  
   private function manipulatePixel(
     vector:Vector<UInt>, i:Int, original:UInt
   ):UInt {

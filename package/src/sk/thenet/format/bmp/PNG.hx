@@ -607,21 +607,24 @@ if the image given is not encodable using any of the enabled colour types.
         }
         
         fpos = 0;
+        var vec = new Vector<Colour>(retWidth * retHeight);
+        var vi:Int = 0;
         switch (retColour){
           case 2: // truecolour
           for (y in 0...retHeight) for (x in 0...retWidth){
-            ret.set(x, y, 0xFF000000
+            vec[vi++] = 0xFF000000
               | (fdata.get(fpos++) << 16)
               | (fdata.get(fpos++) << 8)
-              | fdata.get(fpos++));
+              | fdata.get(fpos++);
           }
           
           case 6: // truecolour and alpha
           for (y in 0...retHeight) for (x in 0...retWidth){
             var p:UInt = fdata.readLEInt32(fpos); fpos += 4;
-            ret.set(x, y, (p << 24) | (p >>> 8));
+            vec[vi++] = (p << 24) | (p >>> 8);
           }
         }
+        ret.setVector(vec);
       }
       switch (chkType){
         case "IHDR": throw "IHDR twice";

@@ -4,13 +4,18 @@ import sk.thenet.FM;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Bitmap;
 
+/**
+##Bitmap manipulator - Shadow##
+
+A simple shadow created with the offset `(offsetX, offsetY)` from any
+non-transparent pixels.
+ */
 class Shadow extends Manipulator {
   public var colour(default, null):Colour;
   public var offsetX(default, null):Int;
   public var offsetY(default, null):Int;
   
   public function new(colour:Colour, x:Int, y:Int){
-    super();
     this.colour = colour;
     this.offsetX = x;
     this.offsetY = y;
