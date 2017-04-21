@@ -40,7 +40,6 @@ class Console extends Source {
     assetManager.add(new AssetBind(
        ["console_font"]
       ,function(assetManager:AssetManager, event:Event):Bool {
-        trace("console got font");
         var fluent = assetManager.getBitmap("console_font").fluent;
         fluent = Font.spreadGrid(
              fluent

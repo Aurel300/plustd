@@ -1,5 +1,6 @@
 package sk.thenet.stream.prng;
 
+import haxe.ds.Vector;
 import haxe.io.Bytes;
 import sk.thenet.stream.Stream;
 
@@ -49,5 +50,9 @@ without restrictions.
       ret.set(i, nextMod(range) + min);
     }
     return ret;
+  }
+  
+  public inline function nextElement<T>(array:Array<T>):T {
+    return array[nextMod(array.length)];
   }
 }

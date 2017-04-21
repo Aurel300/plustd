@@ -5,6 +5,12 @@ import sk.thenet.geom.Point2DI;
 import sk.thenet.stream.Stream;
 
 class Bresenham extends Stream<Point2DI> {
+  public static inline function getCurve(
+    from:Point2DI, to:Point2DI, ?ray:Bool = false
+  ):Curve {
+    return new Curve(new Bresenham(from, to, ray));
+  }
+  
   public function new(from:Point2DI, to:Point2DI, ?ray:Bool = false){
     var x = from.x;
     var y = from.y;

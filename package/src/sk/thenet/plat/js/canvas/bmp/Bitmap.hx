@@ -181,6 +181,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
         src.native, 0, 0, src.width, src.height, x, y, src.width, src.height
       );
     changed = true;
+    getVector();
   }
   
   public inline function blitAlphaRect(

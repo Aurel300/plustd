@@ -158,11 +158,13 @@ Constructs the application and initialises specific systems based on the
   
   private function handleTick(event:ETick):Bool {
     if (assetManager != null && preloader != null && currentState == preloader){
+      preloader.progress(assetManager.assets);
+      /*
       if (assetManager.assetsLoaded){
         applyState(initialState);
       } else {
         preloader.progress(assetManager.assets);
-      }
+      }*/
     }
     if (console != null){
       if (console.applicationTick){

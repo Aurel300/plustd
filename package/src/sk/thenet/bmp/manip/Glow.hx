@@ -24,10 +24,10 @@ class Glow extends Manipulator {
       if ((vec[i] & 0xFF000000) != 0){
         //vec[i] = 0xFF00FFFF;
         // pass
-      } else if ((x >= 0 && (ovec[i - 1] & 0xFF000000) != 0)
-          || (y >= 0 && (ovec[i - bitmap.width] & 0xFF000000) != 0)
-          || (x < bitmap.width && (ovec[i + 1] & 0xFF000000) != 0)
-          || (y < bitmap.height && (ovec[i + bitmap.width] & 0xFF000000) != 0)){
+      } else if ((x > 0 && (ovec[i - 1] & 0xFF000000) != 0)
+          || (y > 0 && (ovec[i - bitmap.width] & 0xFF000000) != 0)
+          || (x < bitmap.width - 1 && (ovec[i + 1] & 0xFF000000) != 0)
+          || (y < bitmap.height - 1 && (ovec[i + bitmap.width] & 0xFF000000) != 0)){
         vec[i] = colour;
       }
       i++;

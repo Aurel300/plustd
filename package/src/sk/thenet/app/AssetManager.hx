@@ -117,7 +117,7 @@ Throws an error if the given asset is not a sound asset.
     if (!isLoaded(id)){
       return null;
     }
-    if (assetsMap.get(id).type != Bitmap){
+    if (assetsMap.get(id).type != Sound){
       throw "asset type mismatch";
     }
     return (cast (assetsMap.get(id)):AssetSound).current;

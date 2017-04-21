@@ -31,6 +31,7 @@ Multiple operations can be chained:
       >> (new Cut(10, 10, 20, 20)) // cut a 20x20 region at (10, 10) from bitmap
       << (new Invert()) // invert it
       << (new Grayscale()); // make it grayscale
+
 ```
 
 @see `Bitmap`
