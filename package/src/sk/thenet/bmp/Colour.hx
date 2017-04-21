@@ -88,6 +88,31 @@ Converts the colour to a string in the format: `0xAARRGGBB`.
   }
   
   /**
+Blends this colour over `dest` using the alpha blending algorithm.
+   */
+  public inline function blendWith(dest:Colour):Colour {
+    return (dest.ai == 255
+      ? Colour.fromARGBf(
+             1
+            ,rf * af + dest.rf * (1 - af)
+            ,gf * af + dest.gf * (1 - af)
+            ,bf * af + dest.bf * (1 - af)
+          )
+      : (dest.ai == 0 && ai == 0
+        ? 0
+        : {
+            var dstaf = dest.af * (1 - af);
+            var outaf = af + dstaf;
+            Colour.fromARGBf(
+                 outaf
+                ,(rf * af + dest.rf * dstaf) / outaf
+                ,(gf * af + dest.gf * dstaf) / outaf
+                ,(bf * af + dest.bf * dstaf) / outaf
+              );
+          }));
+  }
+  
+  /**
 Padded integer-based alpha channel of this colour.
    */
   public var au(get, never):UInt;
@@ -229,6 +254,13 @@ Float-based alpha channel of this colour.
    */
   public inline function setAf(val:Float):Colour {
     return setAi(Std.int(val * 255));
+  }
+  
+  /**
+@return A new colour copied from this one, but with its `af` set to `val * af`.
+   */
+  public inline function mulAf(val:Float):Colour {
+    return setAi(Std.int(ai * val));
   }
   
   /**
