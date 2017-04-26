@@ -31,7 +31,7 @@ class PerlinNoise {
     if (p.x == 0 && p.y == 0){
       p = new Point2DF(1, 1);
     }
-    p = p.unit();
+    p.unitM();
     cacheValues.push(p);
     return p;
   }
