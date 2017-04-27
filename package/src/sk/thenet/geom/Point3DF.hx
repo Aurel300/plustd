@@ -30,11 +30,11 @@ The z coordinate.
   public var z:Float;
   
   /**
-Magnitude of this point.
+Length of this point (as a vector).
    */
-  public var magnitude(get, never):Float;
+  public var length(get, never):Float;
   
-  private inline function get_magnitude():Float {
+  private inline function get_length():Float {
     return Math.sqrt(x * x + y * y + z * z);
   }
   
@@ -101,18 +101,17 @@ Changes the signs of the coordinates of this point.
   }
   
   /**
-@return A point with the same direction as this one, but its magnitude equal to
-1.
+@return A point with the same direction as this one, but its length equal to 1.
    */
   public inline function unitC():Point3DF {
-    return scaleC(1 / magnitude);
+    return scaleC(1 / length);
   }
   
   /**
-Scales this point so that its magnitude is 1.
+Scales this point so that its length is 1.
    */
   public inline function unitM():Void {
-    scaleM(1 / magnitude);
+    scaleM(1 / length);
   }
   
   /**
