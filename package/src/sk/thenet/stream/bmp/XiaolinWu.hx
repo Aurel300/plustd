@@ -6,6 +6,12 @@ import sk.thenet.geom.Point2DI1DF;
 import sk.thenet.stream.Stream;
 
 class XiaolinWu extends Stream<Point2DI1DF> {
+  public static inline function getCurve(
+    from:Point2DF, to:Point2DF, ?ray:Bool = false
+  ):SmoothCurve {
+    return new SmoothCurve(new XiaolinWu(from, to, ray));
+  }
+  
   public function new(from:Point2DF, to:Point2DF, ?ray:Bool = false){
     var steep = FM.absF(to.y - from.y) > FM.absF(to.x - from.x);
     var x1:Float = from.x;

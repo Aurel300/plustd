@@ -42,6 +42,15 @@ abstract FluentBitmap(Bitmap) from Bitmap to Bitmap {
     this = bitmap;
   }
   
+  /**
+The bitmap this fluent bitmap is wrapping. Equivalent to casting to `Bitmap`.
+   */
+  public var bitmap(get, never):Bitmap;
+  
+  private inline function get_bitmap():Bitmap {
+    return this;
+  }
+  
   @:op(A >> B)
   public inline function extract(manipulator:Manipulator):FluentBitmap {
     return new FluentBitmap(manipulator.extract(this));

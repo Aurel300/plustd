@@ -11,6 +11,17 @@ class Bresenham extends Stream<Point2DI> {
     return new Curve(new Bresenham(from, to, ray));
   }
   
+  public static function getTopDown(from:Point2DI, to:Point2DI):Bresenham {
+    if (from.y > to.y){
+      return new Bresenham(to, from);
+    } else if (from.y == to.y && from.x > to.x){
+      return new Bresenham(to, from);
+    }
+    return new Bresenham(from, to);
+  }
+  
+  public var yLong(default, null):Bool;
+  
   public function new(from:Point2DI, to:Point2DI, ?ray:Bool = false){
     var x = from.x;
     var y = from.y;
@@ -20,6 +31,8 @@ class Bresenham extends Stream<Point2DI> {
     
     var dy = FM.absI(to.y - y);
     var sy = y < to.y ? 1 : -1; 
+    
+    yLong = dy > dx;
     
     var err:Float = (dx > dy ? dx : -dy) / 2;
     

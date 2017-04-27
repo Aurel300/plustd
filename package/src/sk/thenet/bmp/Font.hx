@@ -2,6 +2,7 @@ package sk.thenet.bmp;
 
 import haxe.ds.Vector;
 import sk.thenet.bmp.Bitmap;
+import sk.thenet.geom.Point2DI;
 import sk.thenet.plat.Platform;
 
 /**
@@ -94,8 +95,9 @@ Source bitmap data for the font.
    */
   public var data(default, null):Bitmap;
   
+  public var rects:Vector<Int>;
+  
   private var offset:Int;
-  private var rects:Vector<Int>;
   
   private function new(data:Bitmap, offset:Int, rects:Vector<Int>){
     this.data = data;
@@ -105,31 +107,80 @@ Source bitmap data for the font.
   
   /**
 Renders the given `text` to the given `target` bitmap at the point `(x, y)`.
+
+The additional parameters can be used to achieve a (very simple) paragraph
+indent - if the given `sx` is smaller than `x`, any lines following the first
+will be to the left of the first.
+
+If `fbuffer` is not `null`, a special syntax is enabled: `$A` switches the
+rendering font to `fbuffer[0]`, `$B` to `fbuffer[1]`, etc. `$$` can be used when
+a dollar sign is needed.
+
+@param target Bitmap to which the text will be rendered.
+@param x X coordinate at which to start rendering the text.
+@param y Y coordinate at which to start rendering the text.
+@param text The message to render.
+@param sx Starting x coordinate (x is reset to this on new lines). Defaults to
+`x`.
+@param sy Starting y coordinate. Defaults to `y`.
+@param fbuffer An array of fonts that can be chosen using the syntax described
+above.
    */
-  public function render(target:Bitmap, x:Int, y:Int, text:String):Void {
-    var cx:Int = x;
-    var cy:Int = y;
-    for (i in 0...text.length){
+  public function render(
+     target:Bitmap, x:Int, y:Int, text:String
+    ,?sx:Int, ?sy:Int, ?fbuffer:Array<Font>
+  ):Point2DI {
+    if (sx == null){
+      sx = x;
+    }
+    if (sy == null){
+      sy = y;
+    }
+    var xmax = x;
+    var ymax = y;
+    var i = 0;
+    while (i < text.length){
       var ch = text.charAt(i);
       var cc = text.charCodeAt(i);
-      switch (ch){
-        case "\n":
-        cx = x;
-        cy += rects[3];
-        
-        case _ if (cc >= offset && cc < offset + rects.length):
-        cc = (cc - offset) * RECT_SIZE;
-        if (FM.withinI(cx, 0, target.width - 1)
-            && FM.withinI(cy, 0, target.height - 1)){
+      var cr = (cc - offset) * RECT_SIZE;
+      inline function renderChar():Void {
+        if (   FM.withinI(x, -rects[cr + 2], target.width  - 1 + rects[cr + 2])
+            && FM.withinI(y, -rects[cr + 3], target.height - 1 + rects[cr + 3])){
           target.blitAlphaRect(
-               data, cx, cy
-              ,rects[cc], rects[cc + 1], rects[cc + 2], rects[cc + 3]
+               data, x, y
+              ,rects[cr], rects[cr + 1], rects[cr + 2], rects[cr + 3]
             );
         }
-        cx += rects[cc + 4];
+        x += rects[cr + 4];
+      }
+      switch (ch){
+        case "\n":
+        x = sx;
+        y += rects[5];
+        
+        case "$" if (i < text.length - 1 && fbuffer != null):
+        if (text.charAt(i + 1) == "$"
+            || !FM.withinI(text.charCodeAt(i + 1) - 65, 0, fbuffer.length - 1)){
+          if (cc >= offset && cc < offset + rects.length){
+            renderChar();
+          }
+          i++;
+        } else {
+          var subret = fbuffer[text.charCodeAt(i + 1) - 65].render(
+              target, x, y, text.substr(i + 2), sx, sy, fbuffer
+            );
+          return new Point2DI(FM.maxI(xmax, subret.x), FM.maxI(ymax, subret.y));
+        }
+        
+        case _ if (cc >= offset && cc < offset + rects.length):
+        renderChar();
         
         case _:
       }
+      if (x + rects[cr + 4] > xmax) xmax = x + rects[cr + 4];
+      if (y + rects[5] > ymax) ymax = y + rects[5];
+      i++;
     }
+    return new Point2DI(xmax, ymax);
   }
 }
