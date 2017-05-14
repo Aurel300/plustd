@@ -1,19 +1,18 @@
-package sk.thenet.plat.flash.bmp;
+package sk.thenet.plat.common.bmp;
 
-#if flash
+#if (!js && !flash)
 
 import haxe.ds.Vector;
-import flash.display.BitmapData;
 import sk.thenet.FM;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.FluentBitmap;
 
 /**
-Flash implementation of `sk.thenet.bmp.IBitmap`.
+Haxe implementation of `sk.thenet.bmp.IBitmap`.
 
 @see `sk.thenet.bmp.IBitmap`
  */
-@:allow(sk.thenet.plat.flash)
+@:allow(sk.thenet.plat)
 class Bitmap implements sk.thenet.bmp.IBitmap {
   public var height(default, null):Int;
   
@@ -25,33 +24,29 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     return new FluentBitmap(this);
   }
   
-  private var native:BitmapData;
+  private var native:Vector<Colour>;
   
-  private function new(native:BitmapData){
-    this.native = native;
-    width = native.width;
-    height = native.height;
+  private function new(width:Int, height:Int, colour:Colour){
+    native = new Vector<Colour>(width * height);
+    this.width = width;
+    this.height = height;
+    fill(colour);
   }
   
-  public function debug():Void {
-    var b = new flash.display.Bitmap(native);
-    flash.Lib.current.addChild(b);
-  }
-  
-  public inline function get(x:Int, y:Int):UInt {
-    return native.getPixel32(x, y);
+  public inline function get(x:Int, y:Int):Colour {
+    return native[x + y * width];
   }
   
   public inline function set(x:Int, y:Int, colour:Colour):Void {
-    native.setPixel32(x, y, colour);
+    native[x + y * width] = colour;
   }
   
   public inline function getVector():Vector<Colour> {
-    return (cast native.getVector(native.rect):Vector<UInt>);
+    return native;
   }
   
   public inline function setVector(vector:Vector<Colour>):Void {
-    native.setVector(native.rect, (cast vector:flash.Vector<UInt>));
+    native = vector;
   }
   
   public function getVectorRect(
@@ -61,9 +56,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
-    return (cast native.getVector(
-        new flash.geom.Rectangle(x, y, width, height)
-      ):Vector<UInt>);
+    return null;
   }
   
   public function setVectorRect(
@@ -73,14 +66,13 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
-    native.setVector(
-        new flash.geom.Rectangle(x, y, width, height),
-        (cast vector:flash.Vector<UInt>)
-      );
+    
   }
   
   public inline function fill(colour:Colour):Void {
-    native.fillRect(native.rect, colour);
+    for (i in 0...native.length){
+      native[i] = colour;
+    }
   }
   
   public inline function fillRect(
@@ -90,23 +82,17 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
-    native.fillRect(new flash.geom.Rectangle(x, y, width, height), colour);
+    
   }
   
   public inline function blitAlpha(src:Bitmap, x:Int, y:Int):Void {
-    native.copyPixels(
-         src.native, src.native.rect
-        ,new flash.geom.Point(x, y), null, null, true
-      );
+    
   }
   
   public inline function blitAlphaRect(
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
-    native.copyPixels(
-         src.native, new flash.geom.Rectangle(srcX, srcY, srcW, srcH)
-        ,new flash.geom.Point(dstX, dstY), null, null, true
-      );
+    
   }
 }
 

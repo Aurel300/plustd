@@ -2,24 +2,30 @@ package sk.thenet.plat.dummy;
 
 import sk.thenet.app.Keyboard;
 import sk.thenet.app.Mouse;
-import sk.thenet.bmp.Colour;
-import sk.thenet.net.ws.Websocket;
-import sk.thenet.bmp.Bitmap;
 import sk.thenet.audio.Output;
-import sk.thenet.net.Socket;
+import sk.thenet.bmp.Bitmap;
+import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Surface;
 import sk.thenet.event.Source;
+import sk.thenet.net.Socket;
+import sk.thenet.net.ws.Websocket;
 
 /**
 ##Platform - Dummy##
 
 This is a dummy platform. It is provided as a fallback in case no other platform
 is detected. It also serves as the API documentation for public static methods
-which should be implemented by any platform.
+and properties which should be implemented by any platform.
 
 @see `sk.thenet.plat.dummy.Platform`
  */
 class Platform extends PlatformBase {
+  /**
+The object summarising the capabilities of this platform.
+   */
+  public static var capabilities(default, never):Capabilities
+    = new Capabilities();
+  
   /**
 The event source which is used to fire platform-dependent events. Events are
 only triggered after the appropriate `init*` method has been called.
@@ -49,53 +55,6 @@ If using `sk.thenet.app.Application`, use
   
   // private constructor to prevent instantiation
   private function new(){}
-  
-  /**
-Keyboard capable platforms support keyboard events.
-   */
-  public static var isKeyboardCapable(default, never):Bool = false;
-  
-  /**
-Mouse capable platforms support mouse events.
-   */
-  public static var isMouseCapable(default, never):Bool = false;
-  
-  /**
-Real-time capable platforms support a constant framerate and can fire regular
-tick events.
-   */
-  public static var isRealtimeCapable(default, never):Bool = false;
-  
-  /**
-Socket capable platforms can create a socket object which can be used to connect
-via TCP to a remote server on a given port.
-   */
-  public static var isSocketCapable(default, never):Bool = false;
-  
-  /**
-Socket server capable platforms can create a socket object and use it to listen
-for incoming TCP connections.
-   */
-  public static var isSocketServerCapable(default, never):Bool = false;
-  
-  /**
-Surface capable platforms can create a bitmap surface which the application can
-use to display information, components, etc. to the user.
-   */
-  public static var isSurfaceCapable(default, never):Bool = false;
-  
-  /**
-Websocket capable platforms can connect via the websocket protocol to a remote
-server. This is separate from `isSocketCapable`, because JavaScript in the
-browser can connect to Websocket servers, but not arbitrary socket servers.
-   */
-  public static var isWebocketCapable(default, never):Bool = false;
-  
-  /**
-Window capable platforms can create a main window with a title and display it
-in the window system of the underlying OS.
-   */
-  public static var isWindowCapable(default, never):Bool = false;
   
   /**
 Initialises the main frame ticker and starts triggering the frame event.

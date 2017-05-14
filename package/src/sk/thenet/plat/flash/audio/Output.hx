@@ -1,5 +1,7 @@
 package sk.thenet.plat.flash.audio;
 
+#if flash
+
 import haxe.ds.Vector;
 import flash.media.Sound;
 import flash.media.SoundChannel;
@@ -57,3 +59,5 @@ class Output implements sk.thenet.audio.IOutput {
   
   public dynamic function sample(offset:Float, buffer:Vector<Float>):Void {}
 }
+
+#end

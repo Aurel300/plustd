@@ -1,5 +1,7 @@
 package sk.thenet.plat.flash.bmp;
 
+#if flash
+
 import flash.display.Bitmap as NativeBitmap;
 import sk.thenet.bmp.Bitmap;
 
@@ -18,3 +20,5 @@ class Surface implements sk.thenet.bmp.ISurface {
     this.bitmap = bitmap;
   }
 }
+
+#end

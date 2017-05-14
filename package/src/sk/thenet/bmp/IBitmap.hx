@@ -46,7 +46,7 @@ return `0`.
 
 @return 32-bit ARGB colour of the pixel at `(x, y)`.
    */
-  public function get(x:Int, y:Int):UInt;
+  public function get(x:Int, y:Int):Colour;
   
   /**
 Sets the colour of the pixel at `(x, y)` to the given 32-bit ARGB colour. If
@@ -65,7 +65,7 @@ in this bitmap, use `setVector()` with the modified vector.
 
 @return A `haxe.ds.Vector` representing every pixel of this bitmap.
    */
-  public function getVector():Vector<UInt>;
+  public function getVector():Vector<Colour>;
   
   /**
 See `getVector()` for vector format.
@@ -87,7 +87,7 @@ of this bitmap.
    */
   public function getVectorRect(
     x:Int, y:Int, width:Int, height:Int
-  ):Vector<UInt>;
+  ):Vector<Colour>;
   
   /**
 See `getVector()` for vector format.

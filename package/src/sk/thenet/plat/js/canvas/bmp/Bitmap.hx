@@ -161,13 +161,45 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   public inline function fillRect(
     x:Int, y:Int, width:Int, height:Int, colour:Colour
   ):Void {
+    /*
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
+    */
     if (colour.ai != 255){
       c2d.clearRect(x, y, width, height);
     }
+    setFillColour(colour);
+    c2d.fillRect(x, y, width, height);
+    changed = true;
+  }
+  
+  public inline function setFillColour(c:Colour):Void {
+    c2d.fillStyle = 'rgba(${c.ri},${c.gi},${c.bi},${c.af})';
+  }
+  
+  public inline function toFillPattern():js.html.CanvasPattern {
+    return c2d.createPattern(native, "repeat");
+  }
+  
+  public inline function setFillPattern(pattern:js.html.CanvasPattern):Void {
+    c2d.fillStyle = pattern;
+  }
+  
+  public inline function fillRectStyled(
+    x:Int, y:Int, width:Int, height:Int
+  ):Void {
+    c2d.fillRect(x, y, width, height);
+  }
+  
+  public inline function fillRectAlpha(
+    x:Int, y:Int, width:Int, height:Int, colour:Colour
+  ):Void {
+    x = FM.clampI(x, 0, this.width);
+    y = FM.clampI(y, 0, this.height);
+    width = FM.clampI(width, 1, this.width - x);
+    height = FM.clampI(height, 1, this.height - y);
     inline function colourToDOM(c:Colour):String {
       return 'rgba(${c.ri}, ${c.gi}, ${c.bi}, ${c.af})';
     }
@@ -181,12 +213,14 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
         src.native, 0, 0, src.width, src.height, x, y, src.width, src.height
       );
     changed = true;
-    getVector();
   }
   
   public inline function blitAlphaRect(
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
+    if (srcW <= 0 || srcH <= 0){
+      return;
+    }
     c2d.drawImage(src.native, srcX, srcY, srcW, srcH, dstX, dstY, srcW, srcH);
     changed = true;
   }

@@ -1,5 +1,7 @@
 package sk.thenet.plat.flash.net;
 
+#if flash
+
 import haxe.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
@@ -54,3 +56,5 @@ class Socket extends Source implements sk.thenet.net.ISocket {
     socket.close();
   }
 }
+
+#end

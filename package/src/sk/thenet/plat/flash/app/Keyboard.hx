@@ -1,5 +1,7 @@
 package sk.thenet.plat.flash.app;
 
+#if flash
+
 import haxe.ds.Vector;
 import flash.events.KeyboardEvent;
 import sk.thenet.app.Keyboard as AppKeyboard;
@@ -86,3 +88,5 @@ class Keyboard extends AppKeyboard {
     return new EKEvent.EKUp(source, key);
   }
 }
+
+#end

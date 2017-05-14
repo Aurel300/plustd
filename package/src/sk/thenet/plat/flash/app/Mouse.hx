@@ -1,5 +1,7 @@
 package sk.thenet.plat.flash.app;
 
+#if flash
+
 import flash.events.MouseEvent;
 import sk.thenet.FM;
 import sk.thenet.app.Mouse as AppMouse;
@@ -47,3 +49,5 @@ class Mouse extends AppMouse {
     return new EMEvent.EMUp(source, x, y);
   }
 }
+
+#end

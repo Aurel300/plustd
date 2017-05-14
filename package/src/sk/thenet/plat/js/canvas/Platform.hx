@@ -13,6 +13,7 @@ import sk.thenet.app.Application;
 import sk.thenet.bmp.Colour;
 import sk.thenet.event.ETick;
 import sk.thenet.event.*;
+import sk.thenet.plat.Capabilities;
 import sk.thenet.plat.js.common.app.Keyboard;
 import sk.thenet.plat.js.common.app.Mouse;
 import sk.thenet.plat.js.common.audio.Output;
@@ -28,14 +29,17 @@ The JavaScript / Canvas platform.
 @see `sk.thenet.plat.Platform`
  */
 class Platform extends sk.thenet.plat.PlatformBase {
+  public static var capabilities(default, never):Capabilities
+    = new Capabilities([
+         Keyboard
+        ,Mouse
+        ,Realtime
+        ,Surface
+        ,Websocket
+      ]);
+  
   public static var keyboard(default, null):Keyboard;
   public static var mouse   (default, null):Mouse;
-  
-  public static var isKeyboardCapable (default, never):Bool = true;
-  public static var isMouseCapable    (default, never):Bool = true;
-  public static var isRealtimeCapable (default, never):Bool = true;
-  public static var isSurfaceCapable  (default, never):Bool = true;
-  public static var isWebsocketCapable(default, never):Bool = true;
   
   private static var scale:Int = 0;
   private static var canvas:CanvasElement;

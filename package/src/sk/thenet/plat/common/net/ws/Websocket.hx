@@ -1,5 +1,7 @@
 package sk.thenet.plat.common.net.ws;
 
+#if (!js)
+
 import haxe.crypto.Base64;
 import haxe.crypto.Sha1;
 import haxe.ds.Vector;
@@ -388,3 +390,5 @@ private abstract WebsocketFrameType(Int) from Int to Int {
   var Control6 = 14;
   var Control7 = 15;
 }
+
+#end

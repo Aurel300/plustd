@@ -145,6 +145,7 @@ class PlatformBase {
       }
     }
     for (support in [
+      /*
          "isKeyboardCapable"
         ,"isMouseCapable"
         ,"isRealtimeCapable"
@@ -153,6 +154,8 @@ class PlatformBase {
         ,"isSurfaceCapable"
         ,"isWebsocketCapable"
         ,"isWindowCapable"
+      */
+         "capabilities"
         ,"keyboard"
         ,"mouse"
         ,"source"
@@ -173,6 +176,11 @@ class PlatformBase {
       } else {
         modified = true;
         var tp = (switch(support){
+            case "capabilities": {
+                 name: "Capabilities"
+                ,pack: ["sk", "thenet", "plat"]
+                ,params: []
+              };
             case "keyboard": {
                  name: "Keyboard"
                 ,pack: ["sk", "thenet", "app"]
@@ -195,16 +203,24 @@ class PlatformBase {
               };
           });
         var np = (switch (support){
-            case "source": {
+            case "capabilities": {
                  expr: ENew({
-                     name: "Source"
-                    ,pack: ["sk", "thenet", "event"]
+                     name: "Capabilities"
+                    ,pack: ["sk", "thenet", "plat"]
                     ,params: []
                   }, [])
                 ,pos: Context.currentPos()
               };
             case "keyboard" | "mouse": {
                  expr: EConst(CIdent("null"))
+                ,pos: Context.currentPos()
+              };
+            case "source": {
+                 expr: ENew({
+                     name: "Source"
+                    ,pack: ["sk", "thenet", "event"]
+                    ,params: []
+                  }, [])
                 ,pos: Context.currentPos()
               };
             case _: {

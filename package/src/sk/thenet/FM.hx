@@ -55,6 +55,20 @@ Shorthand for a pseudo-random number generator. Initialised by default to
   }
   
   /**
+@return `1` if `x` is positive, `-1` if `x` is negative, `0` otherwise.
+  */
+  public static inline function signF(x:Float):Int {
+    return (x == 0 ? 0 : (x < 1 ? -1 : 1));
+  }
+  
+  /**
+@return `1` if `x` is positive, `-1` if `x` is negative, `0` otherwise.
+  */
+  public static inline function signI(x:Int):Int {
+    return (x == 0 ? 0 : (x < 1 ? -1 : 1));
+  }
+  
+  /**
 @return `x`, rounded up to the nearest integer.
    */
   public static inline function ceil(x:Float):Int {

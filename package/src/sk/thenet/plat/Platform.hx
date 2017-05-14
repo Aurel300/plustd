@@ -24,8 +24,8 @@ Currently, plustd provides these `Platform` subclasses:
 
  - `sk.thenet.plat.cppsdl.Platform` - C++ / SDL / OpenGL (TODO)
  - `sk.thenet.plat.flash.Platform` - Adobe Flash
- - `sk.thenet.plat.jsca.Platform` - Javascript / Canvas (TODO)
- - `sk.thenet.plat.jsgl.Platform` - Javascript / WebGL (TODO, enabled
+ - `sk.thenet.plat.js.canvas.Platform` - Javascript / Canvas
+ - `sk.thenet.plat.js.webgl.Platform` - Javascript / WebGL (TODO, enabled
 when `-D js-webgl`)
  - `sk.thenet.plat.neko.Platform` - Neko VM
 
@@ -52,12 +52,13 @@ fields (using an autobuild macro) and add defaults if any are missing.
     }
 ```
 
-Similar steps have to be taken for `typedef`s:
+Similar steps have to be taken for other `typedef`s:
 
- - `Bitmap`
- - `Output`
- - `Socket`
- - `Surface`
+ - `sk.thenet.audio.Output`
+ - `sk.thenet.bmp.Bitmap`
+ - `sk.thenet.bmp.Surface`
+ - `sk.thenet.net.Socket`
+ - `sk.thenet.net.ws.Websocket`
  */
 typedef Platform =
 #if cpp

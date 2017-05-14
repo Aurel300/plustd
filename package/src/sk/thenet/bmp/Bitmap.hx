@@ -16,6 +16,6 @@ typedef Bitmap =
 #elseif js
     sk.thenet.plat.js.canvas.bmp.Bitmap
 #else
-    IBitmap
+    sk.thenet.plat.common.bmp.Bitmap
 #end
   ;

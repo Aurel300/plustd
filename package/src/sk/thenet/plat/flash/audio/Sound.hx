@@ -1,5 +1,7 @@
 package sk.thenet.plat.flash.audio;
 
+#if flash
+
 import sk.thenet.audio.Sound.LoopMode;
 import flash.events.Event;
 import flash.media.Sound as NativeSound;
@@ -45,3 +47,5 @@ class Sound implements sk.thenet.audio.ISound {
     channels = [];
   }
 }
+
+#end

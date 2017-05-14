@@ -2,6 +2,16 @@ package sk.thenet.anim;
 
 import sk.thenet.FM;
 
+/**
+##Timing function##
+
+This is a wrapper for functions which can act as timing functions. Functions
+which take inputs in `[0, 1]` and generally output values in `[0, 1]`, ensuring
+that the inputs `0` and `1` are mapped to the same number, qualify as timing
+functions (although this assertion is not made in code).
+
+A couple of standard timing functions are also provided.
+ */
 @:callable
 abstract Timing(Float->Float) from (Float->Float) to (Float->Float) {
   public static var linear(default, null):Timing

@@ -53,16 +53,16 @@ class Quaternion {
 Note: this does not ensure unit length - if the result is to be used as a
 versor, it has to be normalised using `unitM()`.
 
-@return The linear interpolation of this quaternion and `other`.
+@return The linear interpolation of quaternions `a` and `b`.
    */
   public static inline function interpolate(
-    other:Quaternion, prog:Float
+    a:Quaternion, b:Quaternion, prog:Float
   ):Quaternion {
     return new Quaternion(
-         a * (1 - prog) + other.a * prog
-        ,b * (1 - prog) + other.b * prog
-        ,c * (1 - prog) + other.c * prog
-        ,d * (1 - prog) + other.d * prog
+         a.a * (1 - prog) + b.a * prog
+        ,a.b * (1 - prog) + b.b * prog
+        ,a.c * (1 - prog) + b.c * prog
+        ,a.d * (1 - prog) + b.d * prog
       );
   }
   
@@ -192,7 +192,7 @@ Scales this quaternion so that its length is 1.
   /**
 Scales this quaternion by a scalar `factor`.
    */
-  public inline function scaleM(x:Float):Quaternion {
+  public inline function scaleM(x:Float):Void {
     multiplyM(Quaternion.ofReal(x));
   }
   
@@ -211,7 +211,7 @@ Scales this quaternion by a scalar `factor`.
   /**
 Multiplies this quaternion by `other`.
    */
-  public inline function multiplyM(other:Quaternion):Quaternion {
+  public inline function multiplyM(other:Quaternion):Void {
     var na = a * other.a - b * other.b - c * other.c - d * other.d;
     var nb = a * other.b + b * other.a + c * other.d - d * other.c;
     var nc = a * other.c - b * other.d + c * other.a + d * other.b;
