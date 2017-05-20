@@ -179,9 +179,9 @@ class M {
       Compiler.define("no-compilation");
     }
     
-    Context.onAfterTyping((_) -> log("onAfterTyping"));
-    Context.onGenerate((_) -> log("onGenerate"));
-    Context.onAfterGenerate(() -> {
+    //Context.onAfterTyping((_) -> log("onAfterTyping"));
+    //Context.onGenerate((_) -> log("onGenerate"));
+    Context.onAfterGenerate(function(){
         var buildEnd = Date.now();
         var secs = Std.int((buildEnd.getTime() - buildStart.getTime()) / 1000);
         var mins = 0;
