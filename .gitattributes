@@ -1,2 +1,2 @@
-package/include linguist-vendored
-package/lib linguist-vendored
+package/include/* linguist-vendored
+package/lib/* linguist-vendored
