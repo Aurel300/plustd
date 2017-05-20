@@ -103,47 +103,10 @@ Constructs the application and initialises specific systems based on the
    */
   public function new(inits:Array<ApplicationInit>){
     fps = -1;
-    var fpsInit:Bool = false;
     states = [];
     statesMap = new Map<String, State>();
     for (init in inits){
-      switch (init){
-        case Assets(assets) if (assetManager == null):
-        assetManager = new AssetManager(assets);
-        
-        case Console if (console == null):
-        console = new Console();
-        
-        case ConsoleRemote(host, port):
-        console.attachRemote(host, port);
-        
-        case Framerate(fps) if (!fpsInit):
-        fpsInit = true;
-        this.fps = fps;
-        Platform.source.listen("tick", handleTick);
-        
-        case Keyboard if (keyboard == null):
-        keyboard = Platform.initKeyboard();
-        Platform.source.listen("kdown", handleKeyDown);
-        Platform.source.listen("kup",   handleKeyUp  );
-        
-        case Mouse if (mouse == null):
-        mouse = Platform.initMouse();
-        Platform.source.listen("mclick", handleMouseClick);
-        Platform.source.listen("mdown",  handleMouseDown );
-        Platform.source.listen("mmove",  handleMouseMove );
-        Platform.source.listen("mup",    handleMouseUp   );
-        
-        case Surface(width, height, scale) if (surface == null):
-        surface = Platform.initSurface(width, height, scale);
-        bitmap = surface.bitmap;
-        
-        case Window(title, width, height):
-        Platform.initWindow(title, width, height);
-        
-        case _:
-        throw "duplicate ApplicationInits";
-      }
+      handleInit(init);
     }
     if (console != null){
       if (assetManager != null){
@@ -153,6 +116,70 @@ Constructs the application and initialises specific systems based on the
       console.keyboard = keyboard;
       console.surface = surface;
       console.applicationInits = inits;
+    }
+  }
+  
+  private function handleInit(
+    init:ApplicationInit, ?required:Bool = true
+  ):Void {
+    inline function checkFeature(isPresent:Bool):Bool {
+      if (isPresent){
+        return true;
+      }
+      if (required){
+        throw "feature not available on this platform";
+      }
+      return false;
+    }
+    
+    switch (init){
+      case Assets(assets) if (assetManager == null):
+      assetManager = new AssetManager(assets);
+      
+      case Console if (console == null):
+      console = new Console();
+      
+      case ConsoleRemote(host, port):
+      console.attachRemote(host, port);
+      
+      case Framerate(fps) if (this.fps <= 0):
+      if (checkFeature(Platform.capabilities.realtime)){
+        this.fps = fps;
+        Platform.source.listen("tick", handleTick);
+      }
+      
+      case Keyboard if (keyboard == null):
+      if (checkFeature(Platform.capabilities.keyboard)){
+        keyboard = Platform.initKeyboard();
+        Platform.source.listen("kdown", handleKeyDown);
+        Platform.source.listen("kup",   handleKeyUp  );
+      }
+      
+      case Mouse if (mouse == null):
+      if (checkFeature(Platform.capabilities.mouse)){
+        mouse = Platform.initMouse();
+        Platform.source.listen("mclick", handleMouseClick);
+        Platform.source.listen("mdown",  handleMouseDown );
+        Platform.source.listen("mmove",  handleMouseMove );
+        Platform.source.listen("mup",    handleMouseUp   );
+      }
+      
+      case Surface(width, height, scale) if (surface == null):
+      if (checkFeature(Platform.capabilities.surface)){
+        surface = Platform.initSurface(width, height, scale);
+        bitmap = surface.bitmap;
+      }
+      
+      case Window(title, width, height):
+      if (checkFeature(Platform.capabilities.window)){
+        Platform.initWindow(title, width, height);
+      }
+      
+      case Optional(sub):
+      handleInit(sub, false);
+      
+      case _:
+      throw "duplicate ApplicationInits";
     }
   }
   
@@ -270,7 +297,9 @@ this function will never return on some Platforms.
     if (states.length < 1){
       throw "no states specified";
     }
-    assetManager.preload();
+    if (assetManager != null){
+      assetManager.preload();
+    }
     for (s in states){
       s.init();
     }

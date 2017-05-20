@@ -1,0 +1,5 @@
+-D PLUSTD_TARGET=flash
+-lib plustd
+-main Main.hx
+-swf-header 160:160:60:000000
+-swf demo.swf

@@ -1,0 +1,5 @@
+-D PLUSTD_TARGET=cppsdl.desktop
+-D PLUSTD_OS=osx
+-lib plustd
+-main Main.hx
+-cpp demo

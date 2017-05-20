@@ -18,10 +18,8 @@ extern class SDL {
   @:native("SDL_INIT_EVERYTHING") static var INIT_EVERYTHING(default, null):cpp.UInt32;
   @:native("SDL_INIT_NOPARACHUTE") static var INIT_NOPARACHUTE(default, null):cpp.UInt32;
   
-  //inline static var WINDOW_NONE:CreateWindowFlag = (cast 0:CreateWindowFlag);
   @:native("SDL_WINDOW_OPENGL") static var WINDOW_OPENGL(default, null):cpp.UInt32;
   
-  //inline static var RENDERER_NONE:CreateRendererFlag = (cast 0:CreateRendererFlag);
   @:native("SDL_RENDERER_SOFTWARE") static var RENDERER_SOFTWARE(default, null):cpp.UInt32;
   @:native("SDL_RENDERER_ACCELERATED") static var RENDERER_ACCELERATED(default, null):cpp.UInt32;
   @:native("SDL_RENDERER_PRESENTVSYNC") static var RENDERER_PRESENTVSYNC(default, null):cpp.UInt32;
@@ -34,6 +32,7 @@ extern class SDL {
   @:native("SDL_MOUSEBUTTONDOWN") static var MOUSEBUTTONDOWN(default, never):EventType;
   @:native("SDL_MOUSEBUTTONUP") static var MOUSEBUTTONUP(default, never):EventType;
   @:native("SDL_QUIT") static var QUIT(default, never):EventType;
+  @:native("AUDIO_F32") static var AUDIO_F32:AudioFormat;
   @:native("SDL_PIXELFORMAT_ARGB8888") static var PIXELFORMAT_ARGB8888(default, null):PixelFormatEnum;
   @:native("SDL_PIXELFORMAT_RGBA8888") static var PIXELFORMAT_RGBA8888(default, null):PixelFormatEnum;
   @:native("SDL_TEXTUREACCESS_STATIC") static var TEXTUREACCESS_STATIC(default, null):TextureAccess;
@@ -55,6 +54,7 @@ extern class SDL {
   
   // methods
   @:native("SDL_BlitSurface") static function blitSurface(src:SurfacePointer, srcrect:RectPointer, dst:SurfacePointer, dstrect:RectPointer):RendererPointer;
+  @:native("SDL_CloseAudioDevice") static function closeAudioDevice(device:Int):Void;
   @:native("SDL_ConvertSurfaceFormat") static function convertSurfaceFormat(src:SurfacePointer, pixel_format:PixelFormatEnum, flags:cpp.UInt32):SurfacePointer;
   @:native("SDL_CreateRenderer") static function createRenderer(win:WindowPointer, index:Int, flags:cpp.UInt32):RendererPointer;
   @:native("SDL_CreateRGBSurface") static function createRGBSurface(flags:cpp.UInt32, w:Int, h:Int, depth:Int,
@@ -73,6 +73,8 @@ extern class SDL {
   @:native("SDL_LockTexture") static function lockTexture(texture:TexturePointer, rect:RectPointer, dest:Dynamic, pitch:cpp.Reference<Int>):Int;
   @:native("SDL_LoadBMP") static function loadBMP(file:cpp.ConstCharStar):SurfacePointer;
   @:native("SDL_MUSTLOCK") static function mustLock(surface:SurfacePointer):Bool;
+  @:native("SDL_OpenAudioDevice") static function openAudioDevice(device:cpp.ConstCharStar, iscapture:Int, desired:AudioSpecPointer, obtained:AudioSpecPointer, changes:Int):Int;
+  @:native("SDL_PauseAudioDevice") static function pauseAudioDevice(device:Int, pause:Int):Void;
   @:native("SDL_PollEvent") static function pollEvent(event:EventPointer):Int;
   @:native("SDL_Quit") static function quit():Void;
   @:native("SDL_RenderClear") static function renderClear(renderer:RendererPointer):Int;
@@ -92,6 +94,7 @@ extern class SDL {
   @:native("SDL_UnlockSurface") static function unlockSurface(surface:SurfacePointer):Void;
   @:native("SDL_UnlockTexture") static function unlockTexture(texture:TexturePointer):Void;
   @:native("SDL_UpdateTexture") static function updateTexture(texture:TexturePointer, rect:RectPointer, pixels:cpp.Star<Dynamic>, pitch:Int):Void;
+  @:native("SDL_zero") static function zero(struct:cpp.Pointer<cpp.Void>):Void;
 }
 
 extern class Image {
@@ -139,11 +142,24 @@ abstract CreateRendererFlag(cpp.UInt32) {
 }
 */
 //@:native("SDL_EventType") extern class EventType {}
+@:native("SDL_AudioFormat") extern class AudioFormat {}
 abstract EventType(cpp.UInt32) {}
 @:native("SDL_PixelFormatEnum") extern class PixelFormatEnum {}
 @:native("SDL_TextureAccess") extern abstract TextureAccess(cpp.UInt32) from cpp.UInt32 to cpp.UInt32 {}
 @:native("SDL_BlendMode") extern class BlendMode {}
 
+@:native("::cpp::Reference<SDL_AudioSpec>") extern class AudioSpecPointer {
+  public var freq:Int;
+  public var format:AudioFormat;
+  public var channels:cpp.UInt8;
+  public var silence:cpp.UInt8;
+  public var samples:cpp.UInt16;
+  public var size:cpp.UInt32;
+  public var callback:cpp.Callable<cpp.Pointer<cpp.Void>->cpp.Pointer<cpp.UInt8>->Int->Void>;
+//  public var callback:cpp.Callable<Int->cpp.Star<cpp.UInt8>->Int->Void>;
+  //public var userdata:Int;
+  public var userdata:cpp.Pointer<cpp.Void>;
+}
 @:native("SDL_Event") extern class Event {}
 @:native("::cpp::Reference<SDL_Event>") extern class EventPointer {}
 @:native("::cpp::Reference<Mix_Chunk>") extern class MixChunkPointer {

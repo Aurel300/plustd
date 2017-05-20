@@ -37,6 +37,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
         ,Mouse
         ,Realtime
         ,Surface
+        ,Window
       ]);
   
   // prevent instantiation
@@ -157,7 +158,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
     return ret;
   }
   
-  public static inline function boot(func:Void->Void):Void {
+  public static function boot(func:Void->Void):Void {
     SDL.init(0);
     func();
   }

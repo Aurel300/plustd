@@ -55,4 +55,10 @@ results in a scaling factor of `2^1 = 2`, so the width and height are doubled.
 Initialise the main window.
    */
   Window(title:String, width:Int, height:Int);
+  
+  /**
+Initialise the given parameter only if available on the current platform. If the
+feature is not available, fails silently.
+   */
+  Optional(init:ApplicationInit);
 }
