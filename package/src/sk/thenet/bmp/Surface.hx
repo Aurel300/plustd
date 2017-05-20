@@ -1,23 +1,16 @@
 package sk.thenet.bmp;
 
-import sk.thenet.bmp.ISurface;
-
 /**
 ##Surface##
 
-This is a `typedef` aliased to the current platform-dependent surface
-implementation.
+This interface represents main surfaces that can be drawn onto.
 
-@see `sk.thenet.plat.Platform` for details and defining custom platforms.
-@see `sk.thenet.bmp.ISurface` for methods and properties available in
-implementations.
+Currently it does not serve much purpose, as it is only a wrapper for `Bitmap`.
  */
-typedef Surface =
-#if flash
-    sk.thenet.plat.flash.bmp.Surface
-#elseif js
-    sk.thenet.plat.js.canvas.bmp.Surface
-#else
-    ISurface
-#end
-  ;
+class Surface {
+  public var bitmap(default, null):Bitmap;
+  
+  public function new(bitmap:Bitmap){
+    this.bitmap = bitmap;
+  }
+}
