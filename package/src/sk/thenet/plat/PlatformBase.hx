@@ -19,10 +19,10 @@ class PlatformBase {
       switch (a){
         case TPath(ta):
         if (ta.name != tb.name) return false;
-        if (ta.pack.length != tb.pack.length) return false;
+        /*if (ta.pack.length != tb.pack.length) return false;
         for (i in 0...ta.pack.length){
           if (ta.pack[i] != tb.pack[i]) return false;
-        }
+        }*/
         return true;
         case _: return false;
       }
@@ -76,6 +76,15 @@ class PlatformBase {
         ]
         ,ret: {name: "Void", pack: [], params: []}
         ,retStrict: true
+      }, {
+         name: "createBitmap"
+        ,args: [
+           {type: {name: "Int", pack: [], params: []}, optional: false, value: null}
+          ,{type: {name: "Int", pack: [], params: []}, optional: false, value: null}
+          ,{type: {name: "Colour", pack: ["sk", "thenet", "bmp"], params: []}, optional: false, value: null}
+        ]
+        ,ret: {name: "Bitmap", pack: ["sk", "thenet", "bmp"], params: []}
+        ,retStrict: false
       }, {
          name: "createSocket"
         ,args: []

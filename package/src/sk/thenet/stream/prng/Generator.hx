@@ -55,4 +55,8 @@ without restrictions.
   public inline function nextElement<T>(array:Array<T>):T {
     return array[nextMod(array.length)];
   }
+  
+  public inline function nextBool():Bool {
+    return this.next() & 1 == 0;
+  }
 }

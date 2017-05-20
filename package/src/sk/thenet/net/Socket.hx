@@ -11,9 +11,9 @@ implementation.
 implementations.
  */
 typedef Socket =
-#if flash
+#if (PLUSTD_TARGET == "flash")
     sk.thenet.plat.flash.net.Socket
-#elseif neko
+#elseif (PLUSTD_TARGET == "neko")
     sk.thenet.plat.neko.Socket
 #else
     ISocket

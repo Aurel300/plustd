@@ -26,11 +26,10 @@ file and hot reloading is initialised).
    */
   public function new(id:String, ?filename:String, ?initial:PlatformBitmap){
     super(AssetType.Bitmap, id, filename);
+    current = initial;
     if (initial == null){
-      current = Platform.createBitmap(1, 1, 0);
       status = Loading(0);
     } else {
-      current = initial;
       status = Loaded;
     }
   }

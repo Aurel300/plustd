@@ -270,6 +270,13 @@ this function will never return on some Platforms.
     if (states.length < 1){
       throw "no states specified";
     }
+    assetManager.preload();
+    for (s in states){
+      s.init();
+    }
+    if (preloader != null){
+      preloader.init();
+    }
     if (assetManager != null && preloader != null){
       currentState = preloader;
     } else {

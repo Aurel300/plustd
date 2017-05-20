@@ -11,7 +11,7 @@ implementation.
 implementations.
  */
 typedef Websocket =
-#if js
+#if ((PLUSTD_TARGET == "js.canvas") || (PLUSTD_TARGET == "js.webgl"))
     sk.thenet.plat.js.common.net.ws.Websocket
 #else
     sk.thenet.plat.common.net.ws.Websocket

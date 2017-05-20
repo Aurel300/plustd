@@ -8,6 +8,26 @@ import haxe.ds.Vector;
 Utility class with some shortcut methods.
  */
 class U {
+  /*
+  public static var isProfiling:Bool = false;
+  public static var ptStart:Date;
+  public static var ptEnd:Date;
+  public static var ptParts:Map<String, Int>;
+  
+  public static function profileStart():Void {
+    isProfiling = true;
+    ptStart = Date.now();
+    ptParts = new Map<String, Int>;
+  }
+  
+  public static function profile(pos:String):Void {
+    if (!ptParts.exists(pos)){
+      ptParts.set(pos, []);
+    }
+    
+  }
+  */
+  
   public static inline function callNotNull<T, U>(func:T->U, val:T):U {
     return (val != null ? func(val) : null);
   }

@@ -11,6 +11,7 @@ import flash.events.MouseEvent;
 import flash.media.Sound as NativeSound;
 import sk.thenet.U;
 import sk.thenet.bmp.Colour;
+import sk.thenet.bmp.Surface;
 import sk.thenet.event.ETick;
 import sk.thenet.event.*;
 import sk.thenet.net.ws.Websocket;
@@ -20,7 +21,6 @@ import sk.thenet.plat.flash.app.Mouse;
 import sk.thenet.plat.flash.audio.Output;
 import sk.thenet.plat.flash.audio.Sound;
 import sk.thenet.plat.flash.bmp.Bitmap;
-import sk.thenet.plat.flash.bmp.Surface;
 import sk.thenet.plat.flash.net.Socket;
 
 /**
@@ -119,7 +119,7 @@ in favour of the ones  provided in the `-swf-header` haxe compiler option.
     native.scaleX = native.scaleY = (1 << scale);
     stage.addChild(native);
     Platform.scale = scale;
-    return new Surface(native, new Bitmap(bd));
+    return new Surface(new Bitmap(bd));
   }
   
   public static inline function createAudioOutput():Output {

@@ -42,6 +42,13 @@ be accessible with `app.getStateById(id)`.
   }
   
   /**
+Called when this state should be initialised. It is preferable to put state
+initialisation here to putting it in the constructor, as some `Platform`
+functions might fail on some platforms. This function is called only once.
+   */
+  public function init():Void {}
+  
+  /**
 Called when this state is entered.
    */
   public function to():Void {}

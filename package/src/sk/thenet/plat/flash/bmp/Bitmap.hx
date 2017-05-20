@@ -38,7 +38,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     flash.Lib.current.addChild(b);
   }
   
-  public inline function get(x:Int, y:Int):UInt {
+  public inline function get(x:Int, y:Int):Colour {
     return native.getPixel32(x, y);
   }
   
@@ -47,7 +47,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   }
   
   public inline function getVector():Vector<Colour> {
-    return (cast native.getVector(native.rect):Vector<UInt>);
+    return (cast native.getVector(native.rect):Vector<Colour>);
   }
   
   public inline function setVector(vector:Vector<Colour>):Void {
@@ -56,14 +56,14 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   public function getVectorRect(
     x:Int, y:Int, width:Int, height:Int
-  ):Vector<UInt> {
+  ):Vector<Colour> {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
     return (cast native.getVector(
         new flash.geom.Rectangle(x, y, width, height)
-      ):Vector<UInt>);
+      ):Vector<Colour>);
   }
   
   public function setVectorRect(

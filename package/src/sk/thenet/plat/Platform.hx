@@ -22,14 +22,16 @@ These have to be initialised with the `init*` methods beforehand. Similarly for
 
 Currently, plustd provides these `Platform` subclasses:
 
- - `sk.thenet.plat.cppsdl.Platform` - C++ / SDL / OpenGL (TODO)
+ - `sk.thenet.plat.cppsdl.desktop.Platform` - C++ / SDL / desktop
+ - `sk.thenet.plat.cppsdl.phone.Platform` - C++ / SDL / smart phone (TODO)
  - `sk.thenet.plat.flash.Platform` - Adobe Flash
  - `sk.thenet.plat.js.canvas.Platform` - Javascript / Canvas
- - `sk.thenet.plat.js.webgl.Platform` - Javascript / WebGL (TODO, enabled
-when `-D js-webgl`)
+ - `sk.thenet.plat.js.webgl.Platform` - Javascript / WebGL (TODO)
  - `sk.thenet.plat.neko.Platform` - Neko VM
 
 ####Defining custom platforms####
+
+(This needs to be rewritten, probably does not work anymore because of macros.)
 
 It is also possible to override the current platform and provide code to extend
 or modify the functionality of any givne platform. To do this, a file has to be
@@ -54,20 +56,26 @@ fields (using an autobuild macro) and add defaults if any are missing.
 
 Similar steps have to be taken for other `typedef`s:
 
+ - `sk.thenet.app.Embed`
  - `sk.thenet.audio.Output`
+ - `sk.thenet.audio.Sound`
  - `sk.thenet.bmp.Bitmap`
- - `sk.thenet.bmp.Surface`
+ - `sk.thenet.format.bmp.PNG`
  - `sk.thenet.net.Socket`
  - `sk.thenet.net.ws.Websocket`
  */
 typedef Platform =
-#if cpp
-    sk.thenet.plat.cppsdl.Platform
-#elseif flash
+#if (PLUSTD_TARGET == "cppsdl.desktop")
+    sk.thenet.plat.cppsdl.desktop.Platform
+#elseif (PLUSTD_TARGET == "cppsdl.phone")
+    sk.thenet.plat.cppsdl.phone.Platform
+#elseif (PLUSTD_TARGET == "flash")
     sk.thenet.plat.flash.Platform
-#elseif js
+#elseif (PLUSTD_TARGET == "js.canvas")
     sk.thenet.plat.js.canvas.Platform
-#elseif neko
+#elseif (PLUSTD_TARGET == "js.webgl")
+    sk.thenet.plat.js.webgl.Platform
+#elseif (PLUSTD_TARGET == "neko")
     sk.thenet.plat.neko.Platform
 #else
     sk.thenet.plat.dummy.Platform

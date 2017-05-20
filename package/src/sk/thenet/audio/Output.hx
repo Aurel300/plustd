@@ -11,9 +11,11 @@ implementation.
 implementations.
  */
 typedef Output =
-#if flash
+#if ((PLUSTD_TARGET == "cppsdl.desktop") || (PLUSTD_TARGET == "cppsdl.phone"))
+    sk.thenet.plat.cppsdl.common.audio.Output
+#elseif (PLUSTD_TARGET == "flash")
     sk.thenet.plat.flash.audio.Output
-#elseif js
+#elseif ((PLUSTD_TARGET == "js.canvas") || (PLUSTD_TARGET == "js.webgl"))
     sk.thenet.plat.js.common.audio.Output
 #else
     IOutput

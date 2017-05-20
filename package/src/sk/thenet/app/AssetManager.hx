@@ -72,11 +72,18 @@ class AssetManager {
       case _:
       if (a.status != Loaded){
         assetsLoaded = false;
-        a.preload();
       }
     }
     if (a.id != ""){
       assetsMap.set(a.id, a);
+    }
+  }
+  
+  public function preload():Void {
+    for (a in assets){
+      if (a.type != Bind && a.type != Trigger && a.status != Loaded){
+        a.preload();
+      }
     }
   }
   

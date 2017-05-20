@@ -1,7 +1,5 @@
 package sk.thenet.plat.common.bmp;
 
-#if (!js && !flash)
-
 import haxe.ds.Vector;
 import sk.thenet.FM;
 import sk.thenet.bmp.Colour;
@@ -95,5 +93,3 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     
   }
 }
-
-#end

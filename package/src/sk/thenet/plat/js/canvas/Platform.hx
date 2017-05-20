@@ -11,6 +11,7 @@ import js.html.MouseEvent;
 import sk.thenet.U;
 import sk.thenet.app.Application;
 import sk.thenet.bmp.Colour;
+import sk.thenet.bmp.Surface;
 import sk.thenet.event.ETick;
 import sk.thenet.event.*;
 import sk.thenet.plat.Capabilities;
@@ -19,7 +20,6 @@ import sk.thenet.plat.js.common.app.Mouse;
 import sk.thenet.plat.js.common.audio.Output;
 import sk.thenet.plat.js.common.net.ws.Websocket;
 import sk.thenet.plat.js.canvas.bmp.Bitmap;
-import sk.thenet.plat.js.canvas.bmp.Surface;
 
 /**
 ##Platform - JavaScript / Canvas##
