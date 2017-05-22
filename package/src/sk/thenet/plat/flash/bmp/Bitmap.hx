@@ -21,7 +21,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   public var fluent(get, never):FluentBitmap;
   
-  public inline function get_fluent():FluentBitmap {
+  private inline function get_fluent():FluentBitmap {
     return new FluentBitmap(this);
   }
   
@@ -31,11 +31,6 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     this.native = native;
     width = native.width;
     height = native.height;
-  }
-  
-  public function debug():Void {
-    var b = new flash.display.Bitmap(native);
-    flash.Lib.current.addChild(b);
   }
   
   public inline function get(x:Int, y:Int):Colour {

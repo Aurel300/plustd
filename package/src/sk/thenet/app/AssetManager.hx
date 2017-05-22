@@ -79,7 +79,7 @@ class AssetManager {
     }
   }
   
-  public function preload():Void {
+  private function preload():Void {
     for (a in assets){
       if (a.type != Bind && a.type != Trigger && a.status != Loaded){
         a.preload();

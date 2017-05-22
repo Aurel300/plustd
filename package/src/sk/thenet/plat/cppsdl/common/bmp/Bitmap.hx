@@ -26,7 +26,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   public var fluent(get, never):FluentBitmap;
   
-  public inline function get_fluent():FluentBitmap {
+  private inline function get_fluent():FluentBitmap {
     return new FluentBitmap(this);
   }
   

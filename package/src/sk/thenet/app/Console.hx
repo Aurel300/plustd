@@ -24,6 +24,7 @@ entered by pressing `Enter`.
 
 For now, this class requires a `"console_font"` bitmap asset to work.
  */
+@:allow(sk.thenet.app)
 class Console extends Source {
   private static inline var HISTORY_SIZE:Int = 20;
   
@@ -102,14 +103,14 @@ class Console extends Source {
   private var history:Array<String> = [];
   private var remote:ConsoleLink;
   
-  public function new(){
+  private function new(){
     history = [ for (i in 0...HISTORY_SIZE) "" ];
     history[HISTORY_SIZE - 2] = "+ plustd console";
     history[HISTORY_SIZE - 1] = "  by Aurel B%l& (thenet.sk)";
     super();
   }
   
-  public function attachRemote(host:String, port:Int):Void {
+  private function attachRemote(host:String, port:Int):Void {
     remote = new ConsoleLink();
     remote.listen("connect", handleConnect);
     remote.listen("data", handleData);
@@ -129,7 +130,7 @@ class Console extends Source {
     return true;
   }
   
-  public function monitor(file:String):Void {
+  private function monitor(file:String):Void {
     if (remote == null){
       return;
     }
@@ -265,7 +266,7 @@ class Console extends Source {
     return true;
   }
   
-  public function tick():Void {
+  private function tick():Void {
     if (surface == null){
       return;
     }
