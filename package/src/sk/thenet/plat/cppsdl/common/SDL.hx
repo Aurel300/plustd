@@ -5,7 +5,7 @@ package sk.thenet.plat.cppsdl.common;
 import haxe.ds.Vector;
 import sk.thenet.bmp.Colour;
 
-@:build(sk.thenet.plat.cppsdl.common.SDLMacro.master())
+@:build(sk.thenet.plat.cppsdl.common.SDLMacro.slave())
 extern class SDL {
   // flags
   @:native("SDL_INIT_TIMER") static var INIT_TIMER(default, null):cpp.UInt32;
@@ -19,6 +19,7 @@ extern class SDL {
   @:native("SDL_INIT_NOPARACHUTE") static var INIT_NOPARACHUTE(default, null):cpp.UInt32;
   
   @:native("SDL_WINDOW_OPENGL") static var WINDOW_OPENGL(default, null):cpp.UInt32;
+  @:native("SDL_WINDOW_ALLOW_HIGHDPI") static var WINDOW_ALLOW_HIGHDPI(default, null):cpp.UInt32;
   
   @:native("SDL_RENDERER_SOFTWARE") static var RENDERER_SOFTWARE(default, null):cpp.UInt32;
   @:native("SDL_RENDERER_ACCELERATED") static var RENDERER_ACCELERATED(default, null):cpp.UInt32;

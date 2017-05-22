@@ -104,10 +104,10 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     SDL.renderCopy(Platform.ren, tex, untyped __cpp__("NULL"), untyped __cpp__("NULL"));
     SDL.renderReadPixels(
          Platform.ren, untyped __cpp__("NULL"), 0
-//        ,cpp.Pointer.ofArray(ret.toData()).ptr, width * 4
-        ,cpp.Pointer.arrayElem(ret.toData(), ret.length - width).ptr, -width * 4
+        ,cpp.Pointer.ofArray(ret.toData()).ptr, width * 4
       );
     SDL.destroyTexture(tmp);
+    
     return ret;
   }
   
@@ -125,6 +125,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
+    y = this.height - y - height;
     untyped __cpp__("SDL_Rect rect");
     if (main && scale != 0){
       untyped __cpp__(
@@ -143,15 +144,16 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
          Platform.ren, SDL.PIXELFORMAT_ARGB8888, SDL.TEXTUREACCESS_TARGET
         ,width, height
       );
+    
     SDL.setRenderTarget(Platform.ren, tmp);
     SDL.setTextureBlendMode(tex, SDL.BLENDMODE_NONE);
     SDL.renderCopy(Platform.ren, tex, untyped __cpp__("&rect"), untyped __cpp__("NULL"));
     SDL.renderReadPixels(
          Platform.ren, untyped __cpp__("NULL"), 0
-//        ,cpp.Pointer.ofArray(ret.toData()).ptr, width * 4
-        ,cpp.Pointer.arrayElem(ret.toData(), ret.length - width).ptr, -width * 4
+        ,cpp.Pointer.ofArray(ret.toData()).ptr, width * 4
       );
     SDL.destroyTexture(tmp);
+    
     return ret;
   }
   
@@ -208,6 +210,34 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     SDL.unlockTexture(tex);
   }
   
+  public inline function blit(src:Bitmap, x:Int, y:Int):Void {
+    blitRect(src, x, y, 0, 0, src.width, src.height);
+  }
+  
+  public function blitRect(
+    src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
+  ):Void {
+    untyped __cpp__("SDL_Rect srcrect; SDL_Rect dstrect");
+    if (main && scale != 0){
+      untyped __cpp__(
+           "srcrect.x = {0}; srcrect.y = {1}; srcrect.w = {2}; srcrect.h = {3}"
+          ,srcX, srcY, srcW, srcH
+        );
+      untyped __cpp__(
+           "dstrect.x = {1} << {0}; dstrect.y = {2} << {0}; dstrect.w = {3} << {0}; dstrect.h = {4} << {0}"
+          ,scale, dstX, dstY, srcW, srcH
+        );
+    } else {
+      untyped __cpp__(
+           "srcrect.x = {0}; srcrect.y = {1}; srcrect.w = dstrect.w = {2}; srcrect.h = dstrect.h = {3}; dstrect.x = {4}; dstrect.y = {5}"
+          ,srcX, srcY, srcW, srcH, dstX, dstY
+        );
+    }
+    SDL.setRenderTarget(Platform.ren, main ? untyped __cpp__("NULL") : tex);
+    SDL.setTextureBlendMode(src.tex, SDL.BLENDMODE_NONE);
+    SDL.renderCopy(Platform.ren, src.tex, untyped __cpp__("&srcrect"), untyped __cpp__("&dstrect"));
+  }
+  
   public inline function blitAlpha(src:Bitmap, x:Int, y:Int):Void {
     blitAlphaRect(src, x, y, 0, 0, src.width, src.height);
   }
@@ -233,7 +263,6 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     }
     SDL.setRenderTarget(Platform.ren, main ? untyped __cpp__("NULL") : tex);
     SDL.setTextureBlendMode(src.tex, SDL.BLENDMODE_BLEND);
-    // no alpha: SDL.BLENDMODE_NONE
     SDL.renderCopy(Platform.ren, src.tex, untyped __cpp__("&srcrect"), untyped __cpp__("&dstrect"));
   }
 }

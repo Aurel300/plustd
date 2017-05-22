@@ -21,8 +21,13 @@ actually create a `Bitmap`, use `sk.thenet.plat.Platform.createBitmap()`.
 Many common bitmap operations were abstracted into the `bmp.manip` package,
 instead of being members of this interface.
 
-Note on the nomenclature: The Flash equivalent to this is
-`flash.display.BitmapData`, not `flash.display.Bitmap`.
+####Equivalent classes####
+
+`Bitmap` in plustd is roughly equivalent to these classes in other languages:
+
+ - C++ / SDL: `SDLTexture` (`SDLSurface` is not used!)
+ - Flash: `flash.display.BitmapData`
+ - JavaScript / Canvas: `CanvasElement` (with a 2D rendering context)
  */
 interface IBitmap {
   /**
@@ -36,7 +41,7 @@ The width of this bitmap, in pixels.
   public var width(default, null):Int;
   
   /**
-The `sk.thenet.bmp.FluentBitmap` for this bitmap.
+The fluent bitmap interface for this bitmap.
    */
   public var fluent(get, never):FluentBitmap;
   
@@ -57,8 +62,8 @@ writing outside the bounds of this bitmap, nothing happens.
   /**
 This function creates a vector for the entire bitmap. As noted in the class
 description, bitmap operations using vectors are usually faster than
-pixel-by-pixel manipulation. To get the  colour of the pixel at `(x, y)`, use
-`vector[x + y * width]`.
+pixel-by-pixel manipulation. To get the colour of the pixel at `(x, y)`, use
+`vector[x + y * width]`. Be careful about out of bounds access.
 
 The result of this function is never the same vector. To overwrite the data
 in this bitmap, use `setVector()` with the modified vector.
@@ -117,6 +122,21 @@ Replaces every pixel in the rectangle whose top-left point is at `(x, y)`, is
    */
   public function fillRect(
     x:Int, y:Int, width:Int, height:Int, colour:Colour
+  ):Void;
+  
+  /**
+Copies the (entire) given bitmap onto this one at `(x, y)`. Pixels are replaced,
+no alpha blending is done.
+   */
+  public function blit(src:Bitmap, x:Int, y:Int):Void;
+  
+  /**
+Copies a region of the given bitmap defined by the rectangle whose top-left
+point is at `(srcX, srcY)`, is `srcW` wide, and `srcH` tall onto this bitmap at
+`(dstX, dstY)`. Pixels are replaced, no alpha blending is done.
+   */
+  public function blitRect(
+    src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void;
   
   /**

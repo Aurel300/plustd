@@ -9,7 +9,7 @@ all platforms the needed capability should be checked first, in order to avoid
 throwing an exception:
 
 ```haxe
-    if (Platform.websocket){
+    if (Platform.capabilities.websocket){
       var sock = Platform.createWebsocket();
       // code using sock
     } else {
@@ -21,6 +21,11 @@ Instances of this class are available in any platform. To get the capabilities
 of the current platform, use `Platform.capabilities`.
  */
 class Capabilities {
+  /**
+Embed capable platforms support asset embedding or loading.
+   */
+  public var embed(default, null):Bool = false;
+  
   /**
 Keyboard capable platforms support keyboard events.
    */
@@ -72,6 +77,7 @@ in the window system of the underlying OS.
     if (cs != null){
       for (c in cs){
         switch (c){
+          case Embed:        embed        = true;
           case Keyboard:     keyboard     = true;
           case Mouse:        mouse        = true;
           case Realtime:     realtime     = true;
@@ -87,6 +93,7 @@ in the window system of the underlying OS.
 }
 
 enum Capability {
+  Embed;
   Keyboard;
   Mouse;
   Realtime;

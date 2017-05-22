@@ -34,7 +34,8 @@ enabled.
 class Platform extends sk.thenet.plat.PlatformBase {
   public static var capabilities(default, never):Capabilities
     = new Capabilities([
-         Keyboard
+         Embed
+        ,Keyboard
         ,Mouse
         ,Realtime
         ,Socket

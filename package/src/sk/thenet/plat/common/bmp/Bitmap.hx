@@ -1,5 +1,7 @@
 package sk.thenet.plat.common.bmp;
 
+#if (PLUSTD_TARGET == "neko")
+
 import haxe.ds.Vector;
 import sk.thenet.FM;
 import sk.thenet.bmp.Colour;
@@ -7,6 +9,8 @@ import sk.thenet.bmp.FluentBitmap;
 
 /**
 Haxe implementation of `sk.thenet.bmp.IBitmap`.
+
+(Very much unfinished!)
 
 @see `sk.thenet.bmp.IBitmap`
  */
@@ -83,6 +87,16 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     
   }
   
+  public inline function blit(src:Bitmap, x:Int, y:Int):Void {
+    
+  }
+  
+  public inline function blitRect(
+    src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
+  ):Void {
+    
+  }
+  
   public inline function blitAlpha(src:Bitmap, x:Int, y:Int):Void {
     
   }
@@ -93,3 +107,5 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     
   }
 }
+
+#end

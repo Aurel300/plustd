@@ -55,7 +55,7 @@ class M {
       }
     }
     
-    var rainbow = [1, 5, 4, 6, 2, 3];
+    var rainbow = [1, 5, 4, 6, 2, 3, 7];
     
     Sys.println("");
     
@@ -129,9 +129,10 @@ class M {
     var platformOS = "";
     var platformOSId = "";
     
-    if (platformId == "cppsdl.desktop"){
+    platformOS = (switch (platformId){
+      case "cppsdl.desktop":
       switch (Context.definedValue("PLUSTD_OS")){
-        case "osx" | "ios":
+        case "osx" | "win" | "linux":
         platformOSId = Context.definedValue("PLUSTD_OS");
         
         case _:
@@ -142,6 +143,8 @@ class M {
         }
         platformOSId = (switch (Sys.systemName()){
           case "Mac": "osx";
+          case "Windows": "win";
+          case "Linux": "linux";
           
           case _:
           logError("Incompatible build platform for C++ / SDL!", true);
@@ -149,12 +152,34 @@ class M {
         });
         logWarning("OS guessed based on build OS.");
       }
-      platformOS = (switch (platformOSId){
+      (switch (platformOSId){
         case "osx": "OS X";
-        case "ios": "iOS";
+        case "win": "Windows";
+        case "linux": "Linux";
         case _: "Unknown";
       });
-    }
+      
+      case "cppsdl.phone":
+      switch (Context.definedValue("PLUSTD_OS")){
+        case "ios" | "android":
+        platformOSId = Context.definedValue("PLUSTD_OS");
+        
+        case _:
+        if (Context.definedValue("PLUSTD_OS") != null){
+          logError("Unknown target OS specified.", true);
+        } else {
+          logError("No target OS specified. Please use -D PLUSTD_OS.", true);
+        }
+      }
+      (switch (platformOSId){
+        case "ios": "iOS";
+        case "android": "Android";
+        case _: "Unknown";
+      });
+      
+      case _: "";
+    });
+    
     Compiler.define("PLUSTD_TARGET", platformId);
     Compiler.define("PLUSTD_OS", platformOSId);
     

@@ -93,6 +93,22 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     native.fillRect(new flash.geom.Rectangle(x, y, width, height), colour);
   }
   
+  public inline function blit(src:Bitmap, x:Int, y:Int):Void {
+    native.copyPixels(
+         src.native, src.native.rect
+        ,new flash.geom.Point(x, y), null, null, false
+      );
+  }
+  
+  public inline function blitRect(
+    src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
+  ):Void {
+    native.copyPixels(
+         src.native, new flash.geom.Rectangle(srcX, srcY, srcW, srcH)
+        ,new flash.geom.Point(dstX, dstY), null, null, false
+      );
+  }
+  
   public inline function blitAlpha(src:Bitmap, x:Int, y:Int):Void {
     native.copyPixels(
          src.native, src.native.rect

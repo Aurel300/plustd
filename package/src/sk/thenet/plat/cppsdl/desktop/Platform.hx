@@ -24,16 +24,17 @@ import sk.thenet.plat.cppsdl.common.bmp.Bitmap;
 The C++ / SDL / Desktop platform.
 
  - `PLUSTD_TARGET` identifier: `cppsdl.desktop`.
- - `PLUSTD_OS` can be: `osx`, `ios`.
+ - `PLUSTD_OS` can be: `osx`, `windows`, `linux`.
 
 @see `sk.thenet.plat.Platform`
  */
 @:allow(sk.thenet.plat.cppsdl)
-@:build(sk.thenet.plat.cppsdl.common.SDLMacro.slave("../common/"))
+@:build(sk.thenet.plat.cppsdl.common.SDLMacro.master("../common/"))
 class Platform extends sk.thenet.plat.PlatformBase {
   public static var capabilities(default, never):Capabilities
     = new Capabilities([
-         Keyboard
+         Embed
+        ,Keyboard
         ,Mouse
         ,Realtime
         ,Surface

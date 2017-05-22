@@ -11,37 +11,38 @@ import sk.thenet.net.ws.Websocket;
 import sk.thenet.plat.Capabilities;
 import sk.thenet.plat.cppsdl.common.SDL;
 import sk.thenet.plat.cppsdl.common.SDL.RendererPointer;
-import sk.thenet.plat.cppsdl.common.SDL.SurfacePointer;
 import sk.thenet.plat.cppsdl.common.SDL.TexturePointer;
 import sk.thenet.plat.cppsdl.common.SDL.WindowPointer;
 import sk.thenet.plat.cppsdl.common.app.Keyboard;
 import sk.thenet.plat.cppsdl.common.app.Mouse;
+import sk.thenet.plat.cppsdl.common.audio.Output;
 import sk.thenet.plat.cppsdl.common.bmp.Bitmap;
 
-/*
-import sk.thenet.plat.flash.audio.Output;
-import sk.thenet.plat.flash.audio.Sound;
-import sk.thenet.plat.flash.net.Socket;
-*/
 /**
-##Platform - C++ / SDL##
+##Platform - C++ / SDL / Phone##
 
-The C++ / SDL platform, used when the `cpp` compiler switch is enabled.
+The C++ / SDL / Phone platform.
+
+ - `PLUSTD_TARGET` identifier: `cppsdl.phone`.
+ - `PLUSTD_OS` can be: `ios`, `android`.
 
 @see `sk.thenet.plat.Platform`
  */
 @:allow(sk.thenet.plat.cppsdl)
-@:build(sk.thenet.plat.cppsdl.common.SDLMacro.slave("../common/"))
+@:build(sk.thenet.plat.cppsdl.common.SDLMacro.master("../common/"))
 class Platform extends sk.thenet.plat.PlatformBase {
   public static var capabilities(default, never):Capabilities
     = new Capabilities([
-         Keyboard
+         Embed
+        ,Keyboard
         ,Mouse
         ,Realtime
-        ,Socket
         ,Surface
-        ,Websocket
+        ,Window
       ]);
+  
+  public static inline var WIDTH:Int = 640;
+  public static inline var HEIGHT:Int = 1136;
   
   // prevent instantiation
   private function new(){}
@@ -73,13 +74,13 @@ class Platform extends sk.thenet.plat.PlatformBase {
             ));
           
           case SDL.MOUSEMOTION if (mouse != null):
-          var x:Int = untyped __cpp__("event.button.x");
-          var y:Int = untyped __cpp__("event.button.y");
+          var x:Int = untyped __cpp__("event.button.x") << 1;
+          var y:Int = untyped __cpp__("event.button.y") << 1;
           source.fireEvent(mouse.handleMove(source, x, y, scale));
           
           case (SDL.MOUSEBUTTONDOWN | SDL.MOUSEBUTTONUP) if (mouse != null):
-          var x:Int = untyped __cpp__("event.button.x");
-          var y:Int = untyped __cpp__("event.button.y");
+          var x:Int = untyped __cpp__("event.button.x") << 1;
+          var y:Int = untyped __cpp__("event.button.y") << 1;
           U.callNotNull(source.fireEvent, mouse.handleButton(
               source, x, y, etype == SDL.MOUSEBUTTONDOWN, scale
             ));
@@ -116,8 +117,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   ):Void {
     SDL.initSubSystem(SDL.INIT_VIDEO);
     window = SDL.createWindow(
-         title, SDL.WINDOWPOS_CENTERED, SDL.WINDOWPOS_CENTERED
-        ,width, height, SDL.WINDOW_OPENGL
+        untyped __cpp__("NULL"), 0, 0, WIDTH, HEIGHT, SDL.WINDOW_ALLOW_HIGHDPI | SDL.WINDOW_OPENGL
       );
   }
   
@@ -138,9 +138,9 @@ class Platform extends sk.thenet.plat.PlatformBase {
     ren = SDL.createRenderer(
         window, -1, SDL.RENDERER_ACCELERATED | SDL.RENDERER_TARGETTEXTURE
       );
-    var bitmap = new Bitmap(width, height);
+    var bitmap = new Bitmap(WIDTH >> scale, HEIGHT >> scale);
     var bitmapScaled = new Bitmap(
-        width, height, null, true, scale
+        WIDTH >> scale, HEIGHT >> scale, null, true, scale
       );
     bitmap.fill(0xFF000000);
     bitmapScaled.fill(0xFF000000);
@@ -149,11 +149,10 @@ class Platform extends sk.thenet.plat.PlatformBase {
     return new Surface(bitmap);
   }
   
-  /*
   public static inline function createAudioOutput():Output {
     return new Output();
   }
-  */
+  
   public static inline function createBitmap(
     width:Int, height:Int, colour:Colour
   ):Bitmap {
@@ -161,24 +160,8 @@ class Platform extends sk.thenet.plat.PlatformBase {
     ret.fill(colour);
     return ret;
   }
-  /*
-  public static inline function createSoundNative(sound:NativeSound):Sound {
-    return new Sound(sound);
-  }
   
-  public static inline function createBitmapNative(bd:BitmapData):Bitmap {
-    return new Bitmap(bd);
-  }
-  
-  public static inline function createSocket():Socket {
-    return new Socket();
-  }
-  
-  public static inline function createWebsocket():Websocket {
-    return new Websocket();
-  }
-  */
-  public static inline function boot(func:Void->Void):Void {
+  public static function boot(func:Void->Void):Void {
     SDL.init(0);
     func();
   }

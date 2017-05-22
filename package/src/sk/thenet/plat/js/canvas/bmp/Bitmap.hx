@@ -208,6 +208,25 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     changed = true;
   }
   
+  public inline function blit(src:Bitmap, x:Int, y:Int):Void {
+    c2d.clearRect(x, y, src.width, src.height);
+    c2d.drawImage(
+        src.native, 0, 0, src.width, src.height, x, y, src.width, src.height
+      );
+    changed = true;
+  }
+  
+  public inline function blitRect(
+    src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
+  ):Void {
+    if (srcW <= 0 || srcH <= 0){
+      return;
+    }
+    c2d.clearRect(dstX, dstY, src.width, src.height);
+    c2d.drawImage(src.native, srcX, srcY, srcW, srcH, dstX, dstY, srcW, srcH);
+    changed = true;
+  }
+  
   public inline function blitAlpha(src:Bitmap, x:Int, y:Int):Void {
     c2d.drawImage(
         src.native, 0, 0, src.width, src.height, x, y, src.width, src.height

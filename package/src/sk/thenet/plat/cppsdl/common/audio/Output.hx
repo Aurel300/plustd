@@ -44,6 +44,7 @@ class Output implements sk.thenet.audio.IOutput {
     var hsCall:cpp.Function<cpp.Pointer<cpp.Void>->cpp.Pointer<cpp.UInt8>->Int, cpp.abi.FastCall>
       = (cast cpp.Callable.fromStaticFunction(handleSample):cpp.Function<cpp.Pointer<cpp.Void>->cpp.Pointer<cpp.UInt8>->Int, cpp.abi.FastCall>);
     */
+    /*
     spec.callback = untyped __cpp__(
          "(void (*)(void*, uint8_t*, int))({0})"
         ,cpp.Callable.fromStaticFunction(handleSample)
@@ -59,6 +60,7 @@ class Output implements sk.thenet.audio.IOutput {
         ,untyped __cpp__("&__obtained")
         ,0
       );
+    */
     //dev = untyped __cpp__("SDL_OpenAudioDevice(NULL, 0, &spec, &obtained, 0)");
     
     /*
@@ -91,17 +93,18 @@ class Output implements sk.thenet.audio.IOutput {
   
   public function play():Void {
     playing = true;
-    SDL.pauseAudioDevice(dev, 0);
+    //SDL.pauseAudioDevice(dev, 0);
   }
   
   public function stop():Void {
     playing = false;
-    SDL.pauseAudioDevice(dev, 1);
+    //SDL.pauseAudioDevice(dev, 1);
   }
   
   private static function handleSample(
     data:cpp.Star<cpp.Void>, stream:cpp.Star<cpp.UInt8>, len:Int
   ):Void {
+    /*
     trace("got called");
     var destPointer:cpp.Pointer<cpp.Float32> = untyped __cpp__("(float_t*)({0})", stream);
     var dataPointer:cpp.Pointer<cpp.Void> = untyped __cpp__("(void*)({0})", data);
@@ -113,6 +116,7 @@ class Output implements sk.thenet.audio.IOutput {
         ,cpp.Pointer.ofArray(obj.buffer.toData())
         ,obj.samples * obj.channels * 4
       );
+    */
   }
   
   public dynamic function sample(offset:Float, buffer:Vector<Float>):Void {}

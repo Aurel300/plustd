@@ -1,5 +1,7 @@
 package sk.thenet.app;
 
+import sk.thenet.bmp.Bitmap;
+import sk.thenet.bmp.Surface;
 import sk.thenet.event.*;
 import sk.thenet.event.EMEvent.EMClick;
 import sk.thenet.event.EMEvent.EMDown;
@@ -10,8 +12,6 @@ import sk.thenet.event.EKEvent.EKUp;
 import sk.thenet.fsm.Machine as FSMMachine;
 import sk.thenet.fsm.Memory as FSMMemory;
 import sk.thenet.plat.Platform;
-import sk.thenet.bmp.Bitmap;
-import sk.thenet.bmp.Surface;
 
 /**
 ##Application##
@@ -97,7 +97,22 @@ The preloader state.
   
   /**
 Constructs the application and initialises specific systems based on the
-`ApplicationInit` values provided.
+`ApplicationInit` values provided using the `init` functions of
+`sk.thenet.plat.Platform` under the hood. The initialisation is done in a
+determined order:
+
+ 1. Framerate
+ 2. Window
+ 3. Surface
+ 4. Assets
+ 5. Keyboard
+ 6. Mouse
+ 7. Console
+ 8. ConsoleRemote
+
+This ensures all platforms can consistently initialise their features. The array
+of initialisation values passed in can be in any order, however - it is sorted
+automatically.
 
 @see `ApplicationInit`
    */
@@ -105,16 +120,26 @@ Constructs the application and initialises specific systems based on the
     fps = -1;
     states = [];
     statesMap = new Map<String, State>();
+    function initPosition(init:ApplicationInit):Int {
+      return (switch (init){
+        case Framerate(_): 0;
+        case Window(_, _, _): 1;
+        case Surface(_, _, _): 2;
+        case Assets(_): 3;
+        case Keyboard: 4;
+        case Mouse: 5;
+        case Console: 6;
+        case ConsoleRemote(_, _): 7;
+        case Optional(i): initPosition(i);
+      });
+    }
+    inits.sort(function(a:ApplicationInit, b:ApplicationInit){
+        return initPosition(a) - initPosition(b);
+      });
     for (init in inits){
       handleInit(init);
     }
     if (console != null){
-      if (assetManager != null){
-        console.assetManager = assetManager;
-        assetManager.attachConsole(console);
-      }
-      console.keyboard = keyboard;
-      console.surface = surface;
       console.applicationInits = inits;
     }
   }
@@ -133,20 +158,25 @@ Constructs the application and initialises specific systems based on the
     }
     
     switch (init){
-      case Assets(assets) if (assetManager == null):
-      assetManager = new AssetManager(assets);
-      
-      case Console if (console == null):
-      console = new Console();
-      
-      case ConsoleRemote(host, port):
-      console.attachRemote(host, port);
-      
       case Framerate(fps) if (this.fps <= 0):
       if (checkFeature(Platform.capabilities.realtime)){
         this.fps = fps;
         Platform.source.listen("tick", handleTick);
       }
+      
+      case Surface(width, height, scale) if (surface == null):
+      if (checkFeature(Platform.capabilities.surface)){
+        surface = Platform.initSurface(width, height, scale);
+        bitmap = surface.bitmap;
+      }
+      
+      case Window(title, width, height):
+      if (checkFeature(Platform.capabilities.window)){
+        Platform.initWindow(title, width, height);
+      }
+      
+      case Assets(assets) if (assetManager == null):
+      assetManager = new AssetManager(assets);
       
       case Keyboard if (keyboard == null):
       if (checkFeature(Platform.capabilities.keyboard)){
@@ -164,15 +194,21 @@ Constructs the application and initialises specific systems based on the
         Platform.source.listen("mup",    handleMouseUp   );
       }
       
-      case Surface(width, height, scale) if (surface == null):
-      if (checkFeature(Platform.capabilities.surface)){
-        surface = Platform.initSurface(width, height, scale);
-        bitmap = surface.bitmap;
+      case Console if (console == null):
+      console = new Console();
+      if (assetManager != null){
+        console.assetManager = assetManager;
+        assetManager.attachConsole(console);
       }
+      console.keyboard = keyboard;
+      console.surface = surface;
       
-      case Window(title, width, height):
-      if (checkFeature(Platform.capabilities.window)){
-        Platform.initWindow(title, width, height);
+      case ConsoleRemote(host, port):
+      if (console == null && required){
+        throw "ConsoleRemote without Console";
+      }
+      if (checkFeature(Platform.capabilities.websocket)){
+        console.attachRemote(host, port);
       }
       
       case Optional(sub):
@@ -186,12 +222,6 @@ Constructs the application and initialises specific systems based on the
   private function handleTick(event:ETick):Bool {
     if (assetManager != null && preloader != null && currentState == preloader){
       preloader.progress(assetManager.assets);
-      /*
-      if (assetManager.assetsLoaded){
-        applyState(initialState);
-      } else {
-        preloader.progress(assetManager.assets);
-      }*/
     }
     if (console != null){
       if (console.applicationTick){
