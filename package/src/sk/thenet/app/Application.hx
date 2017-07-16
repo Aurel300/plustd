@@ -196,10 +196,6 @@ automatically.
       
       case Console if (console == null):
       console = new Console();
-      if (assetManager != null){
-        console.assetManager = assetManager;
-        assetManager.attachConsole(console);
-      }
       console.keyboard = keyboard;
       console.surface = surface;
       
@@ -209,6 +205,10 @@ automatically.
       }
       if (checkFeature(Platform.capabilities.websocket)){
         console.attachRemote(host, port);
+        if (assetManager != null){
+          console.assetManager = assetManager;
+          assetManager.attachConsole(console);
+        }
       }
       
       case Optional(sub):

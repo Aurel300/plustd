@@ -53,12 +53,18 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   public function getVectorRect(
     x:Int, y:Int, width:Int, height:Int
-  ):Vector<UInt> {
+  ):Vector<Colour> {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
-    return null;
+    var ret = new Vector<Colour>(width * height);
+    var ri = 0;
+    for (oy in 0...height) for (ox in 0...width){
+      ret[ri] = native[(x + ox) + (y + oy) * this.width];
+      ri++;
+    }
+    return ret;
   }
   
   public function setVectorRect(
