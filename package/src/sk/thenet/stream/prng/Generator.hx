@@ -13,11 +13,11 @@ integers infinitely. It adds methods for obtaining specific kinds of data
 types.
  */
 @:forward(next)
-abstract Generator(Stream<UInt>){
+abstract Generator(Stream<UInt>) {
   /**
 Creates a generator from the given stream.
    */
-  public function new(stream:Stream<UInt>){
+  public function new(stream:Stream<UInt>) {
     this = stream;
   }
   
@@ -46,7 +46,7 @@ without restrictions.
   ):Bytes {
     var ret = Bytes.alloc(length);
     var range = max - min;
-    for (i in 0...length){
+    for (i in 0...length) {
       ret.set(i, nextMod(range) + min);
     }
     return ret;

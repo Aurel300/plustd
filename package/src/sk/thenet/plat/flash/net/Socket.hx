@@ -18,7 +18,7 @@ class Socket extends Source implements sk.thenet.net.ISocket {
   
   private var socket:NativeSocket;
   
-  private function new(){
+  private function new() {
     super();
     socket = new NativeSocket();
     socket.addEventListener(NativeEvent.CONNECT, handleConnect);

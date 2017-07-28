@@ -40,7 +40,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   private function new(
      width:Int, height:Int, ?tex:TexturePointer
     ,?main:Bool = false, ?scale:Int = 0
-  ){
+  ) {
     this.width  = width;
     this.height = height;
     this.tex    = tex;
@@ -50,7 +50,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     wh    = width * height;
     whpix = wh << 2;
     
-    if (untyped __cpp__("{0} == NULL", tex)){
+    if (untyped __cpp__("{0} == NULL", tex)) {
       this.tex = SDL.createTexture(
            Platform.ren, SDL.PIXELFORMAT_ARGB8888, SDL.TEXTUREACCESS_TARGET
           ,width, height
@@ -61,13 +61,13 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   public var debug:Bool = false;
   
   public inline function get(x:Int, y:Int):Colour {
-    if (!FM.withinI(x, 0, width - 1) || !FM.withinI(y, 0, height - 1)){
+    if (!FM.withinI(x, 0, width - 1) || !FM.withinI(y, 0, height - 1)) {
       return 0;
     }
     //y = height - y - 1;
     var ret = new Vector<Colour>(1);
     untyped __cpp__("SDL_Rect rect");
-    if (main && scale != 0){
+    if (main && scale != 0) {
       untyped __cpp__(
            "rect.x = {0} << {2}; rect.y = {1} << {2}; rect.w = 1 << {2}; rect.h = 1 << {2}"
           ,x, y, scale
@@ -83,7 +83,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
          Platform.ren, untyped __cpp__("&rect"), 0 //(cast SDL.PIXELFORMAT_ARGB8888:Int)
         ,cpp.Pointer.ofArray(ret.toData()).ptr, 4
       );
-    if (debug){
+    if (debug) {
       trace("got here", x, y, main, ret);
     }
     return ret[0];
@@ -93,7 +93,10 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     fillRect(x, y, 1, 1, colour);
   }
   
+  public var vec:Vector<Colour>;
+  
   public function getVector():Vector<Colour> {
+    if (vec != null) return vec;
     var ret = new Vector<Colour>(wh);
     var tmp = SDL.createTexture(
          Platform.ren, SDL.PIXELFORMAT_ARGB8888, SDL.TEXTUREACCESS_TARGET
@@ -112,6 +115,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   }
   
   public function setVector(vector:Vector<Colour>):Void {
+    vec = vector;
     SDL.updateTexture(
          tex, untyped __cpp__("NULL")
         ,cpp.Pointer.ofArray(vector.toData()).ptr, width * 4
@@ -127,7 +131,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     height = FM.clampI(height, 1, this.height - y);
     y = this.height - y - height;
     untyped __cpp__("SDL_Rect rect");
-    if (main && scale != 0){
+    if (main && scale != 0) {
       untyped __cpp__(
            "rect.x = {0} << {4}; rect.y = {1} << {4}; rect.w = {2} << {4}; rect.h = {3} << {4}"
           ,x, y, width, height, scale
@@ -165,7 +169,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
     untyped __cpp__("SDL_Rect rect");
-    if (main && scale != 0){
+    if (main && scale != 0) {
       untyped __cpp__(
            "rect.x = {0} << {4}; rect.y = {1} << {4}; rect.w = {2} << {4}; rect.h = {3} << {4}"
           ,x, y, width, height, scale
@@ -193,7 +197,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     x:Int, y:Int, width:Int, height:Int, colour:Colour
   ):Void {
     untyped __cpp__("SDL_Rect rect");
-    if (main && scale != 0){
+    if (main && scale != 0) {
       untyped __cpp__(
            "rect.x = {0} << {4}; rect.y = {1} << {4}; rect.w = {2} << {4}; rect.h = {3} << {4}"
           ,x, y, width, height, scale
@@ -218,7 +222,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
     untyped __cpp__("SDL_Rect srcrect; SDL_Rect dstrect");
-    if (main && scale != 0){
+    if (main && scale != 0) {
       untyped __cpp__(
            "srcrect.x = {0}; srcrect.y = {1}; srcrect.w = {2}; srcrect.h = {3}"
           ,srcX, srcY, srcW, srcH
@@ -246,7 +250,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
     untyped __cpp__("SDL_Rect srcrect; SDL_Rect dstrect");
-    if (main && scale != 0){
+    if (main && scale != 0) {
       untyped __cpp__(
            "srcrect.x = {0}; srcrect.y = {1}; srcrect.w = {2}; srcrect.h = {3}"
           ,srcX, srcY, srcW, srcH

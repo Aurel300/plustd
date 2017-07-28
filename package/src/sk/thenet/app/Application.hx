@@ -116,12 +116,12 @@ automatically.
 
 @see `ApplicationInit`
    */
-  public function new(inits:Array<ApplicationInit>){
+  public function new(inits:Array<ApplicationInit>) {
     fps = -1;
     states = [];
     statesMap = new Map<String, State>();
     function initPosition(init:ApplicationInit):Int {
-      return (switch (init){
+      return (switch (init) {
         case Framerate(_): 0;
         case Window(_, _, _): 1;
         case Surface(_, _, _): 2;
@@ -133,13 +133,13 @@ automatically.
         case Optional(i): initPosition(i);
       });
     }
-    inits.sort(function(a:ApplicationInit, b:ApplicationInit){
+    inits.sort(function(a:ApplicationInit, b:ApplicationInit) {
         return initPosition(a) - initPosition(b);
       });
-    for (init in inits){
+    for (init in inits) {
       handleInit(init);
     }
-    if (console != null){
+    if (console != null) {
       console.applicationInits = inits;
     }
   }
@@ -148,30 +148,30 @@ automatically.
     init:ApplicationInit, ?required:Bool = true
   ):Void {
     inline function checkFeature(isPresent:Bool):Bool {
-      if (isPresent){
+      if (isPresent) {
         return true;
       }
-      if (required){
+      if (required) {
         throw "feature not available on this platform";
       }
       return false;
     }
     
-    switch (init){
+    switch (init) {
       case Framerate(fps) if (this.fps <= 0):
-      if (checkFeature(Platform.capabilities.realtime)){
+      if (checkFeature(Platform.capabilities.realtime)) {
         this.fps = fps;
         Platform.source.listen("tick", handleTick);
       }
       
       case Surface(width, height, scale) if (surface == null):
-      if (checkFeature(Platform.capabilities.surface)){
+      if (checkFeature(Platform.capabilities.surface)) {
         surface = Platform.initSurface(width, height, scale);
         bitmap = surface.bitmap;
       }
       
       case Window(title, width, height):
-      if (checkFeature(Platform.capabilities.window)){
+      if (checkFeature(Platform.capabilities.window)) {
         Platform.initWindow(title, width, height);
       }
       
@@ -179,14 +179,14 @@ automatically.
       assetManager = new AssetManager(assets);
       
       case Keyboard if (keyboard == null):
-      if (checkFeature(Platform.capabilities.keyboard)){
+      if (checkFeature(Platform.capabilities.keyboard)) {
         keyboard = Platform.initKeyboard();
         Platform.source.listen("kdown", handleKeyDown);
         Platform.source.listen("kup",   handleKeyUp  );
       }
       
       case Mouse if (mouse == null):
-      if (checkFeature(Platform.capabilities.mouse)){
+      if (checkFeature(Platform.capabilities.mouse)) {
         mouse = Platform.initMouse();
         Platform.source.listen("mclick", handleMouseClick);
         Platform.source.listen("mdown",  handleMouseDown );
@@ -200,12 +200,12 @@ automatically.
       console.surface = surface;
       
       case ConsoleRemote(host, port):
-      if (console == null && required){
+      if (console == null && required) {
         throw "ConsoleRemote without Console";
       }
-      if (checkFeature(Platform.capabilities.websocket)){
+      if (checkFeature(Platform.capabilities.websocket)) {
         console.attachRemote(host, port);
-        if (assetManager != null){
+        if (assetManager != null) {
           console.assetManager = assetManager;
           assetManager.attachConsole(console);
         }
@@ -220,16 +220,22 @@ automatically.
   }
   
   private function handleTick(event:ETick):Bool {
-    if (assetManager != null && preloader != null && currentState == preloader){
+    if (assetManager != null && preloader != null && currentState == preloader) {
       preloader.progress(assetManager.assets);
     }
-    if (console != null){
-      if (console.applicationTick){
+    if (console != null) {
+      if (console.applicationTick) {
         currentState.tick();
+        for (p in currentState.phasers) {
+          p.tick();
+        }
       }
       console.tick();
     } else {
       currentState.tick();
+      for (p in currentState.phasers) {
+        p.tick();
+      }
     }
     return true;
   }
@@ -272,9 +278,9 @@ the initial state, which is entered when the application starts. (After the
 preloading is done.)
    */
   public function addState(state:State):Void {
-    if (states.length == 0){
+    if (states.length == 0) {
       initialState = state;
-    } else if (statesMap.exists(state.id)){
+    } else if (statesMap.exists(state.id)) {
       throw "duplicate state";
     }
     states.push(state);
@@ -324,25 +330,25 @@ If `sk.thenet.app.ApplicationInit.Framerate` has been passed to the constructor,
 this function will never return on some Platforms.
    */
   public function mainLoop():Void {
-    if (states.length < 1){
+    if (states.length < 1) {
       throw "no states specified";
     }
-    if (assetManager != null){
+    if (assetManager != null) {
       assetManager.preload();
     }
-    for (s in states){
+    for (s in states) {
       s.init();
     }
-    if (preloader != null){
+    if (preloader != null) {
       preloader.init();
     }
-    if (assetManager != null && preloader != null){
+    if (assetManager != null && preloader != null) {
       currentState = preloader;
     } else {
       currentState = initialState;
     }
     currentState.to();
-    if (fps > 0){
+    if (fps > 0) {
       Platform.initFramerate(fps);
     }
   }

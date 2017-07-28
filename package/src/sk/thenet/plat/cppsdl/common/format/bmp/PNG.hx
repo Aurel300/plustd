@@ -13,14 +13,14 @@ import sk.thenet.plat.cppsdl.common.SDL.RWOpsPointer;
 class PNG implements Format<Bitmap> {
   private static var init:Bool = false;
   
-  public function new(){}
+  public function new() {}
   
   public function encode(obj:Bitmap):Bytes {
-    return null;
+    return (new sk.thenet.plat.common.format.bmp.PNG()).encode(obj);
   }
   
   public function decode(data:Bytes):Bitmap {
-    if (!init){
+    if (!init) {
       SDL.Image.init(SDL.Image.INIT_PNG);
       init = true;
     }

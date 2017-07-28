@@ -61,7 +61,7 @@ whether a map to `Void` is meant to be a pass through.
 @see `sk.thenet.stream.Stream`
  */
 abstract FluentStream<T>(Stream<T>) from Stream<T> to Stream<T> {
-  public inline function new(stream:Stream<T>){
+  public inline function new(stream:Stream<T>) {
     this = stream;
   }
   

@@ -34,11 +34,11 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   private var size8:Int;
   public var changed:Bool;
   
-  private function new(native:CanvasElement, ?c2d:CanvasRenderingContext2D){
+  private function new(native:CanvasElement, ?c2d:CanvasRenderingContext2D) {
     this.native = native;
     width = native.width;
     height = native.height;
-    if (c2d != null){
+    if (c2d != null) {
       this.c2d = c2d;
     } else {
       this.c2d = native.getContext2d();
@@ -60,7 +60,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   public inline function get(x:Int, y:Int):UInt {
     getVector();
-    if (!FM.withinI(x, 0, width - 1) || !FM.withinI(y, 0, height - 1)){
+    if (!FM.withinI(x, 0, width - 1) || !FM.withinI(y, 0, height - 1)) {
       return 0;
     }
     return data[x + y * width];
@@ -72,10 +72,10 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   }
   
   public inline function getVector():Vector<Colour> {
-    if (changed){
+    if (changed) {
       var data8 = c2d.getImageData(0, 0, width, height).data;
       var j = 0;
-      for (i in 0...size32){
+      for (i in 0...size32) {
         data[i] = Colour.fromARGBi(
             data8[j + 3], data8[j], data8[j + 1], data8[j + 2]
           );
@@ -90,7 +90,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     data = vector;
     var data8 = new js.html.Uint8ClampedArray(size8);
     var j = 0;
-    for (i in 0...size32){
+    for (i in 0...size32) {
       data8[j    ] = data[i].ri;
       data8[j + 1] = data[i].gi;
       data8[j + 2] = data[i].bi;
@@ -114,9 +114,9 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     var ret = new Vector<Colour>(width * height);
     var vi = 0;
     var di = 0;
-    for (vy in y...y + height){
+    for (vy in y...y + height) {
       di = x + vy * this.width;
-      for (vx in x...x + width){
+      for (vx in x...x + width) {
         ret[vi] = data[di];
         vi++;
         di++;
@@ -136,9 +136,9 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     var data8 = new js.html.Uint8ClampedArray(width * height * 4);
     var vi = 0;
     var di = 0;
-    for (vy in y...y + height){
+    for (vy in y...y + height) {
       di = x + vy * this.width;
-      for (vx in x...x + width){
+      for (vx in x...x + width) {
         data[di] = vector[vi];
         data8[(di << 2)    ] = data[di].ri;
         data8[(di << 2) + 1] = data[di].gi;
@@ -167,7 +167,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
     */
-    if (colour.ai != 255){
+    if (colour.ai != 255) {
       c2d.clearRect(x, y, width, height);
     }
     setFillColour(colour);
@@ -219,7 +219,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   public inline function blitRect(
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
-    if (srcW <= 0 || srcH <= 0){
+    if (srcW <= 0 || srcH <= 0) {
       return;
     }
     c2d.clearRect(dstX, dstY, src.width, src.height);
@@ -237,7 +237,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   public inline function blitAlphaRect(
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
-    if (srcW <= 0 || srcH <= 0){
+    if (srcW <= 0 || srcH <= 0) {
       return;
     }
     c2d.drawImage(src.native, srcX, srcY, srcW, srcH, dstX, dstY, srcW, srcH);

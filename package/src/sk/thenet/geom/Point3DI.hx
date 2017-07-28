@@ -51,7 +51,7 @@ The sum of the components of this point.
     return x + y + z;
   }
   
-  public inline function new(x:Int, y:Int, z:Int){
+  public inline function new(x:Int, y:Int, z:Int) {
     this.x = x;
     this.y = y;
     this.z = z;

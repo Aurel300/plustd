@@ -13,7 +13,7 @@ C++ / SDL implementation of `sk.thenet.app.Mouse`.
  */
 @:allow(sk.thenet.plat.cppsdl)
 class Mouse extends AppMouse {
-  private function new(){
+  private function new() {
     super();
   }
   
@@ -38,11 +38,11 @@ class Mouse extends AppMouse {
   ):EMEvent {
     this.x = x >> scale;
     this.y = y >> scale;
-    if (this.held == held){
+    if (this.held == held) {
       return null;
     }
     this.held = held;
-    if (held){
+    if (held) {
       return new EMEvent.EMDown(source, this.x, this.y);
     }
     return new EMEvent.EMUp(source, this.x, this.y);

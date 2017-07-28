@@ -21,7 +21,7 @@ class U {
   }
   
   public static function profile(pos:String):Void {
-    if (!ptParts.exists(pos)){
+    if (!ptParts.exists(pos)) {
       ptParts.set(pos, []);
     }
     

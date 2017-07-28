@@ -12,7 +12,7 @@ Applies a bit mask to every pixel of the bitmap. Can be used to select channels.
 class Bitmask extends VectorManipulator {
   public var mask:UInt;
   
-  public function new(mask:UInt){
+  public function new(mask:UInt) {
     this.mask = mask;
   }
   

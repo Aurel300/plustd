@@ -7,7 +7,7 @@ import sk.thenet.geom.Point2DI;
 import sk.thenet.stream.Stream;
 
 abstract Curve(Stream<Point2DI>) from Stream<Point2DI> to Stream<Point2DI> {
-  public inline function new(stream:Stream<Point2DI>){
+  public inline function new(stream:Stream<Point2DI>) {
     this = stream;
   }
   
@@ -15,9 +15,9 @@ abstract Curve(Stream<Point2DI>) from Stream<Point2DI> to Stream<Point2DI> {
     target:Bitmap, colour:Colour, ?bounded:Bool = true
   ):Int {
     var points = 0;
-    for (p in this){
-      if (p.x < 0 || p.x >= target.width || p.y < 0 || p.y >= target.height){
-        if (bounded){
+    for (p in this) {
+      if (p.x < 0 || p.x >= target.width || p.y < 0 || p.y >= target.height) {
+        if (bounded) {
           break;
         }
         continue;
@@ -33,9 +33,9 @@ abstract Curve(Stream<Point2DI>) from Stream<Point2DI> to Stream<Point2DI> {
     ,colour:Colour, ?bounded:Bool = true
   ):Int {
     var points = 0;
-    for (p in this){
-      if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height){
-        if (bounded){
+    for (p in this) {
+      if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) {
+        if (bounded) {
           break;
         }
         continue;

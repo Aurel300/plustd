@@ -54,7 +54,7 @@ If using `sk.thenet.app.Application`, use
   public static var mouse(default, never):Mouse = null;
   
   // private constructor to prevent instantiation
-  private function new(){}
+  private function new() {}
   
   /**
 Initialises the main frame ticker and starts triggering the frame event.

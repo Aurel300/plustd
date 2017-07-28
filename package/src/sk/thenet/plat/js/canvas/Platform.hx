@@ -46,7 +46,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   private static var canvas:CanvasElement;
   
   // prevent instantiation
-  private function new(){}
+  private function new() {}
   
   public static inline function initFramerate(fps:Float):Void {
     //Browser.window.setInterval(handleFrame, 1000 / fps);

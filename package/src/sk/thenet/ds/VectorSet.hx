@@ -7,8 +7,8 @@ class VectorSet<T> implements Set<T> {
   
   private var data:Vector<T>;
   
-  public function new(?reserve:Int = 16){
-    if (reserve < 1){
+  public function new(?reserve:Int = 16) {
+    if (reserve < 1) {
       throw "invalid argument";
     }
     size = 0;
@@ -16,8 +16,8 @@ class VectorSet<T> implements Set<T> {
   }
   
   public function has(obj:T):Bool {
-    for (i in 0...size){
-      if (data[i] == obj){
+    for (i in 0...size) {
+      if (data[i] == obj) {
         return true;
       }
     }
@@ -26,7 +26,7 @@ class VectorSet<T> implements Set<T> {
   
   public function resize(size:Int):Void {
     this.size = size;
-    if (size > data.length){
+    if (size > data.length) {
       var redata = new Vector<T>(size);
       Vector.blit(data, 0, redata, 0, data.length);
       data = redata;
@@ -34,10 +34,10 @@ class VectorSet<T> implements Set<T> {
   }
   
   public function add(obj:T):Bool {
-    if (has(obj)){
+    if (has(obj)) {
       return false;
     }
-    if (size == data.length){
+    if (size == data.length) {
       resize(size << 1);
     }
     data[size] = obj;
@@ -46,9 +46,9 @@ class VectorSet<T> implements Set<T> {
   }
   
   public function remove(obj:T):Bool {
-    for (i in 0...size){
-      if (data[i] == obj){
-        if (i == size - 1){
+    for (i in 0...size) {
+      if (data[i] == obj) {
+        if (i == size - 1) {
           data[i] = null;
         } else {
           data[i] = data[size - 1];

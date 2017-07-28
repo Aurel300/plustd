@@ -15,20 +15,20 @@ class PerlinNoise {
   private var cachePoints:Array<Point2DI> = [];
   private var cacheValues:Array<Point2DF> = [];
   
-  public function new(generator:Generator){
+  public function new(generator:Generator) {
     this.generator = generator;
   }
   
   private function getPoint(x:Int, y:Int):Point2DF {
-    for (ci in 0...cachePoints.length){
-      if (cachePoints[ci].x != x || cachePoints[ci].y != y){
+    for (ci in 0...cachePoints.length) {
+      if (cachePoints[ci].x != x || cachePoints[ci].y != y) {
         continue;
       }
       return cacheValues[ci];
     }
     cachePoints.push(new Point2DI(x, y));
     var p = new Point2DF(generator.nextFloat() - .5, generator.nextFloat() - .5);
-    if (p.x == 0 && p.y == 0){
+    if (p.x == 0 && p.y == 0) {
       p = new Point2DF(1, 1);
     }
     p.unitM();
@@ -64,11 +64,11 @@ class PerlinNoise {
     
     var ret = new Vector<Float>(width * height);
     var i:Int = 0;
-    for (py in 0...height){
+    for (py in 0...height) {
       yf = py / height + y0;
       var sy:Float = yf - y0;
       
-      for (px in 0...width){
+      for (px in 0...width) {
         xf = px / width + x0;
         var sx:Float = xf - x0;
         

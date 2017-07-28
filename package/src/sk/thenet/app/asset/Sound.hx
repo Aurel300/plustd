@@ -17,9 +17,9 @@ class Sound extends Asset {
   /**
 Creates a new sound sample asset with the given `id`.
    */
-  public function new(id:String, ?filename:String, ?initial:PlatformSound){
+  public function new(id:String, ?filename:String, ?initial:PlatformSound) {
     super(AssetType.Sound, id, filename);
-    if (initial == null){
+    if (initial == null) {
       status = Loading(0);
     } else {
       current = initial;

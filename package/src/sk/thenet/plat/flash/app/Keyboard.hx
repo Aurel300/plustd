@@ -18,11 +18,11 @@ class Keyboard extends AppKeyboard {
   private var lookup:Vector<Key>;
   private var lookupLen:UInt;
   
-  private function new(){
+  private function new() {
     super();
     lookup = new Vector<Key>(91);
     lookupLen = lookup.length;
-    for (i in 0...lookup.length){
+    for (i in 0...lookup.length) {
       lookup[i] = Key.Invalid;
     }
     lookup[37] = Key.ArrowLeft;
@@ -74,15 +74,15 @@ class Keyboard extends AppKeyboard {
   private function handleKey(
     source:Source, e:KeyboardEvent, down:Bool
   ):EKEvent {
-    if (e.keyCode >= lookupLen){
+    if (e.keyCode >= lookupLen) {
       return null;
     }
     var key:Key = lookup[e.keyCode];
-    if (key == Key.Invalid || keysHeld[key] == down){
+    if (key == Key.Invalid || keysHeld[key] == down) {
       return null;
     }
     keysHeld[key] = down;
-    if (down){
+    if (down) {
       return new EKEvent.EKDown(source, key);
     }
     return new EKEvent.EKUp(source, key);

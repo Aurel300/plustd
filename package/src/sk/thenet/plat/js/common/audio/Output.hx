@@ -23,18 +23,18 @@ class Output implements sk.thenet.audio.IOutput {
   private var buffer:Vector<Float>;
   private var time:Float;
   
-  private function new(channels:Int = 2, samples:Int = 8192){
+  private function new(channels:Int = 2, samples:Int = 8192) {
     this.samples = samples;
     this.channels = channels;
     channelsSamples = samples * channels;
     buffer = new Vector<Float>(channelsSamples);
-    for (i in 0...channelsSamples){
+    for (i in 0...channelsSamples) {
       buffer[i] = 0;
     }
   }
   
   public function play():Void {
-    if (!playing){
+    if (!playing) {
       time = 0;
       playing = true;
       outputContext = new AudioContext();
@@ -49,7 +49,7 @@ class Output implements sk.thenet.audio.IOutput {
   }
   
   public function stop():Void {
-    if (playing){
+    if (playing) {
       playing = false;
       outputOscillator.stop();
       outputOscillator.disconnect();
@@ -64,7 +64,7 @@ class Output implements sk.thenet.audio.IOutput {
     var outRight:js.html.Float32Array = event.outputBuffer.getChannelData(1);
     var i:Int = 0;
     var i2:Int = 0;
-    while (i2 < channelsSamples){
+    while (i2 < channelsSamples) {
       outLeft[i] = buffer[i2++];
       outRight[i] = buffer[i2++];
       i++;

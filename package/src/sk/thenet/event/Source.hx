@@ -9,7 +9,7 @@ class Source implements ISource {
   private var listenTo:Array<String>;
   private var listeners:Array<Dynamic->Bool>;
   
-  public function new(){
+  public function new() {
     listenTo = [];
     listeners = [];
   }
@@ -19,8 +19,8 @@ Fires an event to its listeners. Listeners are invoked in the order they were
 added until a listener returns `true` or there are no more listeners to invoke.
    */
   public function fireEvent(event:Event):Void {
-    for (i in 0...listenTo.length){
-      if (listenTo[i] == event.type && listeners[i](event)){
+    for (i in 0...listenTo.length) {
+      if (listenTo[i] == event.type && listeners[i](event)) {
         break;
       }
     }
@@ -36,7 +36,7 @@ Adds a listener to an event type.
   public function listen<T:Event>(
     type:String, listener:T->Bool, ?priority:Bool = false
   ):Void {
-    if (priority){
+    if (priority) {
       listenTo.unshift(type);
       listeners.unshift(listener);
     } else {
@@ -49,7 +49,7 @@ Adds a listener to an event type.
 Forwards events of the given type from the given source.
    */
   public function forward<T:Event>(type:String, source:Source):Void {
-    source.listen(type, function(event:T){
+    source.listen(type, function(event:T) {
         fireEvent(event);
         return true;
       });

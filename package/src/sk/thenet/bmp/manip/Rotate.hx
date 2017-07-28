@@ -9,7 +9,7 @@ import sk.thenet.plat.Platform;
 class Rotate extends Manipulator {
   public var angle(default, null):Float;
   
-  public function new(angle:Float){
+  public function new(angle:Float) {
     this.angle = angle;
   }
   
@@ -22,12 +22,12 @@ class Rotate extends Manipulator {
     var vi = 0;
     var hw = (bitmap.width / 2);
     var hh = (bitmap.height / 2);
-    for (y in 0...ret.height) for (x in 0...ret.width){
+    for (y in 0...ret.height) for (x in 0...ret.width) {
       var px:Int = x - bitmap.width;
       var py:Int = y - bitmap.height;
       var ox:Int = FM.floor( px * cos + py * sin + hw);
       var oy:Int = FM.floor(-px * sin + py * cos + hh);
-      if (ox >= 0 && oy >= 0 && ox < bitmap.width && oy < bitmap.height){
+      if (ox >= 0 && oy >= 0 && ox < bitmap.width && oy < bitmap.height) {
         vec[vi] = ovec[ox + oy * bitmap.width];
       }
       vi++;

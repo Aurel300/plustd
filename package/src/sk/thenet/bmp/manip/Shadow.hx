@@ -15,7 +15,7 @@ class Shadow extends Manipulator {
   public var offsetX(default, null):Int;
   public var offsetY(default, null):Int;
   
-  public function new(colour:Colour, x:Int, y:Int){
+  public function new(colour:Colour, x:Int, y:Int) {
     this.colour = colour;
     this.offsetX = x;
     this.offsetY = y;
@@ -25,12 +25,12 @@ class Shadow extends Manipulator {
     var vec = bitmap.getVector();
     var ovec = vec.copy();
     var i:Int = 0;
-    for (y in 0...bitmap.height) for (x in 0...bitmap.width){
-      if ((ovec[i] & 0xFF000000) != 0){
+    for (y in 0...bitmap.height) for (x in 0...bitmap.width) {
+      if ((ovec[i] & 0xFF000000) != 0) {
         // pass
       } else if (FM.withinI(x - offsetX, 0, bitmap.width - 1)
         && FM.withinI(y - offsetY, 0, bitmap.height - 1)
-        && ovec[i - offsetX - offsetY * bitmap.width].au != 0){
+        && ovec[i - offsetX - offsetY * bitmap.width].au != 0) {
         vec[i] = colour;
       }
       i++;

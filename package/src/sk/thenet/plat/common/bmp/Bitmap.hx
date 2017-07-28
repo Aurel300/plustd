@@ -28,7 +28,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   private var native:Vector<Colour>;
   
-  private function new(width:Int, height:Int, colour:Colour){
+  private function new(width:Int, height:Int, colour:Colour) {
     native = new Vector<Colour>(width * height);
     this.width = width;
     this.height = height;
@@ -60,7 +60,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     height = FM.clampI(height, 1, this.height - y);
     var ret = new Vector<Colour>(width * height);
     var ri = 0;
-    for (oy in 0...height) for (ox in 0...width){
+    for (oy in 0...height) for (ox in 0...width) {
       ret[ri] = native[(x + ox) + (y + oy) * this.width];
       ri++;
     }
@@ -78,7 +78,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   }
   
   public inline function fill(colour:Colour):Void {
-    for (i in 0...native.length){
+    for (i in 0...native.length) {
       native[i] = colour;
     }
   }

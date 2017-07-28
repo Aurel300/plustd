@@ -15,7 +15,7 @@ their alpha values.
 class Recolour extends VectorManipulator {
   public var colour(default, null):Colour;
   
-  public function new(colour:Colour){
+  public function new(colour:Colour) {
     this.colour = colour;
   }
   

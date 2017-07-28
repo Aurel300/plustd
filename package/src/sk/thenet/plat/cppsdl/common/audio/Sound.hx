@@ -18,7 +18,7 @@ class Sound implements sk.thenet.audio.ISound {
   private static var channelsMap:Map<Int, Sound>;
   
   public static function init():Void {
-    if (!inited){
+    if (!inited) {
       SDL.initSubSystem(SDL.INIT_AUDIO);
       SDL.Mixer.init(SDL.Mixer.INIT_MP3);
       SDL.Mixer.openAudio(44100, untyped __cpp__("AUDIO_F32"), 2, 1024);
@@ -30,7 +30,7 @@ class Sound implements sk.thenet.audio.ISound {
   
   private static function channelFinished(channel:Int):Void {
     var sound = channelsMap.get(channel);
-    if (sound == null){
+    if (sound == null) {
       return;
     }
     sound.channels.remove(channel);
@@ -46,13 +46,13 @@ class Sound implements sk.thenet.audio.ISound {
   private var chunk:MixChunkPointer;
   private var channels:Array<Int>;
   
-  private function new(chunk:MixChunkPointer){
+  private function new(chunk:MixChunkPointer) {
     this.chunk = chunk;
     channels = [];
   }
   
   public function play(?mode:LoopMode):Void {
-    var channel = SDL.Mixer.playChannel(-1, chunk, (switch (mode){
+    var channel = SDL.Mixer.playChannel(-1, chunk, (switch (mode) {
         case Forever: -1;
         case Loop(amount): amount - 1;
         case _: 0;
@@ -62,7 +62,7 @@ class Sound implements sk.thenet.audio.ISound {
   }
   
   public function stop():Void {
-    for (channel in channels){
+    for (channel in channels) {
       channelsMap.remove(channel);
       SDL.Mixer.haltChannel(channel);
     }

@@ -13,7 +13,7 @@ class AlphaMask extends Manipulator {
   public var bitmap(default, null):Bitmap;
   public var ignoreEmpty(default, null):Bool;
   
-  public function new(bitmap:Bitmap, ?ignoreEmpty:Bool = false){
+  public function new(bitmap:Bitmap, ?ignoreEmpty:Bool = false) {
     this.bitmap = bitmap;
     this.ignoreEmpty = ignoreEmpty;
   }
@@ -22,8 +22,8 @@ class AlphaMask extends Manipulator {
     var vec = bitmap.getVector();
     var avec = this.bitmap.getVector();
     var i:Int = 0;
-    for (y in 0...bitmap.height) for (x in 0...bitmap.width){
-      if (ignoreEmpty && (vec[i] & 0xFF000000) == 0){
+    for (y in 0...bitmap.height) for (x in 0...bitmap.width) {
+      if (ignoreEmpty && (vec[i] & 0xFF000000) == 0) {
         i++;
         continue;
       }

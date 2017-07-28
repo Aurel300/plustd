@@ -22,7 +22,7 @@ their id).
    */
   public function new(
     id:String, bindTo:Array<String>, func:AssetManager->Event->Bool
-  ){
+  ) {
     super(bindTo, function(assetManager:AssetManager, event:Event):Bool {
         func(assetManager, event);
         status = Loaded;

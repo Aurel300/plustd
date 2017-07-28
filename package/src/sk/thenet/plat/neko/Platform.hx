@@ -27,7 +27,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
       ]);
   
   // private constructor to prevent instantiation
-  private function new(){}
+  private function new() {}
     
   public static inline function createAudioOutput():Output {
     throw "unsupported operation";

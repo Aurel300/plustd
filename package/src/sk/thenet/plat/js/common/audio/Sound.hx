@@ -22,7 +22,7 @@ class Sound implements sk.thenet.audio.ISound {
   private var channels:Array<Audio>;
   private var pool:Array<Audio>;
   
-  private function new(sound:Audio){
+  private function new(sound:Audio) {
     this.sound = sound;
     channels = [];
     pool = [];
@@ -30,23 +30,23 @@ class Sound implements sk.thenet.audio.ISound {
   
   public function play(?mode:LoopMode):Void {
     var channel:Audio = null;
-    if (pool.length > 0){
+    if (pool.length > 0) {
       channel = pool.shift();
     } else {
       channel = (cast (sound.cloneNode()):Audio);
     }
-    channel.onended = (switch (mode){
+    channel.onended = (switch (mode) {
         case Forever:
-        function(){
+        function() {
           channel.currentTime = 0;
           channel.play();
         };
         
         case Loop(amount):
         var counter = amount;
-        function(){
+        function() {
           counter--;
-          if (counter > 0){
+          if (counter > 0) {
             channel.currentTime = 0;
             channel.play();
           } else {
@@ -63,7 +63,7 @@ class Sound implements sk.thenet.audio.ISound {
   }
   
   public function stop():Void {
-    for (channel in channels){
+    for (channel in channels) {
       channel.onended = null;
       channel.pause();
       channel.currentTime = 0;

@@ -12,14 +12,14 @@ class Tools {
     url:String, method:Method, headers:Map<String, String>, ?data:Bytes
   ):Bytes {
     var buf = new StringBuf();
-    buf.add((switch (method){
+    buf.add((switch (method) {
         case GET: "GET";
         case POST: "POST";
       }));
     buf.add(" ");
     buf.add(url);
     buf.add(" HTTP/1.1");
-    for (key in headers.keys()){
+    for (key in headers.keys()) {
       buf.add("\r\n");
       buf.add(key);
       buf.add(": ");

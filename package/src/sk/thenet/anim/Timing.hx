@@ -71,7 +71,7 @@ abstract Timing(Float->Float) from (Float->Float) to (Float->Float) {
       ? -.5 * Math.sqrt(1 - 4 * x * x - 1)
       : .5 * Math.sqrt(1 - (x = 2 * x - 2) * x) + 1);
   
-  public inline function new(func:Float->Float){
+  public inline function new(func:Float->Float) {
     this = func;
   }
   

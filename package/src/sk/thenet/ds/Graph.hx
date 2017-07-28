@@ -4,7 +4,7 @@ class Graph<T> {
   private var nodes:VectorSet<T>;
   private var edges:VectorEquatableSet<GraphEdge<T>>;
   
-  public function new(){
+  public function new() {
     nodes = new VectorSet();
     edges = new VectorEquatableSet();
   }
@@ -38,7 +38,7 @@ class GraphEdge<T> implements Equatable<GraphEdge<T>> {
   public var from(default, null):T;
   public var to  (default, null):T;
   
-  public function new(from:T, to:T){
+  public function new(from:T, to:T) {
     this.from = from;
     this.to = to;
   }

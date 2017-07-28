@@ -1,5 +1,6 @@
 package sk.thenet.app;
 
+import sk.thenet.anim.Phaser;
 import sk.thenet.app.Keyboard.Key;
 
 /**
@@ -31,14 +32,24 @@ Convenience shortcut for `app.assetManager`.
     return app.assetManager;
   }
   
+  public var phasers:Map<String, Phaser>;
+  
   /**
 @param id The name given to this state. Once added to the application, it will
 be accessible with `app.getStateById(id)`.
 @param app The application to which this state belongs to.
    */
-  public function new(id:String, app:Application){
+  public function new(id:String, app:Application) {
     this.id = id;
     this.app = app;
+    phasers = new Map<String, Phaser>();
+  }
+  
+  /**
+Convenience shortcut for `phasers.get(id)`.
+   */
+  public inline function ph(id:String):Phaser {
+    return phasers.get(id);
   }
   
   /**

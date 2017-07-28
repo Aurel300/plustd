@@ -24,10 +24,10 @@ Creates a new bitmap asset with the given `id`. If provided, the asset is linked
 to the given `filename` (it will be reloaded if a change is detected to that
 file and hot reloading is initialised).
    */
-  public function new(id:String, ?filename:String, ?initial:PlatformBitmap){
+  public function new(id:String, ?filename:String, ?initial:PlatformBitmap) {
     super(AssetType.Bitmap, id, filename);
     current = initial;
-    if (initial == null){
+    if (initial == null) {
       status = Loading(0);
     } else {
       status = Loaded;
@@ -35,7 +35,7 @@ file and hot reloading is initialised).
   }
   
   override public function update(data:Bytes):Void {
-    if (filename.substr(-4) == ".png"){
+    if (filename.substr(-4) == ".png") {
       updateBitmap(png.decode(data));
     } else {
       throw "unknown filetype";

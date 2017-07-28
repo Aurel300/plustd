@@ -23,14 +23,14 @@ class Embed {
   
   private static function getFile(file:String):Bytes {
     var rw = SDL.RWFromFile(file, "rb");
-    if (untyped __cpp__("{0} == NULL", rw)){
+    if (untyped __cpp__("{0} == NULL", rw)) {
       trace(SDL.getError());
       throw "SDL error";
     }
     var size = SDL.RWsize(rw);
     var data = Bytes.alloc(size);
     var read = 0;
-    while (read < size){
+    while (read < size) {
       read += SDL.RWread(
           rw, cpp.Pointer.arrayElem(data.getData(), read), 1, size - read
         );
@@ -60,7 +60,7 @@ class Embed {
         );
       var chunk = SDL.Mixer.loadWAV_RW(dataOps, 0);
       var sound = new Sound(chunk);
-      if (untyped __cpp__("{0} == NULL", chunk)){
+      if (untyped __cpp__("{0} == NULL", chunk)) {
         trace(SDL.Mixer.getError(), id, file);
         //throw "SDL error";
       }

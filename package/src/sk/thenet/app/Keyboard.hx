@@ -32,7 +32,7 @@ class Keyboard {
 @return String value of the given `key` or `""` if it is not a character.
    */
   public inline static function getCharacter(key:Key):String {
-    if (isCharacter(key)){
+    if (isCharacter(key)) {
       return KEY_CHARACTERS.charAt((cast key:Int) - 4);
     }
     return "";
@@ -40,9 +40,9 @@ class Keyboard {
   
   private var keysHeld:Vector<Bool>;
   
-  private function new(){
+  private function new() {
     keysHeld = new Vector<Bool>(Key.Invalid);
-    for (i in 0...keysHeld.length){
+    for (i in 0...keysHeld.length) {
       keysHeld[i] = false;
     }
   }

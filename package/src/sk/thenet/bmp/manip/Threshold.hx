@@ -13,7 +13,7 @@ Thresholds the alpha channel.
 class Threshold extends VectorManipulator {
   public var threshold(default, null):Int;
   
-  public function new(threshold:Int){
+  public function new(threshold:Int) {
     this.threshold = threshold;
   }
   

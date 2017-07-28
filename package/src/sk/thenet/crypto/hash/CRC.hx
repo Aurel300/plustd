@@ -12,10 +12,10 @@ class CRC {
   private static inline function createCRC():Vector<UInt> {
     var c:UInt;
     var ret = new Vector<UInt>(256);
-    for (n in 0...256){
+    for (n in 0...256) {
       c = n;
-      for (k in 0...8){
-        if (c & 1 == 1){
+      for (k in 0...8) {
+        if (c & 1 == 1) {
           c = 0xEDB88320 ^ (c >>> 1);
         } else {
           c = c >>> 1;
@@ -38,7 +38,7 @@ class CRC {
    */
   public static function calculateRange(data:Bytes, start:Int, len:Int):UInt {
     var c:UInt = 0xFFFFFFFF;
-    for (i in start...start + len){
+    for (i in start...start + len) {
       c = crc[(c ^ data.get(i)) & 0xFF] ^ (c >>> 8);
     }
     return c ^ 0xFFFFFFFF;

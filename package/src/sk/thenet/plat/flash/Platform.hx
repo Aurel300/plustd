@@ -50,7 +50,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   private static var scale:Int = 0;
   
   // prevent instantiation
-  private function new(){}
+  private function new() {}
   
   /**
 On Flash, the argument to this function is ignored in favour of the framerate

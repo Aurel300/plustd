@@ -48,11 +48,11 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   private var handshakeEnd:Int;
   private var serverMode:Bool = false;
   
-  public function new(){
+  public function new() {
     super();
   }
   
-  private function spawn(socket:Socket){
+  private function spawn(socket:Socket) {
     sendQueue = [];
     recvQueue = [];
     recvBuffer = Bytes.alloc(256);
@@ -85,7 +85,7 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
     host:String, url:String, port:Int, spawn:Websocket->Void
   ):Void {
     socket = Platform.createSocket();
-    socket.serve(host, port, function(socket:Socket){
+    socket.serve(host, port, function(socket:Socket) {
         var ws = new Websocket();
         ws.spawn(socket);
         spawn(ws);
@@ -105,14 +105,14 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
         "Sec-WebSocket-Key" => Base64.encode(FM.prng.nextBytes(16))
       ];
     
-    if (origin != null){
+    if (origin != null) {
       headers.set("Origin", origin);
     }
-    if (protocols != null){
+    if (protocols != null) {
       headers.set("Sec-WebSocket-Protocol", protocols.join(", "));
     }
-    if (additionalHeaders != null){
-      for (key in additionalHeaders.keys()){
+    if (additionalHeaders != null) {
+      for (key in additionalHeaders.keys()) {
         headers.set(key, additionalHeaders.get(key));
       }
     }
@@ -123,13 +123,13 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   }
   
   private function handleRecv(data:Bytes):Void {
-    if (!connected || data.length == 0){
+    if (!connected || data.length == 0) {
       return;
     }
-    if (data.length + recvUsed > recvBuffer.length){
+    if (data.length + recvUsed > recvBuffer.length) {
       var tmp = recvBuffer;
       var nlen = tmp.length << 1;
-      while (nlen < data.length + recvUsed){
+      while (nlen < data.length + recvUsed) {
         nlen <<= 1;
       }
       recvBuffer = Bytes.alloc(nlen);
@@ -145,7 +145,7 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   }
   
   private function handleFrame(frame:WebsocketFrame):Void {
-    switch (frame.type){
+    switch (frame.type) {
       case Close:
       // close?
       trace("remote close");
@@ -159,9 +159,9 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       trace("remote pong");
       
       case _:
-      if (frame.fin){
+      if (frame.fin) {
         var fullPayload = new BytesBuffer();
-        for (f in recvQueue){
+        for (f in recvQueue) {
           fullPayload.add(f.data);
         }
         recvQueue = [];
@@ -174,8 +174,8 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   }
   
   private function handleFrames():Void {
-    while (true){
-      if (recvUsed < 2){
+    while (true) {
+      if (recvUsed < 2) {
         return;
       }
       var b1 = recvBuffer.get(1);
@@ -183,7 +183,7 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       var masked = (b1 & 0x80 != 0);
       var length = (b1 & 0x7F);
       
-      var minLen = (switch (length){
+      var minLen = (switch (length) {
           case 127: 10;
           case 126: 4;
           case _:   2;
@@ -191,7 +191,7 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       var maskAt = minLen;
       minLen += (masked ? 4 : 0);
       
-      if (recvUsed < minLen){
+      if (recvUsed < minLen) {
         return;
       }
       
@@ -201,10 +201,10 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       var reserved = ((b0 & 0x70) >> 4);
       var opcode   = (b0 & 0x8);
       
-      length = (switch (length){
+      length = (switch (length) {
           case 127:
           var lengthHigh:UInt = recvBuffer.readLEInt32(2);
-          if (lengthHigh != 0){
+          if (lengthHigh != 0) {
             throw "frame too long";
           }
           recvBuffer.readLEInt32(6);
@@ -218,13 +218,13 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       
       var fullLen = minLen + length;
       
-      if (recvUsed < fullLen){
+      if (recvUsed < fullLen) {
         return;
       }
       
       var payload = Bytes.alloc(length);
       payload.blit(0, recvBuffer, minLen, length);
-      if (masked){
+      if (masked) {
         var mask = recvBuffer.sub(maskAt, 4);
         maskData(payload, mask);
       }
@@ -232,7 +232,7 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       
       handleFrame(new WebsocketFrame((cast opcode:Int), payload, fin));
       
-      if (recvUsed >= 2){
+      if (recvUsed >= 2) {
         continue;
       }
       break;
@@ -241,19 +241,19 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   
   private function handleData(ev:EData):Bool {
     handleRecv(ev.data);
-    if (!handshake){
-      for (i in handshakeEnd...recvUsed){
+    if (!handshake) {
+      for (i in handshakeEnd...recvUsed) {
         if (i < 3) continue;
-        if (recvBuffer.readLEInt32(i - 3) == 0x0D0A0D0A){
-          if (serverMode){
+        if (recvBuffer.readLEInt32(i - 3) == 0x0D0A0D0A) {
+          if (serverMode) {
             var clientHeaders = recvBuffer.sub(0, i - 3).toString().split("\r\n");
             var serverKey = "";
-            for (i in 1...clientHeaders.length){
-              if (clientHeaders[i] == ""){
+            for (i in 1...clientHeaders.length) {
+              if (clientHeaders[i] == "") {
                 break;
               }
               var header = clientHeaders[i].split(": ");
-              if (header[0] == "Sec-WebSocket-Key"){
+              if (header[0] == "Sec-WebSocket-Key") {
                 var sha1 = Sha1.make(Bytes.ofString(
                     header[1] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
                   ));
@@ -269,18 +269,18 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
           }
           handshake = true;
           discardRecv(i + 1);
-          for (f in sendQueue){
+          for (f in sendQueue) {
             sendFrame(f);
           }
           sendQueue = [];
           break;
         }
       }
-      if (!handshake){
+      if (!handshake) {
         handshakeEnd = recvUsed;
       }
     }
-    if (handshake){
+    if (handshake) {
       handleFrames();
     }
     return true;
@@ -289,23 +289,23 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   private function maskData(data:Bytes, mask:Bytes):Void {
     var maskInt = mask.getInt32(0);
     var maskBytes = new Vector<Int>(4);
-    for (i in 0...4){
+    for (i in 0...4) {
       maskBytes[i] = mask.get(i);
     }
     var fl4 = ((data.length >> 2) << 2);
     var i = 0;
-    while (i < fl4){
+    while (i < fl4) {
       data.setInt32(i, data.getInt32(i) ^ maskInt);
       i += 4;
     }
-    while (i < data.length){
+    while (i < data.length) {
       data.set(i, data.get(i) ^ maskBytes[i % 4]);
       i++;
     }
   }
   
   private function sendFrame(frame:WebsocketFrame):Void {
-    if (!handshake){
+    if (!handshake) {
       sendQueue.push(frame);
       return;
     }
@@ -322,12 +322,12 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
       );
     sendBuffer.set(0, 0x80 | (cast (frame.type):Int));
     
-    var maskAt = (if (length > 65536){
+    var maskAt = (if (length > 65536) {
         sendBuffer.set(1, (masked ? 0xFF : 0x7F));
         sendBuffer.setInt32(2, 0);
         sendBuffer.setInt32(6, length);
         10;
-      } else if (length > 125){
+      } else if (length > 125) {
         sendBuffer.set(1, (masked ? 0xFE : 0x7E));
         sendBuffer.set(2, length >> 8);
         sendBuffer.set(3, length & 0xFF);
@@ -337,7 +337,7 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
         2;
       });
     
-    if (masked){
+    if (masked) {
       var mask = FM.prng.nextBytes(4);
       sendBuffer.blit(maskAt, mask, 0, 4);
       maskData(frame.data, mask);
@@ -364,7 +364,7 @@ private class WebsocketFrame {
   public var data(default, null):Bytes;
   public var fin (default, null):Bool;
   
-  public function new(type:WebsocketFrameType, data:Bytes, fin:Bool){
+  public function new(type:WebsocketFrameType, data:Bytes, fin:Bool) {
     this.type = type;
     this.data = data;
     this.fin  = fin;

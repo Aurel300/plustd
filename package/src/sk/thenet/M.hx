@@ -49,7 +49,7 @@ class M {
     }
     inline function logError(msg:String, ?abort:Bool = false):Void {
       Sys.println('${esc("38;41;7")} ╋ std ${esc("1;40;31;5")}  Error  ${esc("1;40;37;25")} $msg ${rst()}');
-      if (abort){
+      if (abort) {
         Sys.println("");
         Context.error("abort", Context.currentPos());
       }
@@ -68,13 +68,13 @@ class M {
         ,[' ',' ',' ','┗','━','━','━','━','━','┛',' ','┗','┛',' ','t','h','e','n','e','t','.','s','k',' ']
       ];
     var ly:Int = 0;
-    for (l in lines){
+    for (l in lines) {
       var lc = ly >> 1;
       Sys.print(esc("1;30;4" + lc));
-      for (c in 0...24){
+      for (c in 0...24) {
         var olc = lc;
         lc = (ly >> 1) + (c >> 3) + ((ly + c) % 4 < 2 ? 1 : 0);
-        if (lc != olc){
+        if (lc != olc) {
           Sys.print(esc("4" + rainbow[lc]));
         }
         Sys.print(l[c]);
@@ -102,18 +102,18 @@ class M {
     //Sys.println("");
     
     var platformId = "";
-    switch (Context.definedValue("PLUSTD_TARGET")){
+    switch (Context.definedValue("PLUSTD_TARGET")) {
       case "cppsdl.desktop" | "cppsdl.phone" | "flash"
         | "js.canvas" | "js.webgl" | "neko":
       platformId = Context.definedValue("PLUSTD_TARGET");
       
       case _:
-      if (Context.definedValue("PLUSTD_TARGET") != null){
+      if (Context.definedValue("PLUSTD_TARGET") != null) {
         logWarning("Unknown target platform specified.");
       } else {
         logWarning("No target platform specified. Please use -D PLUSTD_TARGET.");
       }
-      platformId = (switch (Compiler.getOutput()){
+      platformId = (switch (Compiler.getOutput()) {
         case _.substr(-4) => ".cpp": "cppsdl.desktop";
         case _.substr(-4) => ".swf": "flash";
         case _.substr(-3) => ".js": "js.canvas";
@@ -129,19 +129,19 @@ class M {
     var platformOS = "";
     var platformOSId = "";
     
-    platformOS = (switch (platformId){
+    platformOS = (switch (platformId) {
       case "cppsdl.desktop":
-      switch (Context.definedValue("PLUSTD_OS")){
+      switch (Context.definedValue("PLUSTD_OS")) {
         case "osx" | "win" | "linux":
         platformOSId = Context.definedValue("PLUSTD_OS");
         
         case _:
-        if (Context.definedValue("PLUSTD_OS") != null){
+        if (Context.definedValue("PLUSTD_OS") != null) {
           logWarning("Unknown target OS specified.");
         } else {
           logWarning("No target OS specified. Please use -D PLUSTD_OS.");
         }
-        platformOSId = (switch (Sys.systemName()){
+        platformOSId = (switch (Sys.systemName()) {
           case "Mac": "osx";
           case "Windows": "win";
           case "Linux": "linux";
@@ -152,7 +152,7 @@ class M {
         });
         logWarning("OS guessed based on build OS.");
       }
-      (switch (platformOSId){
+      (switch (platformOSId) {
         case "osx": "OS X";
         case "win": "Windows";
         case "linux": "Linux";
@@ -160,18 +160,18 @@ class M {
       });
       
       case "cppsdl.phone":
-      switch (Context.definedValue("PLUSTD_OS")){
+      switch (Context.definedValue("PLUSTD_OS")) {
         case "ios" | "android":
         platformOSId = Context.definedValue("PLUSTD_OS");
         
         case _:
-        if (Context.definedValue("PLUSTD_OS") != null){
+        if (Context.definedValue("PLUSTD_OS") != null) {
           logError("Unknown target OS specified.", true);
         } else {
           logError("No target OS specified. Please use -D PLUSTD_OS.", true);
         }
       }
-      (switch (platformOSId){
+      (switch (platformOSId) {
         case "ios": "iOS";
         case "android": "Android";
         case _: "Unknown";
@@ -183,7 +183,7 @@ class M {
     Compiler.define("PLUSTD_TARGET", platformId);
     Compiler.define("PLUSTD_OS", platformOSId);
     
-    var platformName = (switch (platformId){
+    var platformName = (switch (platformId) {
       case "cppsdl.desktop": "C++ / SDL / Desktop";
       case "cppsdl.phone":   "C++ / SDL / Phone";
       case "flash":          "Adobe Flash";
@@ -194,28 +194,28 @@ class M {
     });
     
     log("Target platform: " + platformName);
-    if (platformOS != ""){
+    if (platformOS != "") {
       log("Target OS:       " + platformOS);
     }
     log("Target output:   " + Compiler.getOutput());
     
-    switch (platformId){
+    switch (platformId) {
       case "cppsdl.phone":
       Compiler.define("no-compilation");
     }
     
     //Context.onAfterTyping((_) -> log("onAfterTyping"));
     //Context.onGenerate((_) -> log("onGenerate"));
-    Context.onAfterGenerate(function(){
+    Context.onAfterGenerate(function() {
         var buildEnd = Date.now();
         var secs = Std.int((buildEnd.getTime() - buildStart.getTime()) / 1000);
         var mins = 0;
         var hrs  = 0;
-        if (secs >= 60){
+        if (secs >= 60) {
           mins = Std.int(secs / 60);
           secs = secs % 60;
         }
-        if (mins >= 60){
+        if (mins >= 60) {
           hrs = Std.int(mins / 60);
           mins = mins % 60;
         }

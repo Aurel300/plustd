@@ -57,7 +57,7 @@ if the image given is not encodable using any of the enabled colour types.
       ,encRGBA: true
     };
   
-  public function new(){}
+  public function new() {}
   
   public function encode(obj:Bitmap):Bytes {
     var encL    = encodeColourTypes.encL;
@@ -74,7 +74,7 @@ if the image given is not encodable using any of the enabled colour types.
       + (encLA   ? 1 : 0)
       + (encRGBA ? 1 : 0);
     
-    if (enc == 0){
+    if (enc == 0) {
       throw "no possible colour type";
     }
     
@@ -95,54 +95,54 @@ if the image given is not encodable using any of the enabled colour types.
     
     var vec = obj.getVector();
     
-    if (enc > 1 || encI || encIA){
-      for (i in 0...vec.length){
+    if (enc > 1 || encI || encIA) {
+      for (i in 0...vec.length) {
         var a = vec[i].ai;
         var r = vec[i].ri;
         var g = vec[i].gi;
         var b = vec[i].bi;
-        if (a != 0xFF){
-          if (encL){
+        if (a != 0xFF) {
+          if (encL) {
             encL = false;
             enc--;
           }
-          if (encI){
+          if (encI) {
             encI = false;
             enc--;
           }
-          if (encRGB){
+          if (encRGB) {
             encRGB = false;
             enc--;
           }
           encLDepth = 8;
         }
-        if (encL || encLA){
-          if (r != g || r != b){
-            if (encL){
+        if (encL || encLA) {
+          if (r != g || r != b) {
+            if (encL) {
               encL = false;
               enc--;
             }
-            if (encLA){
+            if (encLA) {
               encLA = false;
               enc--;
             }
-          } else if (encLDepth < 8){
+          } else if (encLDepth < 8) {
             encLDepth = FM.maxI(encLDepth, encodeLMinDepth[r]);
           }
         }
-        if (encI || encIA){
-          if (!encIPaletteMap.exists(vec[i])){
-            if (encIFColours >= 256){
-              if (encI){
+        if (encI || encIA) {
+          if (!encIPaletteMap.exists(vec[i])) {
+            if (encIFColours >= 256) {
+              if (encI) {
                 encI = false;
                 enc--;
               }
-              if (encIA){
+              if (encIA) {
                 encIA = false;
                 enc--;
               }
             } else {
-              if (vec[i].ai != 0xFF){
+              if (vec[i].ai != 0xFF) {
                 encIAPalette[encIAColours] = vec[i];
                 encIAPaletteMap.set(vec[i], encIAColours);
                 encIAColours++;
@@ -156,7 +156,7 @@ if the image given is not encodable using any of the enabled colour types.
             }
           }
         }
-        if (enc < 2 && !encI && !encIA){
+        if (enc < 2 && !encI && !encIA) {
           break;
         }
       }
@@ -164,22 +164,22 @@ if the image given is not encodable using any of the enabled colour types.
     
     var raw:Bytes = null;
     var rawPos = 0;
-    var colourType = (if ((encL || encLA) && encLDepth == 8){
-        for (i in 0...vec.length){
-          if (i % obj.width == 0){
+    var colourType = (if ((encL || encLA) && encLDepth == 8) {
+        for (i in 0...vec.length) {
+          if (i % obj.width == 0) {
             raw.set(rawPos++, 0); // no filter (TODO)
           }
           raw.set(rawPos++, vec[i].ri);
-          if (!encL){
+          if (!encL) {
             raw.set(rawPos++, vec[i].ai);
           }
         }
-        if (!encL){
+        if (!encL) {
           4;
         } else {
           0;
         }
-      } else if (encL || encLA){
+      } else if (encL || encLA) {
         raw = Bytes.alloc(
             obj.height
               * (1 + ((obj.width * (!encL ? 2 : 1) * encLDepth + 7) >> 3))
@@ -187,9 +187,9 @@ if the image given is not encodable using any of the enabled colour types.
         var bsh = (8 - encLDepth);
         var bi:Int = 0;
         var cb:Int = 0;
-        for (i in 0...vec.length){
-          if (i % obj.width == 0){
-            if (bi != 0){
+        for (i in 0...vec.length) {
+          if (i % obj.width == 0) {
+            if (bi != 0) {
               raw.set(rawPos++, cb);
             }
             raw.set(rawPos++, 0); // no filter (TODO)
@@ -198,39 +198,39 @@ if the image given is not encodable using any of the enabled colour types.
           }
           cb |= (vec[i].ri >> bsh) << (8 - bi - encLDepth);
           bi += encLDepth;
-          if (!encL){
+          if (!encL) {
             cb |= (vec[i].ai >> bsh) << (8 - bi - encLDepth);
             bi += encLDepth;
           }
-          if (bi >= 8){
+          if (bi >= 8) {
             raw.set(rawPos++, cb);
             bi = 0;
             cb = 0;
           }
         }
-        if (bi != 0){
+        if (bi != 0) {
           raw.set(rawPos++, cb);
         }
-        if (!encL){
+        if (!encL) {
           4;
         } else {
           0;
         }
-      } else if (encI || encIA){
-        for (i in 0...encIAColours){
+      } else if (encI || encIA) {
+        for (i in 0...encIAColours) {
           encIFPalette[i] = encIAPalette[i];
           encIFPaletteMap.set(encIFPalette[i], i);
         }
-        for (i in 0...encIColours){
+        for (i in 0...encIColours) {
           encIFPalette[i + encIAColours] = encIPalette[i];
           encIFPaletteMap.set(encIFPalette[i + encIAColours], i + encIAColours);
         }
         
-        encIDepth = (if (encIFColours <= 2){
+        encIDepth = (if (encIFColours <= 2) {
             1;
-          } else if (encIFColours <= 4){
+          } else if (encIFColours <= 4) {
             2;
-          } else if (encIFColours <= 16){
+          } else if (encIFColours <= 16) {
             4;
           } else {
             8;
@@ -241,9 +241,9 @@ if the image given is not encodable using any of the enabled colour types.
           );
         var bi:Int = 0;
         var cb:Int = 0;
-        for (i in 0...vec.length){
-          if (i % obj.width == 0){
-            if (bi != 0){
+        for (i in 0...vec.length) {
+          if (i % obj.width == 0) {
+            if (bi != 0) {
               raw.set(rawPos++, cb);
             }
             raw.set(rawPos++, 0); // no filter (TODO)
@@ -252,20 +252,20 @@ if the image given is not encodable using any of the enabled colour types.
           }
           cb |= encIFPaletteMap.get(vec[i]) << (8 - bi - encIDepth);
           bi += encIDepth;
-          if (bi >= 8){
+          if (bi >= 8) {
             raw.set(rawPos++, cb);
             bi = 0;
             cb = 0;
           }
         }
-        if (bi != 0){
+        if (bi != 0) {
           raw.set(rawPos++, cb);
         }
         3;
-      } else if (encRGB){
+      } else if (encRGB) {
         raw = Bytes.alloc(obj.height * (1 + (obj.width * 3)));
-        for (i in 0...vec.length){
-          if (i % obj.width == 0){
+        for (i in 0...vec.length) {
+          if (i % obj.width == 0) {
             raw.set(rawPos++, 0); // no filter (TODO)
           }
           raw.set(rawPos++, vec[i].ri);
@@ -273,10 +273,10 @@ if the image given is not encodable using any of the enabled colour types.
           raw.set(rawPos++, vec[i].bi);
         }
         2;
-      } else if (encRGBA){
+      } else if (encRGBA) {
         raw = Bytes.alloc(obj.height * (1 + (obj.width << 2)));
-        for (i in 0...vec.length){
-          if (i % obj.width == 0){
+        for (i in 0...vec.length) {
+          if (i % obj.width == 0) {
             raw.set(rawPos++, 0); // no filter (TODO)
           }
           raw.writeLEInt32(rawPos, vec[i].rgba); rawPos += 4;
@@ -315,7 +315,7 @@ if the image given is not encodable using any of the enabled colour types.
     ret.writeLEInt32(retPos, 0x49484452); retPos += 4; // 'IHDR'
     ret.writeLEInt32(retPos, obj.width); retPos += 4; // width
     ret.writeLEInt32(retPos, obj.height); retPos += 4; // height
-    ret.set(retPos++, (switch (colourType){
+    ret.set(retPos++, (switch (colourType) {
         case 0 | 4: encLDepth;
         case 3: encIDepth;
         case _: 8;
@@ -328,13 +328,13 @@ if the image given is not encodable using any of the enabled colour types.
     // IHDR CRC
     ret.writeLEInt32(retPos, CRC.calculateRange(ret, chkPos, 17)); retPos += 4;
     
-    if (colourType == 3){
+    if (colourType == 3) {
       // IPAL
       ret.writeLEInt32(retPos, encIColours * 3); retPos += 4; // PLTE size
       chkPos = retPos;
       ret.writeLEInt32(retPos, 0x504C5445); retPos += 4; // 'PLTE'
       
-      for (i in 0...encIFColours){
+      for (i in 0...encIFColours) {
         ret.set(retPos++, encIFPalette[i].ri);
         ret.set(retPos++, encIFPalette[i].gi);
         ret.set(retPos++, encIFPalette[i].bi);
@@ -345,13 +345,13 @@ if the image given is not encodable using any of the enabled colour types.
           retPos, CRC.calculateRange(ret, chkPos, encIColours * 3 + 4)
         ); retPos += 4;
       
-      if (encIAColours != 0){
+      if (encIAColours != 0) {
         // tRNS
         ret.writeLEInt32(retPos, encIAColours); retPos += 4; // tRNS size
         chkPos = retPos;
         ret.writeLEInt32(retPos, 0x74524E53); retPos += 4; // 'tRNS'
         
-        for (i in 0...encIAColours){
+        for (i in 0...encIAColours) {
           ret.set(retPos++, encIAPalette[i].ai);
         }
         
@@ -387,33 +387,33 @@ if the image given is not encodable using any of the enabled colour types.
     var datPos = 0;
     
     // check signature
-    if (data.readLEInt32(datPos) != 0x89504E47){
+    if (data.readLEInt32(datPos) != 0x89504E47) {
       throw "incorrect header";
     }
     datPos += 4;
-    if (data.readLEInt32(datPos) != 0x0D0A1A0A){
+    if (data.readLEInt32(datPos) != 0x0D0A1A0A) {
       throw "incorrect header";
     }
     datPos += 4;
     
     var ihdrSize = data.readLEInt32(datPos); datPos += 4;
     var chkPos = datPos;
-    if (data.readLEInt32(datPos) != 0x49484452){
+    if (data.readLEInt32(datPos) != 0x49484452) {
       throw "missing IHDR chunk";
     }
     datPos += 4;
     
     var retWidth = data.readLEInt32(datPos); datPos += 4;
-    if (retWidth <= 0 || retWidth > 2048){
+    if (retWidth <= 0 || retWidth > 2048) {
       throw "image width incorrect";
     }
     var retHeight = data.readLEInt32(datPos); datPos += 4;
-    if (retHeight <= 0 || retHeight > 2048){
+    if (retHeight <= 0 || retHeight > 2048) {
       throw "image height incorrect";
     }
     var retBpp = data.get(datPos++);
     var retColour = data.get(datPos++);
-    if (switch (retColour){
+    if (switch (retColour) {
         case 0: // grayscale
         (retBpp != 1 && retBpp != 2
           && retBpp != 4 && retBpp != 8 && retBpp != 16);
@@ -426,14 +426,14 @@ if the image given is not encodable using any of the enabled colour types.
         (retBpp != 8 && retBpp != 16);
         case _:
         throw "invalid colour mode";
-      }){
+      }) {
       throw "invalid bit depth";
     }
-    if (retColour != 6 && retColour != 2){
+    if (retColour != 6 && retColour != 2) {
       throw "unsupported colour mode";
     }
     
-    var pixelBytes = (switch (retColour){
+    var pixelBytes = (switch (retColour) {
         case 2: 3;
         case 6: 4;
         case _: 0;
@@ -444,7 +444,7 @@ if the image given is not encodable using any of the enabled colour types.
     var retInterlace = data.get(datPos++);
     
     if (CRC.calculateRange(data, chkPos, 17)
-        != (cast data.readLEInt32(datPos):UInt)){
+        != (cast data.readLEInt32(datPos):UInt)) {
       throw "incorrect IHDR CRC";
     }
     datPos += 4;
@@ -493,20 +493,20 @@ if the image given is not encodable using any of the enabled colour types.
     var retWidthBytes = retWidth * pixelBytes;
     var ret = Platform.createBitmap(retWidth, retHeight, 0);
     
-    while (datPos < data.length){
+    while (datPos < data.length) {
       var chkSize = data.readLEInt32(datPos);
       datPos += 4;
       chkPos = datPos;
       var chkType = data.getString(datPos, 4);
       datPos += 4;
-      if (idatFirst && !idatEnd && chkType != "IDAT"){
+      if (idatFirst && !idatEnd && chkType != "IDAT") {
         idatEnd = true;
         var cdlen = 0;
-        for (i in 0...idatBytesStarts.length){
+        for (i in 0...idatBytesStarts.length) {
           cdlen += idatBytesEnds[i] - idatBytesStarts[i];
         }
         var compressed = Bytes.alloc(cdlen);
-        for (i in 0...idatBytesStarts.length){
+        for (i in 0...idatBytesStarts.length) {
           compressed.blit(
               0, data, idatBytesStarts[i], idatBytesEnds[i] - idatBytesStarts[i]
             );
@@ -516,30 +516,30 @@ if the image given is not encodable using any of the enabled colour types.
         
         var fdata = Bytes.alloc(udata.length - retHeight);
         var fpos = 0;
-        for (y in 0...retHeight){
+        for (y in 0...retHeight) {
           var filter = udata.get(upos++);
-          switch (filter){ // truecolour and alpha
+          switch (filter) { // truecolour and alpha
             case 0: // no filter
             fdata.blit(fpos, udata, upos, retWidthBytes);
             fpos += retWidthBytes;
             upos += retWidthBytes;
             
             case 1: // sub
-            for (x in 0...retWidthBytes){
+            for (x in 0...retWidthBytes) {
               var a:UInt = (x >= pixelBytes ? fdata.get(fpos - pixelBytes) : 0);
               var p:UInt = udata.get(upos++);
               fdata.set(fpos++, (p + a) & 0xFF);
             }
             
             case 2: // up
-            for (x in 0...retWidthBytes){
+            for (x in 0...retWidthBytes) {
               var b:UInt = (y > 0 ? fdata.get(fpos - retWidthBytes) : 0);
               var p:UInt = udata.get(upos++);
               fdata.set(fpos++, (p + b) & 0xFF);
             }
             
             case 3: // average
-            for (x in 0...retWidthBytes){
+            for (x in 0...retWidthBytes) {
               var a:UInt = (x >= pixelBytes ? fdata.get(fpos - pixelBytes) : 0);
               var b:UInt = (y > 0 ? fdata.get(fpos - retWidthBytes) : 0);
               var p:UInt = udata.get(upos++);
@@ -547,7 +547,7 @@ if the image given is not encodable using any of the enabled colour types.
             }
             
             case 4: // paeth
-            for (x in 0...retWidthBytes){
+            for (x in 0...retWidthBytes) {
               var a:UInt = (x >= pixelBytes ? fdata.get(fpos - pixelBytes) : 0);
               var b:UInt = (y > 0 ? fdata.get(fpos - retWidthBytes) : 0);
               var c:UInt = (x >= pixelBytes && y > 0 ? fdata.get(fpos - pixelBytes - retWidthBytes) : 0);
@@ -556,9 +556,9 @@ if the image given is not encodable using any of the enabled colour types.
               var paethDa:UInt = FM.absI(paeth - a);
               var paethDb:UInt = FM.absI(paeth - b);
               var paethDc:UInt = FM.absI(paeth - c);
-              fdata.set(fpos++, (p + (if (paethDa <= paethDb && paethDa <= paethDc){
+              fdata.set(fpos++, (p + (if (paethDa <= paethDb && paethDa <= paethDc) {
                   a;
-                } else if (paethDb <= paethDc){
+                } else if (paethDb <= paethDc) {
                   b;
                 } else {
                   c;
@@ -573,9 +573,9 @@ if the image given is not encodable using any of the enabled colour types.
         fpos = 0;
         var vec = new Vector<Colour>(retWidth * retHeight);
         var vi:Int = 0;
-        switch (retColour){
+        switch (retColour) {
           case 2: // truecolour
-          for (y in 0...retHeight) for (x in 0...retWidth){
+          for (y in 0...retHeight) for (x in 0...retWidth) {
             vec[vi++] = 0xFF000000
               | (fdata.get(fpos++) << 16)
               | (fdata.get(fpos++) << 8)
@@ -583,52 +583,52 @@ if the image given is not encodable using any of the enabled colour types.
           }
           
           case 6: // truecolour and alpha
-          for (y in 0...retHeight) for (x in 0...retWidth){
+          for (y in 0...retHeight) for (x in 0...retWidth) {
             var p:UInt = fdata.readLEInt32(fpos); fpos += 4;
             vec[vi++] = (p << 24) | (p >>> 8);
           }
         }
         ret.setVector(vec);
       }
-      switch (chkType){
+      switch (chkType) {
         case "IHDR": throw "IHDR twice";
         case "IDAT":
-        if (idatEnd){
+        if (idatEnd) {
           throw "non-consecutive IDAT chunks";
         }
         idatFirst = true;
         idatBytesStarts.push(datPos);
         idatBytesEnds.push(datPos + chkSize);
         case "IEND":
-        if (chkSize != 0){
+        if (chkSize != 0) {
           throw "IEND with data";
         }
         iend = true;
         case _:
-        if (!chunkCountsMax.exists(chkType)){
+        if (!chunkCountsMax.exists(chkType)) {
           throw "unknown chunk type";
         }
         chunkCounts.set(chkType, chunkCounts.get(chkType) + 1);
         if (chunkCountsMax.get(chkType) != -1
-            && chunkCounts.get(chkType) > chunkCountsMax.get(chkType)){
+            && chunkCounts.get(chkType) > chunkCountsMax.get(chkType)) {
           throw "too many ancillary chunks";
         }
       }
       datPos += chkSize;
       if (CRC.calculateRange(data, chkPos, chkSize + 4)
-          != (cast data.readLEInt32(datPos):UInt)){
+          != (cast data.readLEInt32(datPos):UInt)) {
         throw "incorrect CRC";
       }
       datPos += 4;
-      if (iend && datPos < data.length){
+      if (iend && datPos < data.length) {
         throw "data after IEND";
       }
     }
     
-    if (!iend){
+    if (!iend) {
       throw "no IEND";
     }
-    if (!idatEnd){
+    if (!idatEnd) {
       throw "no IDAT";
     }
     

@@ -97,7 +97,7 @@ of the map are determined using the `keyFunc`, the values using the `valueFunc`.
 }
 
 private class CollectorToArray<T> implements Collector<T, Array<T>> {
-  public function new(){}
+  public function new() {}
   
   public function collect(s:Stream<T>):Array<T> {
     return [ for (e in s) e ];
@@ -109,7 +109,7 @@ private class CollectorToMap<T, U, V> implements Collector<T, Map<U, V>> {
   private var valueFunc:T->V;
   private var mapFunc:Void->Map<U, V>;
   
-  public function new(keyFunc:T->U, valueFunc:T->V, mapFunc:Void->Map<U, V>){
+  public function new(keyFunc:T->U, valueFunc:T->V, mapFunc:Void->Map<U, V>) {
     this.keyFunc = keyFunc;
     this.valueFunc = valueFunc;
     this.mapFunc = mapFunc;
@@ -117,7 +117,7 @@ private class CollectorToMap<T, U, V> implements Collector<T, Map<U, V>> {
   
   public function collect(s:Stream<T>):Map<U, V> {
     var ret = mapFunc();
-    for (e in s){
+    for (e in s) {
       ret.set(keyFunc(e), valueFunc(e));
     }
     return ret;
@@ -131,14 +131,14 @@ private class CollectorToMapUndef<T, U, V> implements Collector<T, Map<U, V>> {
   public var key_function:T->U;
   public var value_function:T->V;
   
-  public function new(nkf:T->U, nvf:T->V){
+  public function new(nkf:T->U, nvf:T->V) {
     key_function = nkf;
     value_function = nvf;
   }
   
   public function collect(s:Stream<T>):Map<U, V> {
     var ret = new Map<U, V>();
-    for (e in s){
+    for (e in s) {
       ret.set(key_function(e), value_function(e));
     }
     return ret;
@@ -154,7 +154,7 @@ private abstract CollectorToMap<T, U, V>(Collector<T, Map<U, V>>) {
     return cast t;
   }
   
-  public inline function new(nkf:T->U, nvf:T->V){
+  public inline function new(nkf:T->U, nvf:T->V) {
     this = new CollectorToMapUndef<T, U, V>(nkf, nvf);
   }
 }
@@ -163,7 +163,7 @@ private class CollectorToStringMap<T, V> implements Collector<T, StringMap<V>> {
   private var key_function:T->String;
   private var value_function:T->V;
   
-  public function new(nkf:T->String, nvf:T->V){
+  public function new(nkf:T->String, nvf:T->V) {
     key_function = nkf;
     value_function = nvf;
   }
@@ -174,14 +174,14 @@ private class CollectorToMap<T, U, V> implements Collector<T, Map<U, V>> {
   private var key_function:T->U;
   private var value_function:T->V;
   
-  public function new(nkf:T->U, nvf:T->V){
+  public function new(nkf:T->U, nvf:T->V) {
     key_function = nkf;
     value_function = nvf;
   }
   
   public function collect(s:Stream<T>):Map<U, V> {
     var ret = new Map<U, V>();
-    for (e in s){
+    for (e in s) {
       ret.set(key_function(e), value_function(e));
     }
     return ret;

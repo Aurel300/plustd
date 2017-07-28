@@ -12,7 +12,7 @@ class OrderedDither {
     inline function interleave(a:Int, b:Int):Int {
       var ret:Int = 0;
       var mask:Int = 1;
-      for (i in 0...16){
+      for (i in 0...16) {
         ret |= ((a & mask) | ((b & mask) << 1)) << i;
         mask *= 2;
       }
@@ -25,7 +25,7 @@ class OrderedDither {
     
     var ret = new Vector<Int>(size * size);
     var i = 0;
-    for (y in 0...size) for (x in 0...size){
+    for (y in 0...size) for (x in 0...size) {
       ret[i] = Std.int(reverse(interleave(x ^ y, x)) / (size * size));
       i++;
     }

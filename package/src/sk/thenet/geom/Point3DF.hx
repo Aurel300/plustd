@@ -47,7 +47,7 @@ The sum of the components of this point.
     return x + y + z;
   }
   
-  public inline function new(x:Float, y:Float, z:Float){
+  public inline function new(x:Float, y:Float, z:Float) {
     this.x = x;
     this.y = y;
     this.z = z;

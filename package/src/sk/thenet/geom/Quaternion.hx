@@ -109,7 +109,7 @@ Creates a new quaternion - mathematically, it will be
 `a + b * i + c * j + d * k`, where `i`, `j`, and `k` are the mutually orthogonal
 imaginary unit vectors.
    */
-  public inline function new(a:Float, b:Float, c:Float, d:Float){
+  public inline function new(a:Float, b:Float, c:Float, d:Float) {
     this.a = a;
     this.b = b;
     this.c = c;

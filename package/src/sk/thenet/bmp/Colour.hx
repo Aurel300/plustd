@@ -73,9 +73,24 @@ values in the range [0, 1].
   }
   
   /**
+Creates a colour from individual ARGB channels, represented as floating point
+values, which are clamped to the range [0, 1].
+   */
+  public static inline function fromARGBfc(
+    a:Float, r:Float, g:Float, b:Float
+  ):Colour {
+    return fromARGBi(
+         FM.clampI(Std.int(a * 255), 0, 255)
+        ,FM.clampI(Std.int(r * 255), 0, 255)
+        ,FM.clampI(Std.int(g * 255), 0, 255)
+        ,FM.clampI(Std.int(b * 255), 0, 255)
+      );
+  }
+  
+  /**
 Creates a colour from a 32-bit unsigned integer in the format 0xAARRGGBB.
    */
-  public inline function new(colour:UInt){
+  public inline function new(colour:UInt) {
     this = colour;
   }
   
@@ -268,7 +283,7 @@ Float-based red channel of this colour.
    */
   public var rf(get, never):Float;
   
-  private inline function get_rf(){
+  private inline function get_rf() {
     return ri / 255;
   }
   
@@ -284,7 +299,7 @@ Float-based green channel of this colour.
    */
   public var gf(get, never):Float;
   
-  private inline function get_gf(){
+  private inline function get_gf() {
     return gi / 255;
   }
   
@@ -300,7 +315,7 @@ Float-based blue channel of this colour.
    */
   public var bf(get, never):Float;
   
-  private inline function get_bf(){
+  private inline function get_bf() {
     return bi / 255;
   }
   

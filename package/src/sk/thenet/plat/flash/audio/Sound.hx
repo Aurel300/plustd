@@ -23,25 +23,25 @@ class Sound implements sk.thenet.audio.ISound {
   private var sound:NativeSound;
   private var channels:Array<SoundChannel>;
   
-  private function new(sound:NativeSound){
+  private function new(sound:NativeSound) {
     this.sound = sound;
     channels = [];
   }
   
   public function play(?mode:LoopMode):Void {
-    var channel = (switch (mode){
+    var channel = (switch (mode) {
         case Forever: sound.play(0, 1000000);
         case Loop(amount): sound.play(0, amount);
         case _: sound.play();
       });
-    channel.addEventListener(Event.SOUND_COMPLETE, function(event:Event){
+    channel.addEventListener(Event.SOUND_COMPLETE, function(event:Event) {
         channels.remove(channel);
       }, false, 0, true);
     channels.push(channel);
   }
   
   public function stop():Void {
-    for (channel in channels){
+    for (channel in channels) {
       channel.stop();
     }
     channels = [];

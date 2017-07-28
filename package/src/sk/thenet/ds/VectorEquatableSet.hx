@@ -1,13 +1,13 @@
 package sk.thenet.ds;
 
 class VectorEquatableSet<T:Equatable<T>> extends VectorSet<T> {
-  public function new(?reserve:Int = 16){
+  public function new(?reserve:Int = 16) {
     super(reserve);
   }
   
   override public function has(obj:T):Bool {
-    for (i in 0...size){
-      if (data[i].equals(obj)){
+    for (i in 0...size) {
+      if (data[i].equals(obj)) {
         return true;
       }
     }
@@ -15,9 +15,9 @@ class VectorEquatableSet<T:Equatable<T>> extends VectorSet<T> {
   }
   
   override public function remove(obj:T):Bool {
-    for (i in 0...size){
-      if (data[i].equals(obj)){
-        if (i == size - 1){
+    for (i in 0...size) {
+      if (data[i].equals(obj)) {
+        if (i == size - 1) {
           data[i] = null;
         } else {
           data[i] = data[size - 1];

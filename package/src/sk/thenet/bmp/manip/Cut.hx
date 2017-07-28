@@ -14,7 +14,7 @@ class Cut extends Manipulator {
   public var width (default, null):Int;
   public var height(default, null):Int;
   
-  public function new(x:Int, y:Int, width:Int, height:Int){
+  public function new(x:Int, y:Int, width:Int, height:Int) {
     this.x      = x;
     this.y      = y;
     this.width  = width;

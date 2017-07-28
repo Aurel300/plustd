@@ -26,7 +26,7 @@ Creates a generator seeded with the given `seed`.
 
 `seed` must be non-zero.
    */
-  public function new(seed:UInt){
+  public function new(seed:UInt) {
     super(Stream.always, function() return this.nextNumber());
     this.set_seed(seed);
   }

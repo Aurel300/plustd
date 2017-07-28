@@ -36,7 +36,7 @@ characters arranged in a grid.
     var x:Int = 0;
     var y:Int = 0;
     var xi:Int = 0;
-    for (i in 0...characters){
+    for (i in 0...characters) {
       rects[i * RECT_SIZE] = x;
       rects[i * RECT_SIZE + 1] = y;
       rects[i * RECT_SIZE + 2] = characterWidth;
@@ -45,7 +45,7 @@ characters arranged in a grid.
       rects[i * RECT_SIZE + 5] = characterHeight + offsetHeight;
       x += characterWidth;
       xi++;
-      if (xi >= charactersPerLine){
+      if (xi >= charactersPerLine) {
         xi = 0;
         x = 0;
         y += characterHeight;
@@ -78,7 +78,7 @@ returns the wider grid.
         ,gridHeight * (characterHeight + addY1 + addY2)
         ,0
       );
-    for (y in 0...gridHeight) for (x in 0...gridWidth){
+    for (y in 0...gridHeight) for (x in 0...gridWidth) {
       ret.blitAlphaRect(
            data
           ,x * (characterWidth + addX1 + addX2) + addX1
@@ -99,7 +99,7 @@ Source bitmap data for the font.
   
   private var offset:Int;
   
-  private function new(data:Bitmap, offset:Int, rects:Vector<Int>){
+  private function new(data:Bitmap, offset:Int, rects:Vector<Int>) {
     this.data = data;
     this.offset = offset;
     this.rects = rects;
@@ -130,22 +130,22 @@ above.
      target:Bitmap, x:Int, y:Int, text:String
     ,?sx:Int, ?sy:Int, ?fbuffer:Array<Font>
   ):Point2DI {
-    if (sx == null){
+    if (sx == null) {
       sx = x;
     }
-    if (sy == null){
+    if (sy == null) {
       sy = y;
     }
     var xmax = x;
     var ymax = y;
     var i = 0;
-    while (i < text.length){
+    while (i < text.length) {
       var ch = text.charAt(i);
       var cc = text.charCodeAt(i);
       var cr = (cc - offset) * RECT_SIZE;
       inline function renderChar():Void {
         if (   FM.withinI(x, -rects[cr + 2], target.width  - 1 + rects[cr + 2])
-            && FM.withinI(y, -rects[cr + 3], target.height - 1 + rects[cr + 3])){
+            && FM.withinI(y, -rects[cr + 3], target.height - 1 + rects[cr + 3])) {
           target.blitAlphaRect(
                data, x, y
               ,rects[cr], rects[cr + 1], rects[cr + 2], rects[cr + 3]
@@ -153,15 +153,15 @@ above.
         }
         x += rects[cr + 4];
       }
-      switch (ch){
+      switch (ch) {
         case "\n":
         x = sx;
         y += rects[5];
         
         case "$" if (i < text.length - 1 && fbuffer != null):
         if (text.charAt(i + 1) == "$"
-            || !FM.withinI(text.charCodeAt(i + 1) - 65, 0, fbuffer.length - 1)){
-          if (cc >= offset && cc < offset + rects.length){
+            || !FM.withinI(text.charCodeAt(i + 1) - 65, 0, fbuffer.length - 1)) {
+          if (cc >= offset && cc < offset + rects.length) {
             renderChar();
           }
           i++;

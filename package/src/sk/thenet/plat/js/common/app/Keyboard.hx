@@ -16,7 +16,7 @@ JavaScript implementation of `sk.thenet.app.Keyboard`.
 class Keyboard extends AppKeyboard {
   private var lookup:Map<String, Key>;
   
-  private function new(){
+  private function new() {
     super();
     lookup = new Map();
     lookup.set("ArrowLeft",  Key.ArrowLeft );
@@ -68,15 +68,15 @@ class Keyboard extends AppKeyboard {
     source:Source, e:KeyboardEvent, down:Bool
   ):EKEvent {
     var code:String = untyped __js__("{0}.code", e);
-    if (!lookup.exists(code)){
+    if (!lookup.exists(code)) {
       return null;
     }
     var key:Key = lookup.get(code);
-    if (keysHeld[key] == down){
+    if (keysHeld[key] == down) {
       return null;
     }
     keysHeld[key] = down;
-    if (down){
+    if (down) {
       return new EKEvent.EKDown(source, key);
     }
     return new EKEvent.EKUp(source, key);

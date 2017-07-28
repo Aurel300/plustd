@@ -38,30 +38,30 @@ class AssetManager {
   private var assets:Array<Asset>;
   private var assetsMap:Map<String, Asset>;
   
-  private function new(?assets:Array<Asset>){
-    if (assets == null){
+  private function new(?assets:Array<Asset>) {
+    if (assets == null) {
       assets = [];
     }
     this.assets = assets;
     assetsMap = new Map();
     assetsLoaded = true;
-    for (a in assets){
+    for (a in assets) {
       add(a);
     }
   }
   
   private function add(a:Asset):Void {
     a.manager = this;
-    switch (a.type){
+    switch (a.type) {
       case Bind | Trigger:
       var bind = (cast a:AssetBind);
-      for (b in bind.bindTo){
-        if (!assetsMap.exists(b)){
+      for (b in bind.bindTo) {
+        if (!assetsMap.exists(b)) {
           throw "invalid bind";
         }
         assetsMap.get(b).listen("change", function(event:Event):Bool {
-            for (b in bind.bindTo){
-              if (!isLoaded(b)){
+            for (b in bind.bindTo) {
+              if (!isLoaded(b)) {
                 return false;
               }
             }
@@ -70,18 +70,18 @@ class AssetManager {
       }
       
       case _:
-      if (a.status != Loaded){
+      if (a.status != Loaded) {
         assetsLoaded = false;
       }
     }
-    if (a.id != ""){
+    if (a.id != "") {
       assetsMap.set(a.id, a);
     }
   }
   
   private function preload():Void {
-    for (a in assets){
-      if (a.type != Bind && a.type != Trigger && a.status != Loaded){
+    for (a in assets) {
+      if (a.type != Bind && a.type != Trigger && a.status != Loaded) {
         a.preload();
       }
     }
@@ -92,7 +92,7 @@ class AssetManager {
 asset with that id does not exist.
    */
   public function isLoaded(id:String):Bool {
-    if (assetsMap.exists(id)){
+    if (assetsMap.exists(id)) {
       return assetsMap.get(id).status == Loaded;
     }
     return false;
@@ -105,10 +105,10 @@ that asset has not been loaded yet.
 Throws an error if the given asset is not a bitmap asset.
    */
   public function getBitmap(id:String):Bitmap {
-    if (!isLoaded(id)){
+    if (!isLoaded(id)) {
       return null;
     }
-    if (assetsMap.get(id).type != Bitmap){
+    if (assetsMap.get(id).type != Bitmap) {
       throw "asset type mismatch";
     }
     return (cast (assetsMap.get(id)):AssetBitmap).current;
@@ -121,10 +121,10 @@ that asset has not been loaded yet.
 Throws an error if the given asset is not a sound asset.
    */
   public function getSound(id:String):Sound {
-    if (!isLoaded(id)){
+    if (!isLoaded(id)) {
       return null;
     }
-    if (assetsMap.get(id).type != Sound){
+    if (assetsMap.get(id).type != Sound) {
       throw "asset type mismatch";
     }
     return (cast (assetsMap.get(id)):AssetSound).current;
@@ -132,8 +132,8 @@ Throws an error if the given asset is not a sound asset.
   
   private function attachConsole(console:Console):Void {
     console.listen("file", handleFile);
-    for (a in assets){
-      if (a.filename != null){
+    for (a in assets) {
+      if (a.filename != null) {
         console.monitor(a.filename);
       }
     }
@@ -141,8 +141,8 @@ Throws an error if the given asset is not a sound asset.
   
   private function updateLoad(id:String):Void {
     assetsLoaded = true;
-    for (asset in assets){
-      if (asset.type != Bind && asset.status != Loaded){
+    for (asset in assets) {
+      if (asset.type != Bind && asset.status != Loaded) {
         assetsLoaded = false;
         return;
       }
@@ -151,8 +151,8 @@ Throws an error if the given asset is not a sound asset.
   
   private function handleFile(ev:EFile):Bool {
     trace("handling " + ev.name);
-    for (asset in assets){
-      if (asset.filename != null && asset.filename == ev.name){
+    for (asset in assets) {
+      if (asset.filename != null && asset.filename == ev.name) {
         asset.update(ev.data);
         return true;
       }

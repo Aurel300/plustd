@@ -27,7 +27,7 @@ class Output implements sk.thenet.audio.IOutput {
   private var dev:Int;
   //private var bufferInt:Vector<cpp.UInt8>;
   
-  private function new(channels:Int = 2, samples:Int = 8192){
+  private function new(channels:Int = 2, samples:Int = 8192) {
     this.channels = channels;
     this.samples = samples;
     
@@ -69,7 +69,7 @@ class Output implements sk.thenet.audio.IOutput {
     
     buffer = new Vector<Float>(channels * samples);
     //bufferInt = new Vector<cpp.UInt8>(channels * samples);
-    for (i in 0...buffer.length){
+    for (i in 0...buffer.length) {
       //bufferInt[i] = (cast FM.prng.nextMod(256):cpp.UInt8);
       buffer[i] = FM.prng.nextFloat(.1);
     }
@@ -85,7 +85,7 @@ class Output implements sk.thenet.audio.IOutput {
     sound = new Sound(chunk);
     /*
     buffer = new Vector<Float>(channelsSamples);
-    for (i in 0...channelsSamples){
+    for (i in 0...channelsSamples) {
       buffer[i] = 0;
     }
     */

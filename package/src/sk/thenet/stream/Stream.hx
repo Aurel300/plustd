@@ -102,7 +102,7 @@ its value is returned in the next iteration.
     seed:T, iterationFunc:T->T
   ):Stream<T> {
     var current:T = seed;
-    return new Stream<T>(always, function(){
+    return new Stream<T>(always, function() {
         var old:T = current;
         current = iterationFunc(current);
         return old;
@@ -129,7 +129,7 @@ always return `true` in their continue function.
 The stream function returns the actual elements of the stream. This is
 equivalent to `next` in iterators.
    */
-  private function new(continueFunc:Void->Bool, streamFunc:Void->T){
+  private function new(continueFunc:Void->Bool, streamFunc:Void->T) {
     this.continueFunc = continueFunc;
     this.streamFunc = streamFunc;
     operated = false;
@@ -185,11 +185,11 @@ This is a stream operation.
     checkOperated();
     var fel:Bool = false;
     var nel:T = null;
-    return new Stream<T>(function(){
+    return new Stream<T>(function() {
         fel = false;
-        while (continueFunc()){
+        while (continueFunc()) {
           nel = streamFunc();
-          if (func(nel)){
+          if (func(nel)) {
             fel = true;
             break;
           }
@@ -206,7 +206,7 @@ This is a stream operation.
   public function skip(n:Int):Stream<T> {
     checkOperated();
     var i:Int = 0;
-    while (i < n && continueFunc()){
+    while (i < n && continueFunc()) {
       streamFunc();
       i++;
     }
@@ -221,10 +221,10 @@ This is a stream operation.
   public function take(n:Int):Stream<T> {
     checkOperated();
     var i:Int = 0;
-    return new Stream<T>(function(){
+    return new Stream<T>(function() {
         if (!continueFunc()) return false;
         return i < n;
-      }, function(){
+      }, function() {
         i++;
         return streamFunc();
       });
@@ -240,7 +240,7 @@ is forced to evaluate, e.g. using terminal operations.
 This is a stream operation.
   */
   public function passThrough(func:T->Void):Stream<T> {
-    return new Stream<T>(continueFunc, function(){
+    return new Stream<T>(continueFunc, function() {
         var el = streamFunc();
         func(el);
         return el;
@@ -264,7 +264,7 @@ This is a terminal operation.
    */
   public function forEach(func:T->Void):Void {
     checkOperated();
-    for (e in this){
+    for (e in this) {
       func(e);
     }
   }

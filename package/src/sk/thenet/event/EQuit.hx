@@ -8,7 +8,7 @@ Event name: `quit`
 This event is fired before the application is terminated.
  */
 class EQuit extends Event {
-  public function new(source:Source){
+  public function new(source:Source) {
     super(source, "quit");
   }
 }

@@ -9,7 +9,7 @@ This event is fired every frame, once `sk.thenet.plat.Platform.initFramerate()`
 has been called.
  */
 class ETick extends Event {
-  public function new(source:Source){
+  public function new(source:Source) {
     super(source, "tick");
   }
 }

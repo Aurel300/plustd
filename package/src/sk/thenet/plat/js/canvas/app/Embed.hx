@@ -21,7 +21,7 @@ class Embed {
     var ret = new AssetBitmap(id, file);
     ret.preload = function():Void {
       var img = new Image();
-      img.onload = function(){
+      img.onload = function() {
         var canvas
           = (cast Browser.document.createElement("canvas"):CanvasElement);
         canvas.width = img.width;
@@ -40,7 +40,7 @@ class Embed {
     var ret = new AssetSound(id, file);
     ret.preload = function():Void {
       var audio = new Audio();
-      audio.oncanplaythrough = function(){
+      audio.oncanplaythrough = function() {
         var sound = new Sound(audio);
         ret.updateSound(sound);
       };

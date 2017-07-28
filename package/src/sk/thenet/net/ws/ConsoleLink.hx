@@ -14,7 +14,7 @@ Used by `sk.thenet.app.Console`.
 class ConsoleLink extends Source {
   private var socket:Websocket;
   
-  public function new(){
+  public function new() {
     super();
     socket = Platform.createWebsocket();
     forward("connect", socket);
@@ -23,10 +23,10 @@ class ConsoleLink extends Source {
   
   private function handleData(event:EData):Bool {
     var data = event.data;
-    if (data.length < 1){
+    if (data.length < 1) {
       return false;
     }
-    switch (data.get(0)){
+    switch (data.get(0)) {
       case 0x01:
       fireEvent(new EData(this, data.sub(1, data.length - 1)));
       case 0x02:

@@ -23,27 +23,27 @@ class Output implements sk.thenet.audio.IOutput {
   private var channelsSamples:Int;
   private var buffer:Vector<Float>;
   
-  private function new(channels:Int = 2, samples:Int = 8192){
+  private function new(channels:Int = 2, samples:Int = 8192) {
     this.channels = channels;
     this.samples = samples;
     channelsSamples = channels * samples;
     sound = new Sound();
     sound.addEventListener(SampleDataEvent.SAMPLE_DATA, handleSample);
     buffer = new Vector<Float>(channelsSamples);
-    for (i in 0...channelsSamples){
+    for (i in 0...channelsSamples) {
       buffer[i] = 0;
     }
   }
   
   public function play():Void {
-    if (!playing){
+    if (!playing) {
       channel = sound.play();
       playing = true;
     }
   }
   
   public function stop():Void {
-    if (playing){
+    if (playing) {
       channel.stop();
       channel = null;
       playing = false;
@@ -52,7 +52,7 @@ class Output implements sk.thenet.audio.IOutput {
   
   private function handleSample(event:SampleDataEvent):Void {
     sample(event.position, buffer);
-    for (i in 0...channelsSamples){
+    for (i in 0...channelsSamples) {
       event.data.writeFloat(buffer[i]);
     }
   }

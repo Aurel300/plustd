@@ -14,7 +14,7 @@ JavaScript implementation of `sk.thenet.app.Mouse`.
  */
 @:allow(sk.thenet.plat.js)
 class Mouse extends AppMouse {
-  private function new(){
+  private function new() {
     super();
   }
   
@@ -39,11 +39,11 @@ class Mouse extends AppMouse {
   ):EMEvent {
     x = FM.floor(e.offsetX) >> scale;
     y = FM.floor(e.offsetY) >> scale;
-    if (this.held == held){
+    if (this.held == held) {
       return null;
     }
     this.held = held;
-    if (held){
+    if (held) {
       return new EMEvent.EMDown(source, x, y);
     }
     return new EMEvent.EMUp(source, x, y);

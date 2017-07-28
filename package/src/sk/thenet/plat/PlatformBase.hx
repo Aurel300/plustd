@@ -16,11 +16,11 @@ class PlatformBase {
     //return null;
     
     function sameTypes(a:ComplexType, tb:TypePath):Bool {
-      switch (a){
+      switch (a) {
         case TPath(ta):
         if (ta.name != tb.name) return false;
         /*if (ta.pack.length != tb.pack.length) return false;
-        for (i in 0...ta.pack.length){
+        for (i in 0...ta.pack.length) {
           if (ta.pack[i] != tb.pack[i]) return false;
         }*/
         return true;
@@ -31,11 +31,11 @@ class PlatformBase {
     var fields = Context.getBuildFields();
     var modified = false;
     var fieldNames = new Map<String, Field>();
-    var className = (switch (Context.getLocalType()){
+    var className = (switch (Context.getLocalType()) {
       case TInst(ref, _): ref.toString();
       case _: "unknown";
     });
-    for (f in fields){
+    for (f in fields) {
       fieldNames.set(f.name, f);
     }
     for (init in [{
@@ -95,21 +95,21 @@ class PlatformBase {
         ,args: []
         ,ret: {name: "Websocket", pack: ["sk", "thenet", "net", "ws"], params: []}
         ,retStrict: false
-      }]){
-      if (fieldNames.exists(init.name)){
+      }]) {
+      if (fieldNames.exists(init.name)) {
         var field = fieldNames.get(init.name);
-        switch (field.kind){
+        switch (field.kind) {
           case FFun(func):
-          if (init.retStrict && !sameTypes(func.ret, init.ret)){
+          if (init.retStrict && !sameTypes(func.ret, init.ret)) {
             throw init.name + " has incorrect return type in " + className;
           }
           var argn:Int = 0;
-          for (arg in func.args){
-            if (!sameTypes(arg.type, init.args[argn].type)){
+          for (arg in func.args) {
+            if (!sameTypes(arg.type, init.args[argn].type)) {
               throw init.name + " has incorrect arg type in " + className;
             }
-            if (arg.opt != init.args[argn].optional){
-              if (arg.opt){
+            if (arg.opt != init.args[argn].optional) {
+              if (arg.opt) {
                 throw init.name + " arg should be required in " + className;
               } else {
                 throw init.name + " arg should be optional in " + className;
@@ -168,23 +168,23 @@ class PlatformBase {
         ,"keyboard"
         ,"mouse"
         ,"source"
-      ]){
-      if (fieldNames.exists(support)){
+      ]) {
+      if (fieldNames.exists(support)) {
         var field = fieldNames.get(support);
-        if (field.access.indexOf(AStatic) == -1){
+        if (field.access.indexOf(AStatic) == -1) {
           throw support + " must be static in " + className;
         }
-        if (field.access.indexOf(APublic) == -1){
+        if (field.access.indexOf(APublic) == -1) {
           throw support + " must be public in " + className;
         }
-        switch (field.kind){
+        switch (field.kind) {
           case FProp(_, _, _, _):
           case _:
           throw support + " must be a property in " + className;
         }
       } else {
         modified = true;
-        var tp = (switch(support){
+        var tp = (switch(support) {
             case "capabilities": {
                  name: "Capabilities"
                 ,pack: ["sk", "thenet", "plat"]
@@ -211,7 +211,7 @@ class PlatformBase {
                 ,params: []
               };
           });
-        var np = (switch (support){
+        var np = (switch (support) {
             case "capabilities": {
                  expr: ENew({
                      name: "Capabilities"
@@ -252,7 +252,7 @@ class PlatformBase {
           });
       }
     }
-    if (modified){
+    if (modified) {
       return fields;
     }
     return null;

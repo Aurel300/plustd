@@ -27,7 +27,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   private var native:BitmapData;
   
-  private function new(native:BitmapData){
+  private function new(native:BitmapData) {
     this.native = native;
     width = native.width;
     height = native.height;

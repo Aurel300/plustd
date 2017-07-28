@@ -45,7 +45,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   public static inline var HEIGHT:Int = 1136;
   
   // prevent instantiation
-  private function new(){}
+  private function new() {}
   
   public static var keyboard(default, null):Keyboard;
   
@@ -62,11 +62,11 @@ class Platform extends sk.thenet.plat.PlatformBase {
     SDL.initSubSystem(SDL.INIT_EVENTS);
     running = true;
     untyped __cpp__("SDL_Event event");
-    while (running){
+    while (running) {
       source.fireEvent(new ETick(source));
-      while (untyped __cpp__("SDL_PollEvent(&event)") != 0){
+      while (untyped __cpp__("SDL_PollEvent(&event)") != 0) {
         var etype = untyped __cpp__("event.type");
-        switch (etype){
+        switch (etype) {
           case (SDL.KEYDOWN | SDL.KEYUP) if (keyboard != null):
           var code:Int = untyped __cpp__("event.key.keysym.sym");
           U.callNotNull(source.fireEvent, keyboard.handleKey(
@@ -84,7 +84,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
           U.callNotNull(source.fireEvent, mouse.handleButton(
               source, x, y, etype == SDL.MOUSEBUTTONDOWN, scale
             ));
-          if (etype == SDL.MOUSEBUTTONDOWN){
+          if (etype == SDL.MOUSEBUTTONDOWN) {
             source.fireEvent(mouse.handleClick(source, x, y, scale));
           }
           
@@ -95,12 +95,12 @@ class Platform extends sk.thenet.plat.PlatformBase {
           case _:
         }
       }
-      if (surface != null){
+      if (surface != null) {
         surface.bitmap.blitAlpha(bitmap, 0, 0);
         SDL.setRenderTarget(ren, untyped __cpp__("NULL"));
         SDL.renderPresent(ren);
       }
-      if (!running){
+      if (!running) {
         SDL.quit();
       } else {
         SDL.delay(FM.floor(1000 / fps));

@@ -25,10 +25,10 @@ class Socket extends Source implements sk.thenet.net.ISocket {
   private var socketArr:Array<NativeSocket>;
   public var plugged:Bool;
   
-  private function new(?socket:NativeSocket){
+  private function new(?socket:NativeSocket) {
     super();
     plugged = true;
-    if (socket == null){
+    if (socket == null) {
       this.socket = new NativeSocket();
     } else {
       this.socket = socket;
@@ -52,34 +52,34 @@ class Socket extends Source implements sk.thenet.net.ISocket {
   
   private function handleThread():Void {
     var readBuffer = Bytes.alloc(READ_BUFFER);
-    while (connected){
-      /*if (plugged){
+    while (connected) {
+      /*if (plugged) {
         Sys.sleep(.1);
         continue;
       }*/
       /*
       var res = NativeSocket.select(socketArr, socketArr, socketArr, .05);
-      if (res.read.length > 0){*/
+      if (res.read.length > 0) {*/
         try {
           var read = socket.input.readBytes(readBuffer, 0, READ_BUFFER);
-          if (read > 0){
+          if (read > 0) {
             //trace("socket got data: " + readBuffer.toString());
             fireEvent(new EData(this, readBuffer.sub(0, read)));
             /*
             last_remote_activity = Sys.time();
             */
           }
-        } catch (e:haxe.io.Error){
-        } catch (e:haxe.io.Eof){
+        } catch (e:haxe.io.Error) {
+        } catch (e:haxe.io.Eof) {
           //handleEof();
           connected = false;
         }
       //}
-      //if (res.write.length > 0){
+      //if (res.write.length > 0) {
         sendMutex.acquire();
         var data = (sendQueue.length > 0 ? sendQueue.shift() : null);
         sendMutex.release();
-        if (data != null){
+        if (data != null) {
           //trace("sending", data.toString());
           socket.setBlocking(true);
           socket.output.writeFullBytes(data, 0, data.length);
@@ -105,8 +105,8 @@ class Socket extends Source implements sk.thenet.net.ISocket {
   }
   
   private function handleServe():Void {
-    while (connected){
-      if (plugged){
+    while (connected) {
+      if (plugged) {
         Sys.sleep(.1);
         continue;
       }
@@ -116,9 +116,9 @@ class Socket extends Source implements sk.thenet.net.ISocket {
         child.plugged = false;
         Thread.create(child.handleThread);
         //child.handleThread();
-      } catch (e:Dynamic){
-      }/* catch (e:haxe.io.Error){
-      } catch (e:haxe.io.Eof){
+      } catch (e:Dynamic) {
+      }/* catch (e:haxe.io.Error) {
+      } catch (e:haxe.io.Eof) {
         //handleEof();
         connected = false;
       }*/

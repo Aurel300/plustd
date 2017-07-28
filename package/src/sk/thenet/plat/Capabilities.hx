@@ -9,7 +9,7 @@ all platforms the needed capability should be checked first, in order to avoid
 throwing an exception:
 
 ```haxe
-    if (Platform.capabilities.websocket){
+    if (Platform.capabilities.websocket) {
       var sock = Platform.createWebsocket();
       // code using sock
     } else {
@@ -73,10 +73,10 @@ in the window system of the underlying OS.
    */
   public var window(default, null):Bool = false;
   
-  public function new(?cs:Array<Capability>){
-    if (cs != null){
-      for (c in cs){
-        switch (c){
+  public function new(?cs:Array<Capability>) {
+    if (cs != null) {
+      for (c in cs) {
+        switch (c) {
           case Embed:        embed        = true;
           case Keyboard:     keyboard     = true;
           case Mouse:        mouse        = true;

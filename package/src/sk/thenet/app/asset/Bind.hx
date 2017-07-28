@@ -20,7 +20,7 @@ Creates a new Bind, bound to the given assets (using their id).
    */
   public function new(
     bindTo:Array<String>, func:AssetManager->Event->Bool
-  ){
+  ) {
     super(AssetType.Bind, "", null);
     this.bindTo = bindTo;
     this.func = func;

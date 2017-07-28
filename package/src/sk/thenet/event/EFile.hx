@@ -20,7 +20,7 @@ class EFile extends Event {
     return dataFunc();
   }
   
-  public function new(source:Source, name:String, dataFunc:Void->Bytes){
+  public function new(source:Source, name:String, dataFunc:Void->Bytes) {
     super(source, "file");
     this.name = name;
     this.dataFunc = dataFunc;

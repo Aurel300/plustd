@@ -32,5 +32,5 @@ The y coordinate of the mouse, in pixels.
    */
   public var held(default, null):Bool = false;
   
-  private function new(){}
+  private function new() {}
 }

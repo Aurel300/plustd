@@ -10,7 +10,7 @@ loading.
 @see `State`
  */
 class Preloader extends State {
-  public function new(id:String, app:Application){
+  public function new(id:String, app:Application) {
     super(id, app);
   }
   

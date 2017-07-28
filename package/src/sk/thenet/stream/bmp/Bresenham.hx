@@ -12,9 +12,9 @@ class Bresenham extends Stream<Point2DI> {
   }
   
   public static function getTopDown(from:Point2DI, to:Point2DI):Bresenham {
-    if (from.y > to.y){
+    if (from.y > to.y) {
       return new Bresenham(to, from);
-    } else if (from.y == to.y && from.x > to.x){
+    } else if (from.y == to.y && from.x > to.x) {
       return new Bresenham(to, from);
     }
     return new Bresenham(from, to);
@@ -22,7 +22,7 @@ class Bresenham extends Stream<Point2DI> {
   
   public var yLong(default, null):Bool;
   
-  public function new(from:Point2DI, to:Point2DI, ?ray:Bool = false){
+  public function new(from:Point2DI, to:Point2DI, ?ray:Bool = false) {
     var x = from.x;
     var y = from.y;
     
@@ -42,15 +42,15 @@ class Bresenham extends Stream<Point2DI> {
         return !finished;
       }, function():Point2DI {
         var ret = new Point2DI(x, y);
-        if (x == to.x && y == to.y){
+        if (x == to.x && y == to.y) {
           finished = true;
         } else {
           var e2 = err;
-          if (e2 > -dx){
+          if (e2 > -dx) {
             err -= dy;
             x += sx;
           }
-          if (e2 < dy){
+          if (e2 < dy) {
             err += dx;
             y += sy;
           }

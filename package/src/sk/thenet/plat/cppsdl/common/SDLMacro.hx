@@ -11,7 +11,7 @@ class SDLMacro {
   private static var sdlPathLib:String;
   
   private static function initPath(?rel:String):Void {
-    if (sdlPathInclude == null){
+    if (sdlPathInclude == null) {
       var pos = Context.currentPos();
       var sdlPath = Path.directory(Context.getPosInfos(pos).file);
       sdlPath = Path.normalize(Path.join([
@@ -23,7 +23,7 @@ class SDLMacro {
       sdlPathInclude = Path.normalize(Path.join([
           sdlPath, "include/SDL2/"
         ]));
-      if (Context.definedValue("PLUSTD_OS") == "osx"){
+      if (Context.definedValue("PLUSTD_OS") == "osx") {
         sdlPathLib = Path.normalize(Path.join([
             sdlPath, "lib/osx/"
           ]));
@@ -38,7 +38,7 @@ class SDLMacro {
     var pos  = Context.currentPos();
     
     cls.meta.add(":buildXml", [{expr: EConst(CString('<target id="haxe">'
-      + (switch (Context.definedValue("PLUSTD_OS")){
+      + (switch (Context.definedValue("PLUSTD_OS")) {
       case "osx": '
   <flag value="-I${sdlPathInclude}" />
   <flag value="-D_THREAD_SAFE" />

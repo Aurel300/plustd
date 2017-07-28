@@ -17,7 +17,7 @@ C++ / SDL implementation of `sk.thenet.app.Keyboard`.
 class Keyboard extends AppKeyboard {
   private var lookup:Map<Int, Key>;
   
-  private function new(){
+  private function new() {
     super();
     lookup = new Map<Int, Key>();
     lookup[untyped __cpp__("SDLK_LEFT")] = Key.ArrowLeft;
@@ -69,11 +69,11 @@ class Keyboard extends AppKeyboard {
     source:Source, code:Int, down:Bool
   ):EKEvent {
     var key:Null<Key> = lookup.get(code);
-    if (key == null || keysHeld[key] == down){
+    if (key == null || keysHeld[key] == down) {
       return null;
     }
     keysHeld[key] = down;
-    if (down){
+    if (down) {
       return new EKEvent.EKDown(source, key);
     }
     return new EKEvent.EKUp(source, key);

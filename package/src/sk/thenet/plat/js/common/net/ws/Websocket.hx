@@ -23,13 +23,13 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   private var socket:NativeWebsocket;
   private var sendQueue:Array<Bytes>;
   
-  public function new(){
+  public function new() {
     super();
     sendQueue = [];
   }
   
   public function connect(host:String, url:String, port:Int):Void {
-    if (host.indexOf("ws://") == -1 && host.indexOf("wss://") == -1){
+    if (host.indexOf("ws://") == -1 && host.indexOf("wss://") == -1) {
       host = "ws://" + host;
     }
     socket = new NativeWebsocket(host + ":" + port + "/" + url);
@@ -53,15 +53,15 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
     fireEvent(new Event(this, "connect"));
     connected = true;
     handshake = true;
-    for (s in sendQueue){
+    for (s in sendQueue) {
       send(s);
     }
   }
   
   private function handleData(ev:js.html.MessageEvent):Void {
-    if (Std.is(ev.data, Blob)){
+    if (Std.is(ev.data, Blob)) {
       var fileReader = new FileReader();
-      fileReader.onload = function(){
+      fileReader.onload = function() {
         var data = Bytes.ofData(fileReader.result);
         fireEvent(new EData(this, data));
       };
@@ -73,7 +73,7 @@ class Websocket extends Source implements sk.thenet.net.ws.IWebsocket {
   }
   
   public inline function send(data:Bytes, ?binary:Bool = false):Void {
-    if (!connected){
+    if (!connected) {
       sendQueue.push(data);
       return;
     }

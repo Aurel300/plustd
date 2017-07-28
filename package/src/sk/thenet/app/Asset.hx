@@ -36,7 +36,7 @@ class Asset extends Source {
   public var filename(default, null):String;
   public var status  (default, null):AssetStatus = AssetStatus.None;
   
-  private function new(type:AssetType, id:String, ?filename:String){
+  private function new(type:AssetType, id:String, ?filename:String) {
     super();
     this.type     = type;
     this.id       = id;
@@ -61,7 +61,7 @@ Starts the preloading of this asset. Called automatically by `AssetManager`.
     type:String, listener:T->Bool, ?priority:Bool = false
   ):Void {
     super.listen(type, listener, priority);
-    if (type == "change" && status == Loaded){
+    if (type == "change" && status == Loaded) {
       var ev = new Event(this, "change");
       listener((cast ev:T));
     }

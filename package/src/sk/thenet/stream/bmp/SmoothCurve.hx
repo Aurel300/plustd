@@ -10,7 +10,7 @@ abstract SmoothCurve(Stream<Point2DI1DF>)
   from Stream<Point2DI1DF>
   to Stream<Point2DI1DF>
 {
-  public inline function new(stream:Stream<Point2DI1DF>){
+  public inline function new(stream:Stream<Point2DI1DF>) {
     this = stream;
   }
   
@@ -18,9 +18,9 @@ abstract SmoothCurve(Stream<Point2DI1DF>)
     target:Bitmap, colour:Colour, ?bounded:Bool = true
   ):Int {
     var points = 0;
-    for (p in this){
-      if (p.x < 0 || p.x >= target.width || p.y < 0 || p.y >= target.height){
-        if (bounded){
+    for (p in this) {
+      if (p.x < 0 || p.x >= target.width || p.y < 0 || p.y >= target.height) {
+        if (bounded) {
           break;
         }
         continue;
@@ -36,9 +36,9 @@ abstract SmoothCurve(Stream<Point2DI1DF>)
     ,colour:Colour, ?bounded:Bool = true
   ):Int {
     var points = 0;
-    for (p in this){
-      if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height){
-        if (bounded){
+    for (p in this) {
+      if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) {
+        if (bounded) {
           break;
         }
         continue;

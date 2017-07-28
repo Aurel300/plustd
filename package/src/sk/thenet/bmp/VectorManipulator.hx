@@ -16,7 +16,7 @@ class VectorManipulator extends Manipulator {
     bitmap:Bitmap, func:Vector<UInt>->Int->UInt->UInt
   ):Vector<UInt> {
     var vector:Vector<UInt> = bitmap.getVector();
-    for (i in 0...vector.length){
+    for (i in 0...vector.length) {
       vector[i] = func(vector, i, vector[i]);
     }
     return vector;

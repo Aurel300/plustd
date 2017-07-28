@@ -12,18 +12,18 @@ class XiaolinWu extends Stream<Point2DI1DF> {
     return new SmoothCurve(new XiaolinWu(from, to, ray));
   }
   
-  public function new(from:Point2DF, to:Point2DF, ?ray:Bool = false){
+  public function new(from:Point2DF, to:Point2DF, ?ray:Bool = false) {
     var steep = FM.absF(to.y - from.y) > FM.absF(to.x - from.x);
     var x1:Float = from.x;
     var y1:Float = from.y;
     var x2:Float = to.x;
     var y2:Float = to.y;
     var t:Float = 0;
-    if (steep){
+    if (steep) {
       t = x1; x1 = y1; y1 = t;
       t = x2; x2 = y2; y2 = t;
     }
-    if (x1 > x2){
+    if (x1 > x2) {
       t = x1; x1 = x2; x2 = t;
       t = y1; y1 = y2; y2 = t;
     }
@@ -78,10 +78,10 @@ class XiaolinWu extends Stream<Point2DI1DF> {
     super(ray ? Stream.always : function():Bool {
         return (ray || ends.length > 0 || x < xpxl2);
       }, function():Point2DI1DF {
-        if (ends.length > 2){
+        if (ends.length > 2) {
           return ends.shift();
-        } else if (ray || x < xpxl2){
-          if (!ph){
+        } else if (ray || x < xpxl2) {
+          if (!ph) {
             ph = true;
             return (steep
               ? new Point2DI1DF(FM.floor(intery), x, 1 - FM.frac(intery))
