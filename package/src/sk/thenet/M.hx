@@ -6,7 +6,14 @@ import haxe.macro.Expr;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 
+#end
+
 class M {
+  public static macro function denull(value:Expr, def:Expr):Expr {
+    return macro ($value != null ? $value : $def);
+  }
+  
+#if macro
   public static function touchFields(fields:Array<Field>):Void {
     fields.push({
          name: "__touch"
@@ -227,6 +234,5 @@ class M {
         Sys.println("");
       });
   }
-}
-
 #end
+}

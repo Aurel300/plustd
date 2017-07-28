@@ -1,6 +1,7 @@
 package sk.thenet.bmp;
 
 import haxe.ds.Vector;
+import sk.thenet.M;
 import sk.thenet.bmp.Bitmap;
 import sk.thenet.geom.Point2DI;
 import sk.thenet.plat.Platform;
@@ -130,12 +131,8 @@ above.
      target:Bitmap, x:Int, y:Int, text:String
     ,?sx:Int, ?sy:Int, ?fbuffer:Array<Font>
   ):Point2DI {
-    if (sx == null) {
-      sx = x;
-    }
-    if (sy == null) {
-      sy = y;
-    }
+    sx = M.denull(sx, x);
+    sy = M.denull(sy, y);
     var xmax = x;
     var ymax = y;
     var i = 0;

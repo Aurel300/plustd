@@ -1,5 +1,6 @@
 package sk.thenet.app;
 
+import sk.thenet.M;
 import sk.thenet.app.asset.Bind as AssetBind;
 import sk.thenet.app.asset.Bitmap as AssetBitmap;
 import sk.thenet.app.asset.Sound as AssetSound;
@@ -39,10 +40,7 @@ class AssetManager {
   private var assetsMap:Map<String, Asset>;
   
   private function new(?assets:Array<Asset>) {
-    if (assets == null) {
-      assets = [];
-    }
-    this.assets = assets;
+    this.assets = assets = M.denull(assets, []);
     assetsMap = new Map();
     assetsLoaded = true;
     for (a in assets) {

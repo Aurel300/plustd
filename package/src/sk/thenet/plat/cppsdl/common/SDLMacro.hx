@@ -5,6 +5,7 @@ package sk.thenet.plat.cppsdl.common;
 import haxe.io.Path;
 import haxe.macro.Expr;
 import haxe.macro.Context;
+import sk.thenet.M;
 
 class SDLMacro {
   private static var sdlPathInclude:String;
@@ -17,7 +18,7 @@ class SDLMacro {
       sdlPath = Path.normalize(Path.join([
            (Path.isAbsolute(sdlPath) ? "" : Sys.getCwd())
           ,sdlPath
-          ,(rel == null ? "" : rel)
+          ,M.denull(rel, "")
           ,"../../../../../../"
         ]));
       sdlPathInclude = Path.normalize(Path.join([

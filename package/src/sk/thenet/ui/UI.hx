@@ -1,29 +1,27 @@
 package sk.thenet.ui;
 
+import sk.thenet.M;
 import sk.thenet.bmp.Bitmap;
 import sk.thenet.event.Source;
 
 class UI extends Source {
   public var list:Array<Display>;
-  public var names:Map<String, Display>;
-  public var lmx:Int;
-  public var lmy:Int;
   public var displayOver:Display;
   public var displayDown:Display;
   
+  private var lmx:Int;
+  private var lmy:Int;
+  private var names:Map<String, Display>;
+  
   public function new(?list:Array<Display>) {
     super();
-    this.list = (list != null ? list : []);
+    this.list = M.denull(list, []);
     names = new Map<String, Display>();
     update();
   }
   
   public inline function get(id:String):Display {
     return names.get(id);
-  }
-  
-  private function zSort(a:Display, b:Display):Int {
-    return a.z - b.z;
   }
   
   public function update():Void {
@@ -36,7 +34,7 @@ class UI extends Source {
         if (l.name != null) {
           names.set(prefix + l.name, l);
         }
-        updateSub(l.children, l.name + ".");
+        updateSub(l.children, prefix + (l.name != null ? l.name + "." : ""));
       }
     }
     updateSub(list, "");
@@ -68,6 +66,40 @@ class UI extends Source {
     renderSub(list, ox, oy);
   }
   
+  public function mouseMove(mx:Int, my:Int, ?ox:Int = 0, ?oy:Int = 0):Display {
+    if (displayOver != null) {
+      displayOver.mouseOver = false;
+    }
+    displayOver = mouseAt(mx, my, ox, oy);
+    if (displayOver != null) {
+      displayOver.mouseOver = true;
+    }
+    return displayOver;
+  }
+  
+  public function mouseDown(mx:Int, my:Int, ?ox:Int = 0, ?oy:Int = 0):Display {
+    if (displayDown != null) {
+      displayDown.mouseDown = false;
+    }
+    displayDown = mouseAt(mx, my, ox, oy);
+    if (displayDown != null) {
+      displayDown.mouseDown = true;
+    }
+    return displayDown;
+  }
+  
+  public function mouseUp(mx:Int, my:Int, ?ox:Int = 0, ?oy:Int = 0):Display {
+    var d = mouseAt(mx, my, ox, oy);
+    if (displayDown != null) {
+      if (displayDown == d) {
+        fireEvent(new EDisplayClick(this, d, mx - ox, my - oy));
+      }
+      displayDown.mouseDown = false;
+      displayDown = null;
+    }
+    return d;
+  }
+  
   private function mouseAt(mx:Int, my:Int, ?ox:Int = 0, ?oy:Int = 0):Display {
     lmx = mx;
     lmy = my;
@@ -91,37 +123,7 @@ class UI extends Source {
     return mouseAtSub(list, ox, oy);
   }
   
-  public function mouseMove(mx:Int, my:Int, ?ox:Int = 0, oy:Int = 0):Display {
-    if (displayOver != null) {
-      displayOver.mouseOver = false;
-    }
-    displayOver = mouseAt(mx, my, ox, oy);
-    if (displayOver != null) {
-      displayOver.mouseOver = true;
-    }
-    return displayOver;
-  }
-  
-  public function mouseDown(mx:Int, my:Int, ?ox:Int = 0, oy:Int = 0):Display {
-    if (displayDown != null) {
-      displayDown.mouseDown = false;
-    }
-    displayDown = mouseAt(mx, my, ox, oy);
-    if (displayDown != null) {
-      displayDown.mouseDown = true;
-    }
-    return displayDown;
-  }
-  
-  public function mouseUp(mx:Int, my:Int, ?ox:Int = 0, oy:Int = 0):Display {
-    var d = mouseAt(mx, my, ox, oy);
-    if (displayDown != null) {
-      if (displayDown == d) {
-        fireEvent(new EDisplayClick(this, d));
-      }
-      displayDown.mouseDown = false;
-      displayDown = null;
-    }
-    return d;
+  private function zSort(a:Display, b:Display):Int {
+    return a.z - b.z;
   }
 }
