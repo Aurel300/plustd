@@ -23,7 +23,7 @@ interface ISound {
 Plays the sample with the given loop mode. This will create a new channel, and
 it won't stop the playback of any previous channels of this sound.
    */
-  public function play(?mode:LoopMode):Void;
+  public function play(?mode:LoopMode, ?volume:Float):Void;
   
   /**
 Stops the playback of this sound on all channels.

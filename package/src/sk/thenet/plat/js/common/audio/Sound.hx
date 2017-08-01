@@ -28,13 +28,14 @@ class Sound implements sk.thenet.audio.ISound {
     pool = [];
   }
   
-  public function play(?mode:LoopMode):Void {
+  public function play(?mode:LoopMode, ?volume:Float = 1):Void {
     var channel:Audio = null;
     if (pool.length > 0) {
       channel = pool.shift();
     } else {
       channel = (cast (sound.cloneNode()):Audio);
     }
+    channel.volume = volume;
     channel.onended = (switch (mode) {
         case Forever:
         function() {

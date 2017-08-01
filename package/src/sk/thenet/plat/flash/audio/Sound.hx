@@ -6,6 +6,7 @@ import sk.thenet.audio.Sound.LoopMode;
 import flash.events.Event;
 import flash.media.Sound as NativeSound;
 import flash.media.SoundChannel;
+import flash.media.SoundTransform;
 
 /**
 Flash implementation of `sk.thenet.audio.ISound`.
@@ -28,12 +29,15 @@ class Sound implements sk.thenet.audio.ISound {
     channels = [];
   }
   
-  public function play(?mode:LoopMode):Void {
+  public function play(?mode:LoopMode, ?volume:Float = 1.0):Void {
     var channel = (switch (mode) {
         case Forever: sound.play(0, 1000000);
         case Loop(amount): sound.play(0, amount);
         case _: sound.play();
       });
+    if (volume != 1.0) {
+      channel.soundTransform = new SoundTransform(volume);
+    }
     channel.addEventListener(Event.SOUND_COMPLETE, function(event:Event) {
         channels.remove(channel);
       }, false, 0, true);

@@ -37,6 +37,7 @@ Multiple operations can be chained:
 @see `Bitmap`
 @see `Manipulator`
  */
+@:forward
 abstract FluentBitmap(Bitmap) from Bitmap to Bitmap {
   public inline function new(bitmap:Bitmap) {
     this = bitmap;

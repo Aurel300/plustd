@@ -58,7 +58,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     js.Browser.document.body.appendChild(native);
   }
   
-  public inline function get(x:Int, y:Int):UInt {
+  public inline function get(x:Int, y:Int):Colour {
     getVector();
     if (!FM.withinI(x, 0, width - 1) || !FM.withinI(y, 0, height - 1)) {
       return 0;
@@ -105,7 +105,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   
   public function getVectorRect(
     x:Int, y:Int, width:Int, height:Int
-  ):Vector<UInt> {
+  ):Vector<Colour> {
     x = FM.clampI(x, 0, this.width);
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
@@ -126,19 +126,18 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   }
   
   public function setVectorRect(
-    x:Int, y:Int, width:Int, height:Int, vector:Vector<Colour>
+    x:Int, y:Int, w:Int, h:Int, vector:Vector<Colour>
   ):Void {
     getVector();
-    x = FM.clampI(x, 0, this.width);
-    y = FM.clampI(y, 0, this.height);
-    width = FM.clampI(width, 1, this.width - x);
-    height = FM.clampI(height, 1, this.height - y);
-    var data8 = new js.html.Uint8ClampedArray(width * height * 4);
+    x = FM.clampI(x, 0, this.width - 1);
+    y = FM.clampI(y, 0, this.height - 1);
+    w = FM.clampI(w, 1, this.width - x);
+    h = FM.clampI(h, 1, this.height - y);
+    var data8 = new js.html.Uint8ClampedArray(w * h * 4);
     var vi = 0;
     var di = 0;
-    for (vy in y...y + height) {
-      di = x + vy * this.width;
-      for (vx in x...x + width) {
+    for (vy in 0...h) {
+      for (vx in 0...w) {
         data[di] = vector[vi];
         data8[(di << 2)    ] = data[di].ri;
         data8[(di << 2) + 1] = data[di].gi;
@@ -148,9 +147,9 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
         di++;
       }
     }
-    var idata = new js.html.ImageData(width, height);
+    var idata = new js.html.ImageData(w, h);
     idata.data.set(data8);
-    c2d.putImageData(idata, x, y, 0, 0, width, height);
+    c2d.putImageData(idata, x, y, 0, 0, w, h);
     changed = false;
   }
   

@@ -12,7 +12,7 @@ import sk.thenet.plat.Platform;
 This class can be used to create and render bitmap fonts.
  */
 class Font {
-  private static inline var RECT_SIZE:Int = 6;
+  public static inline var RECT_SIZE:Int = 6;
   
   /**
 Creates a monospaced font. The bitmap given should contain the necessary
@@ -174,7 +174,9 @@ above.
         
         case _:
       }
-      if (x + rects[cr + 4] > xmax) xmax = x + rects[cr + 4];
+      if (cc >= offset && cc < offset + rects.length) {
+        if (x + rects[cr + 4] > xmax) xmax = x + rects[cr + 4];
+      }
       if (y + rects[5] > ymax) ymax = y + rects[5];
       i++;
     }

@@ -15,18 +15,24 @@ class Box extends Manipulator {
   public var width (default, null):Int;
   public var height(default, null):Int;
   
+  var midw:Int;
+  var midh:Int;
+  
   public function new(cut1:Point2DI, cut2:Point2DI, width:Int, height:Int) {
     this.cut1   = cut1;
     this.cut2   = cut2;
     this.width  = width;
     this.height = height;
+    midw = cut2.x - cut1.x;
+    midh = cut2.y - cut1.y;
   }
   
   override public function extract(bitmap:Bitmap):Bitmap {
+    if (height == 0 || width == 0) {
+      return null;
+    }
     var cutw = bitmap.width - cut2.x;
     var cuth = bitmap.height - cut2.y;
-    var midw = cut2.x - cut1.x;
-    var midh = cut2.y - cut1.y;
     var ret = Platform.createBitmap(width, height, 0);
     ret.blitAlphaRect(bitmap, 0, 0, 0, 0, cut1.x, cut1.y);
     ret.blitAlphaRect(bitmap, width - cutw, 0, cut2.x, 0, cutw, cut1.y);

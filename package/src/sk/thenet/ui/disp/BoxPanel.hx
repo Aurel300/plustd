@@ -28,7 +28,7 @@ class BoxPanel extends Display {
   
   override public function update():Void {
     super.update();
-    if (w == lw || h == lh) {
+    if (w == lw && h == lh) {
       return;
     }
     lw = w;

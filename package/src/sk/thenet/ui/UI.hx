@@ -1,22 +1,30 @@
 package sk.thenet.ui;
 
+import haxe.ds.ArraySort;
 import sk.thenet.M;
 import sk.thenet.bmp.Bitmap;
 import sk.thenet.event.Source;
+import sk.thenet.plat.Platform;
 
 class UI extends Source {
   public var list:Array<Display>;
   public var displayOver:Display;
   public var displayDown:Display;
+  public var cursors:Array<Cursor>;
+  public var doubleClick:Int = 0;
   
   private var lmx:Int;
   private var lmy:Int;
   private var names:Map<String, Display>;
+  private var lastClickTime:Int = 0;
+  private var lastClickDisplay:Display;
   
   public function new(?list:Array<Display>) {
     super();
     this.list = M.denull(list, []);
+    cursors = [];
     names = new Map<String, Display>();
+    reset();
     update();
   }
   
@@ -24,12 +32,11 @@ class UI extends Source {
     return names.get(id);
   }
   
-  public function update():Void {
+  public function update(?root:Array<Display>):Void {
     function updateSub(list:Array<Display>, prefix:String):Void {
       if (list == null) {
         return;
       }
-      list.sort(zSort);
       for (l in list) {
         if (l.name != null) {
           names.set(prefix + l.name, l);
@@ -37,7 +44,7 @@ class UI extends Source {
         updateSub(l.children, prefix + (l.name != null ? l.name + "." : ""));
       }
     }
-    updateSub(list, "");
+    updateSub(M.denull(root, list), "");
   }
   
   public function reset():Void {
@@ -53,20 +60,50 @@ class UI extends Source {
   }
   
   public function render(bmp:Bitmap, ?ox:Int = 0, oy:Int = 0):Void {
-    function renderSub(list:Array<Display>, ox:Int, oy:Int):Void {
+    if (lastClickTime > 0) {
+      lastClickTime--;
+      if (lastClickTime == 0) {
+        lastClickDisplay = null;
+      }
+    }
+    function renderSub(bmp:Bitmap, list:Array<Display>, ox:Int, oy:Int):Void {
       if (list == null) {
         return;
       }
-      list.sort(zSort);
       for (l in list) {
-        l.render(bmp, ox + l.x, oy + l.y);
-        renderSub(l.children, ox + l.x, oy + l.y);
+        if (!l.show) {
+          continue;
+        }
+        var inbound = ox + l.x < bmp.width && ox + l.x + l.w >= 0
+            && oy + l.y < bmp.height && oy + l.y + l.h >= 0;
+        if (inbound) {
+          l.render(bmp, ox + l.x, oy + l.y);
+        }
+        if (l.clip) {
+          if (inbound) {
+            if (l.w == l.clipTarget.width && l.h == l.clipTarget.height) {
+              l.clipTarget.fill(0);
+            } else {
+              l.clipTarget = Platform.createBitmap(l.w, l.h, 0);
+            }
+            renderSub(l.clipTarget, l.children, 0, 0);
+            bmp.blitAlpha(l.clipTarget, ox + l.x, oy + l.y);
+          }
+        } else {
+          renderSub(bmp, l.children, ox + l.x, oy + l.y);
+        }
       }
     }
-    renderSub(list, ox, oy);
+    renderSub(bmp, list, ox, oy);
+    for (c in cursors) {
+      bmp.blitAlpha(c.bitmap, lmx + c.offX, lmy + c.offY);
+    }
   }
   
   public function mouseMove(mx:Int, my:Int, ?ox:Int = 0, ?oy:Int = 0):Display {
+    if (displayDown != null) {
+      fireEvent(new EDisplayDrag(this, displayDown, mx - lmx, my - lmy, mx - displayDown.fullX, my - displayDown.fullY));
+    }
     if (displayOver != null) {
       displayOver.mouseOver = false;
     }
@@ -92,7 +129,17 @@ class UI extends Source {
     var d = mouseAt(mx, my, ox, oy);
     if (displayDown != null) {
       if (displayDown == d) {
-        fireEvent(new EDisplayClick(this, d, mx - ox, my - oy));
+        if (doubleClick > 0 && lastClickTime > 0 && lastClickDisplay == d) {
+          fireEvent(new EDisplayClick(this, d, mx - ox, my - oy, true));
+          lastClickTime = 0;
+          lastClickDisplay = null;
+        } else {
+          fireEvent(new EDisplayClick(this, d, mx - ox, my - oy));
+          lastClickTime = doubleClick;
+          lastClickDisplay = d;
+        }
+      } else if (d != null) {
+        fireEvent(new EDisplayDrop(this, displayDown, d));
       }
       displayDown.mouseDown = false;
       displayDown = null;
@@ -103,24 +150,37 @@ class UI extends Source {
   private function mouseAt(mx:Int, my:Int, ?ox:Int = 0, ?oy:Int = 0):Display {
     lmx = mx;
     lmy = my;
-    function mouseAtSub(list:Array<Display>, ox:Int, oy:Int):Display {
+    function mouseAtSub(list:Array<Display>, ox:Int, oy:Int, xmin:Int, ymin:Int, xmax:Int, ymax:Int):Display {
       if (list == null) {
         return null;
       }
-      list.sort(zSort);
-      for (l in list) {
-        var ret = mouseAtSub(l.children, ox + l.x, oy + l.y);
+      //list.sort(zSort);
+      for (li in 0...list.length) {
+        var l = list[list.length - li - 1];
+        if (!l.show) {
+          continue;
+        }
+        var ret = (if (l.clip) {
+            mouseAtSub(
+                 l.children, ox + l.x, oy + l.y
+                ,FM.maxI(ox + l.x, xmin), FM.maxI(oy + l.y, ymin)
+                ,FM.minI(ox + l.x + l.w, xmax), FM.minI(oy + l.y + l.h, ymax)
+              );
+          } else {
+            mouseAtSub(l.children, ox + l.x, oy + l.y, xmin, ymin, xmax, ymax);
+          });
         if (ret != null) {
           return ret;
         }
-        if (mx >= ox + l.x && mx < ox + l.x + l.w
+        if (mx >= xmin && mx < xmax && my >= ymin && my < ymax
+            && mx >= ox + l.x && mx < ox + l.x + l.w
             && my >= oy + l.y && my < oy + l.y + l.h) {
           return l;
         }
       }
       return null;
     }
-    return mouseAtSub(list, ox, oy);
+    return mouseAtSub(list, ox, oy, ox, oy, 9999, 9999);
   }
   
   private function zSort(a:Display, b:Display):Int {

@@ -54,7 +54,11 @@ class Phaser {
     phase %= mod;
   }
   
-  public function get():Int {
-    return FM.floor(map[phase] / scale) * multiply;
+  public function get(?tickAfter:Bool):Int {
+    var ret = FM.floor(map[phase] / scale) * multiply;
+    if (tickAfter) {
+      tick();
+    }
+    return ret;
   }
 }

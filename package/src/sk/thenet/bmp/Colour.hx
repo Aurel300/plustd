@@ -1,5 +1,6 @@
 package sk.thenet.bmp;
 
+import haxe.ds.Vector;
 import sk.thenet.U;
 
 /**
@@ -85,6 +86,21 @@ values, which are clamped to the range [0, 1].
         ,FM.clampI(Std.int(g * 255), 0, 255)
         ,FM.clampI(Std.int(b * 255), 0, 255)
       );
+  }
+  
+  public static function quantise(c:Colour, pal:Vector<Colour>):Int {
+    var bestI    = 0;
+    var bestDist = 0x300;
+    for (i in 1...pal.length) {
+      var dist = FM.absI(c.ri - pal[i].ri)
+        + FM.absI(c.gi - pal[i].gi)
+        + FM.absI(c.bi - pal[i].bi);
+      if (dist < bestDist) {
+        bestI = i;
+        bestDist = dist;
+      }
+    }
+    return bestI;
   }
   
   /**

@@ -13,6 +13,45 @@ class Display {
   public var children:Array<Display>;
   public var mouseOver:Bool = false;
   public var mouseDown:Bool = false;
+  public var clip:Bool = false;
+  public var clipTarget:Bitmap;
+  public var sort:Bool = true;
+  public var show:Bool = true;
+  
+  public var fullName(get, never):String;
+  private inline function get_fullName():String {
+    var ret = [];
+    var c = this;
+    while (c != null) {
+      if (c.name != null) {
+        ret.unshift(c.name);
+      }
+      c = c.parent;
+    }
+    return ret.join(".");
+  }
+  
+  public var fullX(get, never):Int;
+  private inline function get_fullX():Int {
+    var ret = 0;
+    var c = this;
+    while (c != null) {
+      ret += c.x;
+      c = c.parent;
+    }
+    return ret;
+  }
+  
+  public var fullY(get, never):Int;
+  private inline function get_fullY():Int {
+    var ret = 0;
+    var c = this;
+    while (c != null) {
+      ret += c.y;
+      c = c.parent;
+    }
+    return ret;
+  }
   
   public function new(x:Int, y:Int, z:Int, w:Int, h:Int, ?name:String) {
     this.x    = x;
