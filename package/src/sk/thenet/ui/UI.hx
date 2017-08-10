@@ -130,16 +130,22 @@ class UI extends Source {
     if (displayDown != null) {
       if (displayDown == d) {
         if (doubleClick > 0 && lastClickTime > 0 && lastClickDisplay == d) {
-          fireEvent(new EDisplayClick(this, d, mx - ox, my - oy, true));
+          var ev = new EDisplayClick(this, d, mx - ox, my - oy, true);
+          d.fireEvent(ev);
+          fireEvent(ev);
           lastClickTime = 0;
           lastClickDisplay = null;
         } else {
-          fireEvent(new EDisplayClick(this, d, mx - ox, my - oy));
+          var ev = new EDisplayClick(this, d, mx - ox, my - oy);
+          d.fireEvent(ev);
+          fireEvent(ev);
           lastClickTime = doubleClick;
           lastClickDisplay = d;
         }
       } else if (d != null) {
-        fireEvent(new EDisplayDrop(this, displayDown, d));
+        var ev = new EDisplayDrop(this, displayDown, d);
+        d.fireEvent(ev);
+        fireEvent(ev);
       }
       displayDown.mouseDown = false;
       displayDown = null;

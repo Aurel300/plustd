@@ -1,8 +1,9 @@
 package sk.thenet.ui;
 
 import sk.thenet.bmp.Bitmap;
+import sk.thenet.event.Source;
 
-class Display {
+class Display extends Source {
   public var x:Int;
   public var y:Int;
   public var z:Int;
@@ -54,6 +55,7 @@ class Display {
   }
   
   public function new(x:Int, y:Int, z:Int, w:Int, h:Int, ?name:String) {
+    super();
     this.x    = x;
     this.y    = y;
     this.z    = z;

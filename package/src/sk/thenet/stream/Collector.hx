@@ -9,5 +9,5 @@ into a different data structure.
 @see `sk.thenet.stream.Collectors` for common collector implementations.
  */
 interface Collector<T, U> {
-  public function collect(s:Stream<T>):U;
+  public function collect(s:Iterator<T>):U;
 }

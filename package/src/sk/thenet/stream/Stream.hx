@@ -5,17 +5,21 @@ import haxe.ds.Vector;
 /**
 ##Stream##
 
-Simple class to aid functional programming. Streams are objects which can
-generate elements. Generally, they are evaluated lazily. They can be iterated
-using for loops.
+Simple tools to aid functional programming with streams. Streams / iterators
+are objects which can generate elements and tell when they are exhausted.
+Generally, they are evaluated lazily. They can be iterated using for loops.
 
-Streams can be created from arrays, lists, vectors, and iterators using the
-static `from*` methods. There are also methods for creating infinite streams
-from generating functions.
+The intended usage for this class is to use it as static extension:
 
-Any operation applied to a stream prevents the stream from being used again.
-Some operations produce another stream (stream operations), some do not
-(terminal operations).
+```haxe
+    using sk.thenet.stream.Stream;
+```
+
+Then to create a stream from an array:
+
+```haxe
+    [1, 2, 3].streamArray();
+```
 
 ####Stream operations####
 
@@ -41,34 +45,33 @@ complete. Use with caution.
 List of terminal operations supported:
 
  - `Stream.collect`
+ - `Stream.eager`
  - `Stream.forEach`
  */
-class Stream<T> {
+class Stream {
   /**
 Generates a stream from an `Array<T>`. The elements are streamed in the array
 order.
    */
-  public static function ofArray<T>(array:Array<T>):Stream<T> {
-    var it = array.iterator();
-    return new Stream<T>(it.hasNext, it.next);
+  public static inline function streamArray<T>(array:Array<T>):FluentStream<T> {
+    return array.iterator();
   }
   
   /**
 Generates a stream from a `List<T>`. The elements are streamed in the list
 order.
    */
-  public static function ofList<T>(list:List<T>):Stream<T> {
-    var it = list.iterator();
-    return new Stream<T>(it.hasNext, it.next);
+  public static inline function streamList<T>(list:List<T>):FluentStream<T> {
+    return list.iterator();
   }
   
   /**
 Generates a stream from a `haxe.ds.Vector<T>`. The elements are streamed in the
 vector order.
    */
-  public static function ofVector<T>(vector:Vector<T>):Stream<T> {
+  public static function streamVector<T>(vector:Vector<T>):FluentStream<T> {
     var it = 0...vector.length;
-    return new Stream<T>(it.hasNext, function() return vector[it.next()]);
+    return {hasNext: it.hasNext, next: function() return vector[it.next()]};
   }
   
   private static function always():Bool {
@@ -78,15 +81,8 @@ vector order.
   /**
 Generates an infinite stream from a generating function.
    */
-  public static function ofGenerator<T>(generatingFunc:Void->T):Stream<T> {
-    return new Stream<T>(always, generatingFunc);
-  }
-  
-  /**
-Generates a stream from an iterator.
-   */
-  public static function ofIterator<T>(iterator:Iterator<T>):Stream<T> {
-    return new Stream<T>(iterator.hasNext, iterator.next);
+  public static function streamFunction<T>(func:Void->T):FluentStream<T> {
+    return {hasNext: always, next: func};
   }
   
   /**
@@ -98,61 +94,17 @@ The seed is the first value produced by this stream, without being modified by
 the iteration function. The iteration function is called at every element, but
 its value is returned in the next iteration.
    */
-  public static function ofSeedIteration<T>(
-    seed:T, iterationFunc:T->T
-  ):Stream<T> {
-    var current:T = seed;
-    return new Stream<T>(always, function() {
-        var old:T = current;
-        current = iterationFunc(current);
+  public static function streamSeed<T>(seed:T, func:T->T):FluentStream<T> {
+    var current = seed;
+    return {hasNext: always, next: function() {
+        var old = current;
+        current = func(current);
         return old;
-      });
+      }};
   }
   
-  public var fluent(get, never):FluentStream<T>;
-  
-  private inline function get_fluent():FluentStream<T> {
-    return new FluentStream(this);
-  }
-  
-  private var continueFunc:Void->Bool;
-  private var streamFunc:Void->T;
-  private var operated:Bool;
-  
-  /**
-Creates a new Stream given a continue function and a stream function.
-
-The continue function returns a boolean - `true` iff the stream still has
-elements. This is equivalent to `hasNext` in iterators. Infinite streams will
-always return `true` in their continue function.
-
-The stream function returns the actual elements of the stream. This is
-equivalent to `next` in iterators.
-   */
-  private function new(continueFunc:Void->Bool, streamFunc:Void->T) {
-    this.continueFunc = continueFunc;
-    this.streamFunc = streamFunc;
-    operated = false;
-  }
-  
-  /**
-@return `true` iff there are more elements in the stream.
-   */
-  public inline function hasNext():Bool {
-    return continueFunc();
-  }
-  
-  /**
-@return The next element in the stream, if available.
-   */
-  public inline function next():T {
-    return streamFunc();
-  }
-  
-  // checks if stream was used, throws if so
-  private inline function checkOperated():Void {
-    if (operated) throw "stream used";
-    operated = true;
+  public static inline function fluent<T>(stream:Iterator<T>):FluentStream<T> {
+    return new FluentStream(stream);
   }
   
   /**
@@ -160,16 +112,15 @@ Applies a mapping function to each element in the stream. This produces another
 stream, whose type does not have to be the same as that of the original stream.
 
 ```haxe
-var floats = Stream.ofArray([1.5, 2.5, 3.5]);
+var floats = [1.5, 2.5, 3.5].streamArray();
 var ints = floats.map(FM.floor);
 ints.forEach(function(a) trace(a)); // 1, 2, 3
 ```
 
 This is a stream operation.
    */
-  public function map<U>(func:T->U):Stream<U> {
-    checkOperated();
-    return new Stream<U>(continueFunc, function() return func(streamFunc()));
+  public static function map<T, U>(stream:Iterator<T>, func:T->U):FluentStream<U> {
+    return {hasNext: stream.hasNext, next: function() return func(stream.next())};
   }
   
   /**
@@ -181,21 +132,17 @@ filter function will cause an infinite loop - use with caution.
 
 This is a stream operation.
    */
-  public function filter(func:T->Bool):Stream<T> {
-    checkOperated();
-    var fel:Bool = false;
+  public static function filter<T>(stream:Iterator<T>, func:T->Bool):FluentStream<T> {
     var nel:T = null;
-    return new Stream<T>(function() {
-        fel = false;
-        while (continueFunc()) {
-          nel = streamFunc();
+    return {hasNext: function() {
+        while (stream.hasNext()) {
+          nel = stream.next();
           if (func(nel)) {
-            fel = true;
-            break;
+            return true;
           }
         }
-        return fel;
-      }, function() return nel);
+        return false;
+      }, next: function() return nel};
   }
   
   /**
@@ -203,14 +150,11 @@ Skips `n` elements in the stream, then returns a stream consisting of the rest.
 
 This is a stream operation.
    */
-  public function skip(n:Int):Stream<T> {
-    checkOperated();
-    var i:Int = 0;
-    while (i < n && continueFunc()) {
-      streamFunc();
-      i++;
+  public static function skip<T>(stream:Iterator<T>, n:Int):FluentStream<T> {
+    for (i in 0...n) if (stream.hasNext()) {
+      stream.next();
     }
-    return new Stream<T>(continueFunc, streamFunc);
+    return stream;
   }
   
   /**
@@ -218,16 +162,14 @@ Returns a stream consisting of the first `n` elements of the original stream.
 
 This is a stream operation.
    */
-  public function take(n:Int):Stream<T> {
-    checkOperated();
+  public static function take<T>(stream:Iterator<T>, n:Int):FluentStream<T> {
     var i:Int = 0;
-    return new Stream<T>(function() {
-        if (!continueFunc()) return false;
-        return i < n;
-      }, function() {
+    return {hasNext: function() {
+        return stream.hasNext() && i < n;
+      }, next: function() {
         i++;
-        return streamFunc();
-      });
+        return stream.next();
+      }};
   }
   
   /**
@@ -239,33 +181,76 @@ is forced to evaluate, e.g. using terminal operations.
 
 This is a stream operation.
   */
-  public function passThrough(func:T->Void):Stream<T> {
-    return new Stream<T>(continueFunc, function() {
-        var el = streamFunc();
+  public static function passThrough<T>(stream:Iterator<T>, func:T->Void):FluentStream<T> {
+    return {hasNext: stream.hasNext, next: function() {
+        var el = stream.next();
         func(el);
         return el;
-      });
+      }};
   }
   
   /**
-Applies a `Collector` to this stream.
+Applies a `Collector` to the given stream.
 
 This is a terminal operation.
    */
-  public function collect<U>(c:Collector<T, U>):U {
-    checkOperated();
-    return c.collect(this);
+  public static function collect<T, U>(stream:Iterator<T>, c:Collector<T, U>):U {
+    return c.collect(stream);
   }
   
   /**
-Applies a function to each element of this stream.
+Forces the given stream to generate all of its elements.
 
 This is a terminal operation.
    */
-  public function forEach(func:T->Void):Void {
-    checkOperated();
-    for (e in this) {
+  public static function eager<T>(stream:Iterator<T>):Void {
+    for (e in stream) {}
+  }
+  
+  /**
+Applies a function to each element of the given stream.
+
+This is a terminal operation.
+   */
+  public static function forEach<T>(stream:Iterator<T>, func:T->Void):Void {
+    for (e in stream) {
       func(e);
     }
+  }
+  
+  /**
+Lazily flattens an array of streams.
+   */
+  public static function flatten<T>(streams:Array<Iterator<T>>):Iterator<T> {
+    return {hasNext: function() {
+        for (iter in streams) {
+          if (iter.hasNext()) {
+            return true;
+          }
+        }
+        return false;
+      }, next: function() {
+        while (!streams[0].hasNext()) {
+          streams.shift();
+        }
+        return streams[0].next();
+      }};
+  }
+  
+  /**
+Adds a value at the end of the given stream.
+   */
+  public static function push<T>(stream:Iterator<T>, add:T):Iterator<T> {
+    var added = false;
+    return {
+         hasNext: function () return (stream.hasNext() || !added)
+        ,next: function () {
+            if (stream.hasNext()) {
+              return stream.next();
+            }
+            added = true;
+            return add;
+          }
+      };
   }
 }

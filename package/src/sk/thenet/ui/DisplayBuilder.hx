@@ -6,6 +6,10 @@ import sk.thenet.geom.Point2DI;
 import sk.thenet.ui.disp.*;
 
 class DisplayBuilder {
+  public static inline function buildOne(d:DisplayType):Display {
+    return build([d])[0];
+  }
+  
   public static function build(list:Array<DisplayType>):Array<Display> {
     function buildSub(
       last:Display, list:Array<DisplayType>, z:Int
