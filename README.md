@@ -2,9 +2,7 @@
 
 # plustd #
 
-**This library is in development**
-
-Plustd is a Haxe library in development, aimed at 2D game development, interactive apps, and more - performance-oriented while supporting many platforms.
+Plustd is a Haxe library *in development*, aimed at 2D game development, interactive apps, and more - performance-oriented while supporting many platforms.
 
 Currently, it supports:
 
@@ -20,15 +18,15 @@ In the near future, the goal is to add support for:
 
 ### Usage ###
 
-**Warning: this library is in development and any API might change dramatically between releases. Use at your own peril.**
+*Warning: this library is in development and any API might change dramatically between releases. Use at your own peril.*
 
 To use plustd in your haxe projects, include these lines at the beginning of your `make.hxml` (or within your command line arguments):
 
 ```haxe
-    -D PLUSTD_TARGET=<specify target here>
-    -D PLUSTD_OS=<specify OS here>
-    -lib plustd
-    <compilation target here>
+-D PLUSTD_TARGET=<specify target here>
+-D PLUSTD_OS=<specify OS here>
+-lib plustd
+<compilation target here>
 ```
 
 Here are the values of `PLUSTD_TARGET`, `PLUSTD_OS` according to their intended compilation target and platform:
@@ -42,15 +40,14 @@ Here are the values of `PLUSTD_TARGET`, `PLUSTD_OS` according to their intended 
 | JavaScript / WebGL | `js.webgl` | (not used) | `-js` |
 | Neko VM  | `neko` | (not used) | `-neko` |
 
-To use the features of plustd, make your class extend `sk.thenet.app.Application` and pass appropriate `sk.thenet.app.ApplicationInit` values to `super` in its constructor. Some platforms require additional setup beforehand, which is handled by `sk.thenet.plat.Platform.boot`. Here is an example class:
+To use the features of plustd, make your class extend `sk.thenet.app.Application` and pass appropriate `sk.thenet.app.ApplicationInit` values to `super` in its constructor. The `main` function is created automatically if you don't provide it:
 
 ```haxe
+import sk.thenet.FM;
 import sk.thenet.app.*;
 import sk.thenet.plat.Platform;
 
 class Main extends Application {
-  public static function main() Platform.boot(function() new Main());
-  
   public function new() {
     super([
          Framerate(60)
