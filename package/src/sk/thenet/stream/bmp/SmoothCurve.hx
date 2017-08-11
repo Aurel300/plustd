@@ -6,11 +6,11 @@ import sk.thenet.bmp.Colour;
 import sk.thenet.geom.Point2DI1DF;
 import sk.thenet.stream.Stream;
 
-abstract SmoothCurve(Stream<Point2DI1DF>)
-  from Stream<Point2DI1DF>
-  to Stream<Point2DI1DF>
+abstract SmoothCurve(Iterator<Point2DI1DF>)
+  from Iterator<Point2DI1DF>
+  to Iterator<Point2DI1DF>
 {
-  public inline function new(stream:Stream<Point2DI1DF>) {
+  public inline function new(stream:Iterator<Point2DI1DF>) {
     this = stream;
   }
   
