@@ -4,7 +4,7 @@ import sk.thenet.FM;
 import sk.thenet.geom.Point2DI;
 import sk.thenet.stream.Stream;
 
-class Bresenham extends Stream<Point2DI> {
+class Bresenham {
   public static inline function getCurve(
     from:Point2DI, to:Point2DI, ?ray:Bool = false
   ):Curve {
@@ -21,41 +21,55 @@ class Bresenham extends Stream<Point2DI> {
   }
   
   public var yLong(default, null):Bool;
+  public var ray  (default, null):Bool;
+  
+  public var x(default, null):Int;
+  public var y(default, null):Int;
+  
+  private var finished:Bool = false;
+  private var to:Point2DI;
+  private var sx:Int;
+  private var sy:Int;
+  private var dx:Int;
+  private var dy:Int;
+  private var err:Float;
   
   public function new(from:Point2DI, to:Point2DI, ?ray:Bool = false) {
-    var x = from.x;
-    var y = from.y;
+    this.ray = ray;
+    this.to  = to;
     
-    var dx = FM.absI(to.x - x);
-    var sx = x < to.x ? 1 : -1;
+    x = from.x;
+    y = from.y;
     
-    var dy = FM.absI(to.y - y);
-    var sy = y < to.y ? 1 : -1; 
+    dx = FM.absI(to.x - x);
+    sx = x < to.x ? 1 : -1;
+    dy = FM.absI(to.y - y);
+    sy = y < to.y ? 1 : -1; 
     
     yLong = dy > dx;
     
-    var err:Float = (dx > dy ? dx : -dy) / 2;
-    
-    var finished = false;
-    
-    super(ray ? Stream.always : function():Bool {
-        return !finished;
-      }, function():Point2DI {
-        var ret = new Point2DI(x, y);
-        if (x == to.x && y == to.y) {
-          finished = true;
-        } else {
-          var e2 = err;
-          if (e2 > -dx) {
-            err -= dy;
-            x += sx;
-          }
-          if (e2 < dy) {
-            err += dx;
-            y += sy;
-          }
-        }
-        return ret;
-      });
+    err = (dx > dy ? dx : -dy) / 2;
+  }
+  
+  public function hasNext():Bool {
+    return ray || !finished;
+  }
+  
+  public function next():Point2DI {
+    var ret = new Point2DI(x, y);
+    if (x == to.x && y == to.y) {
+      finished = !ray;
+    } else {
+      var e2 = err;
+      if (e2 > -dx) {
+        err -= dy;
+        x += sx;
+      }
+      if (e2 < dy) {
+        err += dx;
+        y += sy;
+      }
+    }
+    return ret;
   }
 }

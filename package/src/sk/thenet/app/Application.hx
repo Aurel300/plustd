@@ -41,6 +41,7 @@ Note that the transitions are not used in this class. To change states, use
 `Application.applyState`.
  */
 @:keepSub
+@:autoBuild(sk.thenet.M.initApplication())
 class Application
   implements FSMMachine<Application, State, Transition>
   implements FSMMemory<State>

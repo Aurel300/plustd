@@ -253,4 +253,47 @@ Adds a value at the end of the given stream.
           }
       };
   }
+  
+  /**
+Adds a value at the beginning of the given stream.
+   */
+  public static function unshift<T>(stream:Iterator<T>, add:T):Iterator<T> {
+    var added = false;
+    return {
+         hasNext: function () return (stream.hasNext() || !added)
+        ,next: function () {
+            if (!added) {
+              added = true;
+              return add;
+            }
+            return stream.next();
+          }
+      };
+  }
+  
+  public static inline function id<T>(val:T):T {
+    return val;
+  }
+  
+  public static function min<T, U:Float>(stream:Iterator<T>, func:T->U):U {
+    var min = func(stream.next());
+    for (e in stream) {
+      var val = func(e);
+      if (val < min) {
+        min = val;
+      }
+    }
+    return min;
+  }
+  
+  public static function max<T, U:Float>(stream:Iterator<T>, func:T->U):U {
+    var max = func(stream.next());
+    for (e in stream) {
+      var val = func(e);
+      if (val > max) {
+        max = val;
+      }
+    }
+    return max;
+  }
 }

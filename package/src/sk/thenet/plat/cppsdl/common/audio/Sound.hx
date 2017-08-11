@@ -51,12 +51,13 @@ class Sound implements sk.thenet.audio.ISound {
     channels = [];
   }
   
-  public function play(?mode:LoopMode):Void {
+  public function play(?mode:LoopMode, ?volume:Float = 1):Void {
     var channel = SDL.Mixer.playChannel(-1, chunk, (switch (mode) {
         case Forever: -1;
         case Loop(amount): amount - 1;
         case _: 0;
       }));
+    SDL.Mixer.volume(channel, Std.int(volume * SDL.Mixer.MAX_VOLUME));
     channels.push(channel);
     channelsMap.set(channel, this);
   }

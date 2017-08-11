@@ -45,32 +45,32 @@ Here are the values of `PLUSTD_TARGET`, `PLUSTD_OS` according to their intended 
 To use the features of plustd, make your class extend `sk.thenet.app.Application` and pass appropriate `sk.thenet.app.ApplicationInit` values to `super` in its constructor. Some platforms require additional setup beforehand, which is handled by `sk.thenet.plat.Platform.boot`. Here is an example class:
 
 ```haxe
-    import sk.thenet.app.*;
-    import sk.thenet.plat.Platform;
-    
-    class Main extends Application {
-      public static function main() Platform.boot(function() new Main());
-      
-      public function new(){
-        super([
-             Framerate(60)
-            ,Window("demo", 320, 240)
-            ,Surface(160, 120, 1)
-          ]);
-        addState(new Test(this));
-        mainLoop();
-      }
-    }
-    
-    class Test extends State {
-      public function new(app:Main){
-        super("test", app);
-      }
-      
-      override public function tick(){
-        app.bitmap.fill(0xFF000000 | FM.prng.nextMod(0xFFFFFF));
-      }
-    }
+import sk.thenet.app.*;
+import sk.thenet.plat.Platform;
+
+class Main extends Application {
+  public static function main() Platform.boot(function() new Main());
+  
+  public function new() {
+    super([
+         Framerate(60)
+        ,Optional(Window("demo", 320, 240))
+        ,Surface(160, 120, 1)
+      ]);
+    addState(new Test(this));
+    mainLoop();
+  }
+}
+
+class Test extends State {
+  public function new(app:Main) {
+    super("test", app);
+  }
+  
+  override public function tick() {
+    app.bitmap.fill(0xFF000000 | FM.prng.next());
+  }
+}
 ```
 
 See the samples and API documentation for more details.

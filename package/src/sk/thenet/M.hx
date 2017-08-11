@@ -31,6 +31,50 @@ class M {
     return fields;
   }
   
+  public static macro function initApplication():Array<Field> {
+    var fields = Context.getBuildFields();
+    for (f in fields) {
+      if (f.name == "main") {
+        return fields;
+      }
+    }
+    var name = Context.getLocalClass().get().name;
+    var pos = Context.currentPos();
+    fields.push({
+         access: [AStatic, APublic]
+        ,doc: null
+        ,kind: FFun({
+           args: []
+          ,expr: {
+            expr: ECall({
+              expr: EField({
+                 expr: EConst(CIdent("Platform"))
+                ,pos: pos
+              }, "boot")
+              ,pos: pos
+            }, [{
+              expr: EFunction(null,{
+                args: [], expr: {
+                  expr: ENew({
+                    name: name, pack: [], params: []
+                  }, [])
+                  ,pos: pos
+                }
+                ,params: [], ret: null
+              })
+              ,pos: pos
+            }])
+            ,pos: pos
+          }
+          ,params: [], ret: null
+        })
+        ,meta: []
+        ,name: "main"
+        ,pos: pos
+      });
+    return fields; 
+  }
+  
   public static macro function init():Void {
     var buildStart = Date.now();
     

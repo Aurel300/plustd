@@ -40,7 +40,7 @@ extern class SDL {
   @:native("SDL_TEXTUREACCESS_STREAMING") static var TEXTUREACCESS_STREAMING(default, null):TextureAccess;
   @:native("SDL_TEXTUREACCESS_TARGET") static var TEXTUREACCESS_TARGET(default, null):TextureAccess;
   
-  // ints?
+  // constants
   @:native("SDL_BLENDMODE_NONE") static var BLENDMODE_NONE(default, null):BlendMode;
   @:native("SDL_BLENDMODE_BLEND") static var BLENDMODE_BLEND(default, null):BlendMode;
   @:native("SDL_BLENDMODE_ADD") static var BLENDMODE_ADD(default, null):BlendMode;
@@ -117,6 +117,9 @@ extern class Mixer {
   @:native("MIX_INIT_MP3") static var INIT_MP3(default, null):cpp.UInt32;
   @:native("MIX_INIT_OGG") static var INIT_OGG(default, null):cpp.UInt32;
   
+  // constants
+  @:native("MIX_MAX_VOLUME") static var MAX_VOLUME(default, null):Int;
+  
   // init
   @:native("Mix_Init") static function init(flags:cpp.UInt32):Int;
   
@@ -127,6 +130,7 @@ extern class Mixer {
   @:native("Mix_LoadWAV_RW") static function loadWAV_RW(rwops:RWOpsPointer, freesrc:Int):MixChunkPointer;
   @:native("Mix_OpenAudio") static function openAudio(frequency:Int, format:cpp.UInt16, channels:Int, chunksize:Int):Int;
   @:native("Mix_PlayChannel") static function playChannel(channel:Int, chunk:MixChunkPointer, loops:Int):Int;
+  @:native("Mix_Volume") static function volume(channel:Int, volume:Int):Int;
 }
 
 /*

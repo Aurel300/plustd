@@ -1,45 +1,33 @@
 package sk.thenet.anim;
 
-import haxe.ds.Vector;
 import sk.thenet.FM;
 
 /**
-##Phase function##
+##Phaser function##
 
 A phaser function, used for cyclic timers, e.g. walk cycles. The function
 `get()` can is written as:
 
 ```haxe
-    FM.floor(map[phase] / scale) * multiply
+    FM.floor(phase / scale) * multiply
 ```
 
 Where `phase` increases by `speed` with every call to `tick()`, and is kept
-within modulo `mod`. If the mapping is linear, use `Phaser.linear(mod)`.
+within modulo `mod`. If no modulo is needed, set `mod` to `0`.
  */
 class Phaser {
-  public static function linear(
-    mod:Int, ?scale:Int = 1, ?multiply:Int = 1
-  ):Phaser {
-    var map = new Vector<Int>(mod);
-    for (i in 0...mod) {
-      map[i] = i;
-    }
-    return new Phaser(0, mod, map, scale, multiply, 1);
-  }
-  
   public var phase   :Int;
   public var mod     :Int;
-  public var map     :Vector<Int>;
   public var scale   :Int;
   public var multiply:Int;
   public var speed   :Int;
   
   public function new(
-    phase:Int, mod:Int, map:Vector<Int>, scale:Int, multiply:Int, speed:Int
+     ?mod:Int = 0, ?scale:Int = 1
+    ,?multiply:Int = 1, ?speed:Int = 1, ?phase:Int = 0
   ) {
     this.phase    = phase;
     this.mod      = mod;
-    this.map      = map;
     this.scale    = scale;
     this.multiply = multiply;
     this.speed    = speed;
@@ -51,11 +39,13 @@ class Phaser {
   
   public function tick():Void {
     phase += (speed >= 0 ? speed : mod + speed);
-    phase %= mod;
+    if (mod != 0) {
+      phase %= mod;
+    }
   }
   
-  public function get(?tickAfter:Bool):Int {
-    var ret = FM.floor(map[phase] / scale) * multiply;
+  public function get(?tickAfter:Bool = false):Int {
+    var ret = FM.floor(phase / scale) * multiply;
     if (tickAfter) {
       tick();
     }

@@ -6,8 +6,8 @@ import sk.thenet.bmp.Colour;
 import sk.thenet.geom.Point2DI;
 import sk.thenet.stream.Stream;
 
-abstract Curve(Stream<Point2DI>) from Stream<Point2DI> to Stream<Point2DI> {
-  public inline function new(stream:Stream<Point2DI>) {
+abstract Curve(Iterator<Point2DI>) from Iterator<Point2DI> to Iterator<Point2DI> {
+  public inline function new(stream:Iterator<Point2DI>) {
     this = stream;
   }
   

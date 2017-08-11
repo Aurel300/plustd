@@ -2,22 +2,21 @@ package sk.thenet.stream.prng;
 
 import haxe.ds.Vector;
 import haxe.io.Bytes;
-import sk.thenet.stream.Stream;
 
 /**
 ##PRN Generator##
 
-Pseudo-random number generator wrapper. This class wraps a `Stream<UInt>`
+Pseudo-random number generator wrapper. This class wraps a `Iterator<UInt>`
 (ideally ones from `sk.thenet.stream.prng`) which generates (pseudo-)random
 integers infinitely. It adds methods for obtaining specific kinds of data
 types.
  */
 @:forward(next)
-abstract Generator(Stream<UInt>) {
+abstract Generator(Iterator<UInt>) {
   /**
 Creates a generator from the given stream.
    */
-  public function new(stream:Stream<UInt>) {
+  public function new(stream:Iterator<UInt>) {
     this = stream;
   }
   

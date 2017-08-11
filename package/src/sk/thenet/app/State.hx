@@ -46,13 +46,6 @@ be accessible with `app.getStateById(id)`.
   }
   
   /**
-Convenience shortcut for `phasers.get(id)`.
-   */
-  public inline function ph(id:String):Phaser {
-    return phasers.get(id);
-  }
-  
-  /**
 Called when this state should be initialised. It is preferable to put state
 initialisation here to putting it in the constructor, as some `Platform`
 functions might fail on some platforms. This function is called only once.
@@ -136,4 +129,9 @@ application initialisation.
 @see `sk.thenet.event.EKEvent`
    */
   public function keyUp(key:Key):Void {}
+  
+  @:dox(show)
+  private function getPhase(id:String, ?tickAfter:Bool = true):Int {
+    return phasers[id].get(tickAfter);
+  }
 }
