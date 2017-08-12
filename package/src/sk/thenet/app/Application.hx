@@ -213,6 +213,9 @@ automatically.
       }
       
       case Optional(sub):
+      if (!required) {
+        throw "nested Optional";
+      }
       handleInit(sub, false);
       
       case _:

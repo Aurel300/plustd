@@ -147,31 +147,39 @@ See above for note on `ceilZ` and `floorZ`.
   }
   
   /**
-@return The bigger number between `x` and `y`.
+@return The bigger number among `x` and `y`.
    */
   public static inline function maxF(x:Float, y:Float):Float {
     return x > y ? x : y;
   }
   
   /**
-@return The bigger number between `x` and `y`.
+@return The bigger number among `x` and `y`.
    */
   public static inline function maxI(x:Int, y:Int):Int {
     return x > y ? x : y;
   }
   
   /**
-@return The smaller number between `x` and `y`.
+@return The smaller number among `x` and `y`.
    */
   public static inline function minF(x:Float, y:Float):Float {
     return x < y ? x : y;
   }
   
   /**
-@return The smaller number between `x` and `y`.
+@return The smaller number among `x` and `y`.
    */
   public static inline function minI(x:Int, y:Int):Int {
     return x < y ? x : y;
+  }
+  
+  public static inline function nmodI(n:Int, mod:Int):Int {
+    return (n < 0 ? mod - ((-n) % mod) : n) % mod;
+  }
+  
+  public static inline function nmodF(n:Float, mod:Float):Float {
+    return (n < 0 ? mod - ((-n) % mod) : n) % mod;
   }
   
   /**
@@ -183,6 +191,20 @@ See above for note on `ceilZ` and `floorZ`.
 #else
     return Math.floor(x + .5);
 #end
+  }
+  
+  /**
+@return Degree equivalent of `rad` radians.
+   */
+  public static inline function deg(rad:Float):Float {
+    return (rad / Math.PI) * 180;
+  }
+  
+  /**
+@return Radian equivalent of `deg` degrees.
+   */
+  public static inline function rad(deg:Float):Float {
+    return (deg / 180) * Math.PI;
   }
   
   /**
