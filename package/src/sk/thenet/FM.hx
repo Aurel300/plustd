@@ -174,6 +174,20 @@ See above for note on `ceilZ` and `floorZ`.
     return x < y ? x : y;
   }
   
+  /**
+@return `n` if `pos && !neg`, `-n` if `!pos && neg`, `0` otherwise.
+   */
+  public static inline function negposI(n:Int, neg:Bool, pos:Bool):Int {
+    return neg != pos ? (neg ? -n : n) : 0;
+  }
+  
+  /**
+@return `n` if `pos && !neg`, `-n` if `!pos && neg`, `0` otherwise.
+   */
+  public static inline function negposF(n:Float, neg:Bool, pos:Bool):Float {
+    return neg != pos ? (neg ? -n : n) : 0;
+  }
+  
   public static inline function nmodI(n:Int, mod:Int):Int {
     return (n < 0 ? mod - ((-n) % mod) : n) % mod;
   }
