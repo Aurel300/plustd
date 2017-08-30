@@ -8,6 +8,8 @@ import haxe.macro.Context;
 
 #end
 
+using StringTools;
+
 class M {
   public static macro function denull(value:Expr, def:Expr):Expr {
     return macro ($value != null ? $value : $def);
@@ -29,6 +31,11 @@ class M {
     var fields = Context.getBuildFields();
     touchFields(fields);
     return fields;
+  }
+  
+  public static macro function traceType():Array<Field> {
+    trace(Context.getBuildFields());
+    return null;
   }
   
   public static macro function initApplication():Array<Field> {
@@ -75,25 +82,54 @@ class M {
     return fields; 
   }
   
+  public static function makeDocTypes():Void {
+    for (t in [
+        for (d in 1...5) for (c in ["I", "F"]) 'sk.thenet.geom.Point${d}D${c}'
+      ]) {
+      makeType(t, true);
+    }
+  }
+  
+  public static function makeType(type:String, define:Bool):TypeDefinition {
+    if (!type.startsWith("sk.thenet.")) {
+      return null;
+    }
+    var c = type.split(".");
+    var ret = (switch (c) {
+        case ["sk", "thenet", "geom", gp]:
+        if (!gp.startsWith("Point")
+            || (!gp.endsWith("DF") && !gp.endsWith("DI"))
+            || gp.length != 8
+            || gp.charCodeAt(5) < "1".code
+            || gp.charCodeAt(5) > "9".code) {
+          null;
+        } else {
+          sk.thenet.geom.PointMacro.buildPoint(
+              gp.charCodeAt(5) - "0".code, gp.endsWith("DI")
+            );
+        }
+        case _: null;
+      });
+    if (define) {
+      Context.defineType(ret);
+    }
+    return ret;
+  }
+  
   public static macro function init():Void {
     var buildStart = Date.now();
+    var quiet = Context.defined("PLUSTD_QUIET");
     
-    /*
-    Sys.println(" ┏━┓  ┏┓   ┏┓ ┏┓"); // hmm
-    Sys.println("┏┛ ┗┳━┫┣┳┳━┫┗┳┻┃");
-    Sys.println("┗┓ ┏┫╋┃┃┃┣┓┃┏┫╋┃");
-    Sys.println(" ┗━┛┃┳┻┻━┻━┻━┻━┛");
-    Sys.println("    ┗┛");
-    */
     inline function esc(str:String):String {
       return String.fromCharCode(0x1B) + "[" + str + "m";
     }
     inline function rst():String {
       return esc("0");
     }
-    
     inline function log(msg:String):Void {
-      Sys.println('${esc("38;7")} ╋ std ${esc("1;40;37")} $msg ${rst()}');
+      if (!quiet) {
+        Sys.println('${esc("38;7")} ╋ std ${esc("1;40;37")} $msg ${rst()}');
+      }
     }
     inline function logWarning(msg:String):Void {
       Sys.println('${esc("38;43;7")} ╋ std ${esc("1;40;33")} Warning ${esc("1;40;37")} $msg ${rst()}');
@@ -106,51 +142,57 @@ class M {
       }
     }
     
-    var rainbow = [1, 5, 4, 6, 2, 3, 7];
-    
-    Sys.println("");
-    
-    var lines = [
-         [' ',' ',' ','┏','━','━','━','━','━','┓',' ',' ',' ','┏','┓',' ',' ',' ','┏','┓',' ','┏','┓',' ']
-        ,[' ','┏','━','┛',' ',' ',' ',' ',' ','┗','━','┳','━','┫','┣','┳','┳','━','┫','┗','┳','┛','┃',' ']
-        ,[' ','┃',' ',' ',' ',' ',' ',' ',' ',' ',' ','┃','┃','┃','┃','┃','┃','┗','┫','┏','┫','┃','┃',' ']
-        ,[' ','┃',' ',' ',' ',' ',' ',' ',' ',' ',' ','┃','╋','┃','┃','┃','┣','┓','┃','┣','┫','╋','┃',' ']
-        ,[' ','┗','━','┓',' ',' ',' ',' ',' ','┏','━','┫','┏','┻','┻','━','┻','━','┻','━','┻','━','┛',' ']
-        ,[' ',' ',' ','┗','━','━','━','━','━','┛',' ','┗','┛',' ','t','h','e','n','e','t','.','s','k',' ']
-      ];
-    var ly:Int = 0;
-    for (l in lines) {
-      var lc = ly >> 1;
-      Sys.print(esc("1;30;4" + lc));
-      for (c in 0...24) {
-        var olc = lc;
-        lc = (ly >> 1) + (c >> 3) + ((ly + c) % 4 < 2 ? 1 : 0);
-        if (lc != olc) {
-          Sys.print(esc("4" + rainbow[lc]));
+    if (!quiet) {
+      var rainbow = [1, 5, 4, 6, 2, 3, 7];
+      Sys.println("");
+      var lines = [
+           [' ',' ',' ','┏','━','━','━','━','━','┓',' ',' ',' ','┏','┓',' ',' ',' ','┏','┓',' ','┏','┓',' ']
+          ,[' ','┏','━','┛',' ',' ',' ',' ',' ','┗','━','┳','━','┫','┣','┳','┳','━','┫','┗','┳','┛','┃',' ']
+          ,[' ','┃',' ',' ',' ',' ',' ',' ',' ',' ',' ','┃','┃','┃','┃','┃','┃','┗','┫','┏','┫','┃','┃',' ']
+          ,[' ','┃',' ',' ',' ',' ',' ',' ',' ',' ',' ','┃','╋','┃','┃','┃','┣','┓','┃','┣','┫','╋','┃',' ']
+          ,[' ','┗','━','┓',' ',' ',' ',' ',' ','┏','━','┫','┏','┻','┻','━','┻','━','┻','━','┻','━','┛',' ']
+          ,[' ',' ',' ','┗','━','━','━','━','━','┛',' ','┗','┛',' ','t','h','e','n','e','t','.','s','k',' ']
+        ];
+      var ly:Int = 0;
+      for (l in lines) {
+        var lc = ly >> 1;
+        Sys.print(esc("1;30;4" + lc));
+        for (c in 0...24) {
+          var olc = lc;
+          lc = (ly >> 1) + (c >> 3) + ((ly + c) % 4 < 2 ? 1 : 0);
+          if (lc != olc) {
+            Sys.print(esc("4" + rainbow[lc]));
+          }
+          Sys.print(l[c]);
         }
-        Sys.print(l[c]);
+        Sys.println(rst());
+        ly++;
       }
-      Sys.println(rst());
-      ly++;
+      /*
+      Sys.println(" ┏━┓  ┏┓   ┏┓ ┏┓"); // hmm
+      Sys.println("┏┛ ┗┳━┫┣┳┳━┫┗┳┻┃");
+      Sys.println("┗┓ ┏┫╋┃┃┃┣┓┃┏┫╋┃");
+      Sys.println(" ┗━┛┃┳┻┻━┻━┻━┻━┛");
+      Sys.println("    ┗┛");
+      */
+      /*
+      Sys.println(' ${esc("30;43;5")}     ┏━━━━━┓   ┏┓   ┏┓ ┏┓ ${rst()}');
+      Sys.println('  ${esc("30;42;5")}  ┏━┛     ┗━┳━┫┣┳┳━┫┗┳┛┃ ${rst()}');
+      Sys.println('   ${esc("30;46;5")} ┃         ┃┃┃┃┃┃┗┫┏┫┃┃ ${rst()}');
+      Sys.println(' ${esc("30;44;5")}   ┃         ┃╋┃┃┃┣┓┃┣┫╋┃ ${rst()}');
+      Sys.println('  ${esc("30;45;5")}  ┗━┓     ┏━┫┏┻┻━┻━┻━┻━┛ ${rst()}');
+      Sys.println('${esc("30;41;5")}      ┗━━━━━┛ ┗┛ thenet.sk ${rst()}');
+      */
+      /*
+      Sys.println(' ${esc("30;43;5")}     ┏━━━━━┓   ┏┓   ┏┓ ┏┓ ${rst()}');
+      Sys.println('  ${esc("30;42;5")}  ┏━┛     ┗━┳━┫┣┳┳━┫┗┳┛┃ ${rst()}');
+      Sys.println('   ${esc("30;46;5")} ┃         ┃┃┃┃┃┃┗┫┏┫┃┃ ${rst()}');
+      Sys.println(' ${esc("30;44;5")}   ┃         ┃╋┃┃┃┣┓┃┣┫╋┃ ${rst()}');
+      Sys.println('  ${esc("30;45;5")}  ┗━┓     ┏━┫┏┻┻━┻━┻━┻━┛ ${rst()}');
+      Sys.println('${esc("30;41;5")}      ┗━━━━━┛ ┗┛ thenet.sk ${rst()}');
+      */
+      //Sys.println("");
     }
-    /*
-    Sys.println(' ${esc("30;43;5")}     ┏━━━━━┓   ┏┓   ┏┓ ┏┓ ${rst()}');
-    Sys.println('  ${esc("30;42;5")}  ┏━┛     ┗━┳━┫┣┳┳━┫┗┳┛┃ ${rst()}');
-    Sys.println('   ${esc("30;46;5")} ┃         ┃┃┃┃┃┃┗┫┏┫┃┃ ${rst()}');
-    Sys.println(' ${esc("30;44;5")}   ┃         ┃╋┃┃┃┣┓┃┣┫╋┃ ${rst()}');
-    Sys.println('  ${esc("30;45;5")}  ┗━┓     ┏━┫┏┻┻━┻━┻━┻━┛ ${rst()}');
-    Sys.println('${esc("30;41;5")}      ┗━━━━━┛ ┗┛ thenet.sk ${rst()}');
-    */
-    
-    /*
-    Sys.println(' ${esc("30;43;5")}     ┏━━━━━┓   ┏┓   ┏┓ ┏┓ ${rst()}');
-    Sys.println('  ${esc("30;42;5")}  ┏━┛     ┗━┳━┫┣┳┳━┫┗┳┛┃ ${rst()}');
-    Sys.println('   ${esc("30;46;5")} ┃         ┃┃┃┃┃┃┗┫┏┫┃┃ ${rst()}');
-    Sys.println(' ${esc("30;44;5")}   ┃         ┃╋┃┃┃┣┓┃┣┫╋┃ ${rst()}');
-    Sys.println('  ${esc("30;45;5")}  ┗━┓     ┏━┫┏┻┻━┻━┻━┻━┛ ${rst()}');
-    Sys.println('${esc("30;41;5")}      ┗━━━━━┛ ┗┛ thenet.sk ${rst()}');
-    */
-    //Sys.println("");
     
     var platformId = "";
     switch (Context.definedValue("PLUSTD_TARGET")) {
@@ -255,6 +297,7 @@ class M {
       Compiler.define("no-compilation");
     }
     
+    Context.onTypeNotFound(makeType.bind(_, false));
     //Context.onAfterTyping((_) -> log("onAfterTyping"));
     //Context.onGenerate((_) -> log("onGenerate"));
     Context.onAfterGenerate(function() {
