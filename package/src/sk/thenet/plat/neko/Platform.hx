@@ -46,6 +46,10 @@ class Platform extends sk.thenet.plat.PlatformBase {
   public static inline function createWebsocket():Websocket {
     return new Websocket();
   }
+  
+  public static inline function boot(func:Void->Void):Void {
+    func();
+  }
 }
 
 #end
