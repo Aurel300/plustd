@@ -74,18 +74,23 @@ class Keyboard extends AppKeyboard {
   private function handleKey(
     source:Source, e:KeyboardEvent, down:Bool
   ):EKEvent {
-    if (e.keyCode >= lookupLen) {
+    var char = (e.charCode == 0 ? "" : String.fromCharCode(e.charCode));
+    var key  = Key.Invalid;
+    if (e.keyCode < lookupLen) {
+      key = lookup[e.keyCode];
+    }
+    if (key != Key.Invalid) {
+      if (keysHeld[key] == down) {
+        return null;
+      }
+      keysHeld[key] = down;
+    } else if (e.charCode == 0) {
       return null;
     }
-    var key:Key = lookup[e.keyCode];
-    if (key == Key.Invalid || keysHeld[key] == down) {
-      return null;
-    }
-    keysHeld[key] = down;
     if (down) {
-      return new EKEvent.EKDown(source, key);
+      return new EKEvent.EKDown(source, key, char);
     }
-    return new EKEvent.EKUp(source, key);
+    return new EKEvent.EKUp(source, key, char);
   }
 }
 

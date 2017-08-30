@@ -18,9 +18,15 @@ The key for this event.
    */
   public var key(default, null):Key;
   
-  public function new(source:Source, key:Key, type:String) {
+  /**
+The string representation of this key, or null.
+   */
+  public var char(default, null):String;
+  
+  public function new(source:Source, key:Key, char:String, type:String) {
     super(source, type);
-    this.key = key;
+    this.key  = key;
+    this.char = char;
   }
 }
 
@@ -33,8 +39,8 @@ This event is fired when the user presses down a key on the keyboard,
 once `sk.thenet.plat.Platform.initKeyboard()` has been called.
  */
 class EKDown extends EKEvent {
-  public function new(source:Source, key:Key) {
-    super(source, key, "kdown");
+  public function new(source:Source, key:Key, char:String) {
+    super(source, key, char, "kdown");
   }
 }
 
@@ -47,7 +53,7 @@ This event is fired when the user releases a key on the keyboard,
 once `sk.thenet.plat.Platform.initKeyboard()` has been called.
  */
 class EKUp extends EKEvent {
-  public function new(source:Source, key:Key) {
-    super(source, key, "kup");
+  public function new(source:Source, key:Key, char:String) {
+    super(source, key, char, "kup");
   }
 }

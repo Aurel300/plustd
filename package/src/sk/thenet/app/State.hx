@@ -23,15 +23,6 @@ Used to access the `sk.thenet.app.Application` from within states.
    */
   public var app(default, null):Application;
   
-  /**
-Convenience shortcut for `app.assetManager`.
-   */
-  public var am(get, never):AssetManager;
-  
-  private inline function get_am():AssetManager {
-    return app.assetManager;
-  }
-  
   public var phasers:Map<String, Phaser>;
   
   /**
@@ -118,7 +109,7 @@ application initialisation.
 
 @see `sk.thenet.event.EKEvent`
    */
-  public function keyDown(key:Key):Void {}
+  public function keyDown(key:Key, char:String):Void {}
   
   /**
 Called when a key is released.
@@ -128,10 +119,5 @@ application initialisation.
 
 @see `sk.thenet.event.EKEvent`
    */
-  public function keyUp(key:Key):Void {}
-  
-  @:dox(show)
-  private function getPhase(id:String, ?tickAfter:Bool = true):Int {
-    return phasers[id].get(tickAfter);
-  }
+  public function keyUp(key:Key, char:String):Void {}
 }

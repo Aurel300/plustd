@@ -245,12 +245,12 @@ automatically.
   }
   
   private function handleKeyDown(event:EKDown):Bool {
-    currentState.keyDown(event.key);
+    currentState.keyDown(event.key, event.char);
     return true;
   }
   
   private function handleKeyUp(event:EKUp):Bool {
-    currentState.keyUp(event.key);
+    currentState.keyUp(event.key, event.char);
     return true;
   }
   
