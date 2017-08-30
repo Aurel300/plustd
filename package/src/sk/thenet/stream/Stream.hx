@@ -275,6 +275,16 @@ Adds a value at the beginning of the given stream.
     return val;
   }
   
+  public static function avg<T, U:Float>(stream:Iterator<T>, func:T->U):Float {
+    var sum:U = (cast 0:U);
+    var count = 0;
+    for (e in stream) {
+      sum += func(e);
+      count++;
+    }
+    return sum / count;
+  }
+  
   public static function min<T, U:Float>(stream:Iterator<T>, func:T->U):U {
     var min = func(stream.next());
     for (e in stream) {
@@ -295,5 +305,13 @@ Adds a value at the beginning of the given stream.
       }
     }
     return max;
+  }
+  
+  public static function sum<T, U:Float>(stream:Iterator<T>, func:T->U):U {
+    var sum:U = (cast 0:U);
+    for (e in stream) {
+      sum += func(e);
+    }
+    return sum;
   }
 }
