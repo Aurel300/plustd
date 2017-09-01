@@ -71,9 +71,8 @@ imaginary unit vectors.
 @return Result of rotating `p` using this quaternion as a versor.
    */
   public inline function rotate(p:Point3DF):Point3DF {
-    var q = multiplyC(Quaternion.ofPoint(p));
-    q.multiplyM(inverseC());
-    return q.point;
+    var q = multiplyQuatC(Quaternion.ofPoint(p));
+    return q.multiplyQuatM(inverseC()).point;
   }
   
   /**
@@ -114,7 +113,7 @@ Changes this quaternion into its inverse.
   /**
 @return Result of mulitplying this quaternion with `other`.
    */
-  public inline function multiplyC(other:Quaternion):Quaternion {
+  public inline function multiplyQuatC(other:Quaternion):Quaternion {
     return new Quaternion(
          x * other.x - y * other.y - z * other.z - w * other.w
         ,x * other.y + y * other.x + z * other.w - w * other.z
@@ -125,8 +124,10 @@ Changes this quaternion into its inverse.
   
   /**
 Multiplies this quaternion by `other`.
+
+@return This quaternion after modification.
    */
-  public inline function multiplyM(other:Quaternion):Void {
+  public inline function multiplyQuatM(other:Quaternion):Quaternion {
     var nx = x * other.x - y * other.y - z * other.z - w * other.w;
     var ny = x * other.y + y * other.x + z * other.w - w * other.z;
     var nz = x * other.z - y * other.w + z * other.x + w * other.y;
@@ -134,5 +135,6 @@ Multiplies this quaternion by `other`.
     x = nx;
     y = ny;
     z = nz;
+    return this;
   }
 }

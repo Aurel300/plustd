@@ -327,13 +327,13 @@ as a static extension:
         ,"@return Result of adding `other` point to this one."
         ,"Adds `other` to this point."
       );
-    /*addFunctionCM(
+    addFunctionCM(
          "multiply", [{name: "other", type: ctype}]
         ,function(dim) return '$dim * other.$dim'
         ,"@return Result of a component-wise multiplication of this point "
           + "and `other`."
         ,"Component-wise multiplies this point and `other`."
-      );*/
+      );
     addFunctionCM(
          "negate", []
         ,function(dim) return '-$dim'

@@ -147,13 +147,13 @@ abstract CreateRendererFlag(cpp.UInt32) {
 }
 */
 //@:native("SDL_EventType") extern class EventType {}
-@:native("SDL_AudioFormat") extern class AudioFormat {}
-abstract EventType(cpp.UInt32) {}
-@:native("SDL_PixelFormatEnum") extern class PixelFormatEnum {}
-@:native("SDL_TextureAccess") extern abstract TextureAccess(cpp.UInt32) from cpp.UInt32 to cpp.UInt32 {}
-@:native("SDL_BlendMode") extern class BlendMode {}
+@:dox(hide) @:native("SDL_AudioFormat") extern class AudioFormat {}
+@:dox(hide) abstract EventType(cpp.UInt32) {}
+@:dox(hide) @:native("SDL_PixelFormatEnum") extern class PixelFormatEnum {}
+@:dox(hide) @:native("SDL_TextureAccess") extern abstract TextureAccess(cpp.UInt32) from cpp.UInt32 to cpp.UInt32 {}
+@:dox(hide) @:native("SDL_BlendMode") extern class BlendMode {}
 
-@:native("::cpp::Reference<SDL_AudioSpec>") extern class AudioSpecPointer {
+@:dox(hide) @:native("::cpp::Reference<SDL_AudioSpec>") extern class AudioSpecPointer {
   public var freq:Int;
   public var format:AudioFormat;
   public var channels:cpp.UInt8;
@@ -165,30 +165,30 @@ abstract EventType(cpp.UInt32) {}
   //public var userdata:Int;
   public var userdata:cpp.Pointer<cpp.Void>;
 }
-@:native("SDL_Event") extern class Event {}
-@:native("::cpp::Reference<SDL_Event>") extern class EventPointer {}
-@:native("::cpp::Reference<Mix_Chunk>") extern class MixChunkPointer {
+@:dox(hide) @:native("SDL_Event") extern class Event {}
+@:dox(hide) @:native("::cpp::Reference<SDL_Event>") extern class EventPointer {}
+@:dox(hide) @:native("::cpp::Reference<Mix_Chunk>") extern class MixChunkPointer {
   public var allocated:Int;
   public var abuf:cpp.Pointer<cpp.UInt8>;
   public var alen:cpp.UInt32;
   public var volume:cpp.UInt8;
 }
-@:native("::cpp::Reference<SDL_Rect>") extern class RectPointer {
+@:dox(hide) @:native("::cpp::Reference<SDL_Rect>") extern class RectPointer {
   public var x:Int;
   public var y:Int;
   @:native("w") public var width:Int;
   @:native("h") public var height:Int;
 }
-@:native("::cpp::Reference<SDL_Renderer>") extern class RendererPointer {}
-@:native("::cpp::Reference<SDL_RWops>") extern class RWOpsPointer {}
-@:native("::cpp::Reference<SDL_Surface>") extern class SurfacePointer {
+@:dox(hide) @:native("::cpp::Reference<SDL_Renderer>") extern class RendererPointer {}
+@:dox(hide) @:native("::cpp::Reference<SDL_RWops>") extern class RWOpsPointer {}
+@:dox(hide) @:native("::cpp::Reference<SDL_Surface>") extern class SurfacePointer {
   @:native("w") public var width:Int;
   @:native("h") public var height:Int;
   public var pixels:cpp.Pointer<cpp.Void>;
   public var pitch:cpp.UInt16;
 }
-@:native("::cpp::Reference<SDL_Texture>") extern class TexturePointer {}
-@:native("::cpp::Reference<SDL_Window>") extern class WindowPointer {}
-@:native("::cpp::Reference<void*>") extern class VoidPointer {}
+@:dox(hide) @:native("::cpp::Reference<SDL_Texture>") extern class TexturePointer {}
+@:dox(hide) @:native("::cpp::Reference<SDL_Window>") extern class WindowPointer {}
+@:dox(hide) @:native("::cpp::Reference<void*>") extern class VoidPointer {}
 
 #end

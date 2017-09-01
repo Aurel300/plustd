@@ -42,7 +42,7 @@ class M {
     var fields = Context.getBuildFields();
     for (f in fields) {
       if (f.name == "main") {
-        return fields;
+        return null;
       }
     }
     var cname = Context.getLocalClass().get().name;
@@ -61,6 +61,47 @@ class M {
         ,pos: pos
       });
     return fields; 
+  }
+  
+  public static macro function autoConstruct():Array<Field> {
+    var fields = Context.getBuildFields();
+    var code:Expr = null;
+    for (f in fields) {
+      if (f.name == "new") {
+        switch (f.kind) {
+          case FFun(fun):
+          code = fun.expr;
+          fields.remove(f);
+          break;
+          
+          case _:
+        }
+      }
+    }
+    var args = [];
+    var states = [ for (f in fields) switch (f.kind) {
+        case FVar(t, _):
+        args.push({name: f.name, type: t, opt: false, value: null});
+        macro $p{["this", f.name]} = $i{f.name};
+        
+        case _:
+        continue;
+      } ];
+    if (code != null) {
+      states.push(code);
+    }
+    fields.push({
+      name: "new",
+      access: [APublic],
+      pos: Context.currentPos(),
+      kind: FFun({
+        args: args,
+        expr: macro $b{states},
+        params: [],
+        ret: null
+      })
+    });
+    return fields;
   }
   
   public static function makeDocTypes():Void {
