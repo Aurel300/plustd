@@ -6,19 +6,26 @@ import haxe.ds.Vector;
 ##Quaternion##
 
 This class represents quaternions, or 4-dimensional numbers. They are a useful
-tool when dealing with 3D transformations and rotations.
+tool when dealing with 3D transformations and rotations. For simplicity, this
+class is an extension of `Point4DF`. Its coordinates represent:
 
-There are two types of operations on quaternions:
-
- - Cloning - These create a new instance of `Quaternion` that is the result of
-applying the given operation. Suffixed with `C`.
- - Modifying - These modify the instance of `Quaternion`. Suffixed with `M`.
+ - `x` - The real part of a quaternion.
+ - `y` - The imaginary `i` coefficient.
+ - `z` - The imaginary `j` coefficient.
+ - `w` - The imaginary `k` coefficient.
  */
-class Quaternion {
+class Quaternion extends Point4DF {
+  /**
+@return A quaternion representing no transformation.
+   */
+  public static inline function identity():Quaternion {
+    return new Quaternion(1, 0, 0, 0);
+  }
+  
   /**
 @return A quaternion representing the rotation of `angle` radians around `axis`.
    */
-  public static function axisRotation(axis:Point3DF, angle:Float):Quaternion {
+  public static inline function ofAxis(axis:Point3DF, angle:Float):Quaternion {
     var s = Math.sin(angle / 2);
     return new Quaternion(
          Math.cos(angle / 2)
@@ -26,13 +33,6 @@ class Quaternion {
         ,s * axis.y
         ,s * axis.z
       );
-  }
-  
-  /**
-@return A quaternion representing no transformation.
-   */
-  public static inline function identity():Quaternion {
-    return new Quaternion(1, 0, 0, 0);
   }
   
   /**
@@ -50,58 +50,12 @@ class Quaternion {
   }
   
   /**
-Note: this does not ensure unit length - if the result is to be used as a
-versor, it has to be normalised using `unitM()`.
-
-@return The linear interpolation of quaternions `a` and `b`.
-   */
-  public static inline function interpolate(
-    a:Quaternion, b:Quaternion, prog:Float
-  ):Quaternion {
-    return new Quaternion(
-         a.a * (1 - prog) + b.a * prog
-        ,a.b * (1 - prog) + b.b * prog
-        ,a.c * (1 - prog) + b.c * prog
-        ,a.d * (1 - prog) + b.d * prog
-      );
-  }
-  
-  /**
-The real component of this quaternion.
-   */
-  public var a:Float;
-  
-  /**
-The coefficient of `i` in this quaternion.
-   */
-  public var b:Float;
-  
-  /**
-The coefficient of `j` in this quaternion.
-   */
-  public var c:Float;
-  
-  /**
-The coefficient of `k` in this quaternion.
-   */
-  public var d:Float;
-  
-  /**
 The point consisting of the coefficients of the imaginary unit vectors.
    */
   public var point(get, never):Point3DF;
   
   private inline function get_point():Point3DF {
-    return new Point3DF(b, c, d);
-  }
-  
-  /**
-The length of this quaternion.
-   */
-  public var length(get, never):Float;
-  
-  private inline function get_length():Float {
-    return Math.sqrt(a * a + b * b + c * c + d * d);
+    return new Point3DF(y, z, w);
   }
   
   /**
@@ -110,10 +64,7 @@ Creates a new quaternion - mathematically, it will be
 imaginary unit vectors.
    */
   public inline function new(a:Float, b:Float, c:Float, d:Float) {
-    this.a = a;
-    this.b = b;
-    this.c = c;
-    this.d = d;
+    super(a, b, c, d);
   }
   
   /**
@@ -126,33 +77,26 @@ imaginary unit vectors.
   }
   
   /**
-@return A copy of this quaternion.
-   */
-  public inline function clone():Quaternion {
-    return new Quaternion(a, b, c, d);
-  }
-  
-  /**
 @return A conjugate of this quaternion.
    */
   public inline function conjugateC():Quaternion {
-    return new Quaternion(a, -b, -c, -d);
+    return new Quaternion(x, -y, -z, -w);
   }
   
   /**
 Changes this quaternion into its conjugate.
    */
   public inline function conjugateM():Void {
-    b = -b;
-    c = -c;
-    d = -d;
+    y = -y;
+    z = -z;
+    w = -w;
   }
   
   /**
 @return An inverse of this quaternion.
    */
   public inline function inverseC():Quaternion {
-    var len = length;
+    var len = magnitude;
     var conj = conjugateC();
     conj.scaleM(1 / (len * len));
     return conj;
@@ -162,38 +106,9 @@ Changes this quaternion into its conjugate.
 Changes this quaternion into its inverse.
    */
   public inline function inverseM():Void {
-    var len = length;
+    var len = magnitude;
     conjugateM();
     scaleM(1 / (len * len));
-  }
-  
-  /**
-@return A quaternion with the same direction as this one, but its length equal
-to 1.
-   */
-  public inline function unitC():Quaternion {
-    return scaleC(1 / length);
-  }
-  
-  /**
-Scales this quaternion so that its length is 1.
-   */
-  public inline function unitM():Void {
-    scaleM(1 / length);
-  }
-  
-  /**
-@return Result of scaling this quaternion by a scalar `factor`.
-   */
-  public inline function scaleC(x:Float):Quaternion {
-    return multiplyC(Quaternion.ofReal(x));
-  }
-  
-  /**
-Scales this quaternion by a scalar `factor`.
-   */
-  public inline function scaleM(x:Float):Void {
-    multiplyM(Quaternion.ofReal(x));
   }
   
   /**
@@ -201,10 +116,10 @@ Scales this quaternion by a scalar `factor`.
    */
   public inline function multiplyC(other:Quaternion):Quaternion {
     return new Quaternion(
-         a * other.a - b * other.b - c * other.c - d * other.d
-        ,a * other.b + b * other.a + c * other.d - d * other.c
-        ,a * other.c - b * other.d + c * other.a + d * other.b
-        ,a * other.d + b * other.c - c * other.b + d * other.a
+         x * other.x - y * other.y - z * other.z - w * other.w
+        ,x * other.y + y * other.x + z * other.w - w * other.z
+        ,x * other.z - y * other.w + z * other.x + w * other.y
+        ,x * other.w + y * other.z - z * other.y + w * other.x
       );
   }
   
@@ -212,12 +127,12 @@ Scales this quaternion by a scalar `factor`.
 Multiplies this quaternion by `other`.
    */
   public inline function multiplyM(other:Quaternion):Void {
-    var na = a * other.a - b * other.b - c * other.c - d * other.d;
-    var nb = a * other.b + b * other.a + c * other.d - d * other.c;
-    var nc = a * other.c - b * other.d + c * other.a + d * other.b;
-    d = a * other.d + b * other.c - c * other.b + d * other.a;
-    a = na;
-    b = nb;
-    c = nc;
+    var nx = x * other.x - y * other.y - z * other.z - w * other.w;
+    var ny = x * other.y + y * other.x + z * other.w - w * other.z;
+    var nz = x * other.z - y * other.w + z * other.x + w * other.y;
+    w = x * other.w + y * other.z - z * other.y + w * other.x;
+    x = nx;
+    y = ny;
+    z = nz;
   }
 }

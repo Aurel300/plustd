@@ -1,12 +1,12 @@
 package sk.thenet;
 
 #if macro
-
 import haxe.macro.Expr;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
-
 #end
+
+import sk.thenet.geom.Point;
 
 using StringTools;
 
@@ -45,34 +45,15 @@ class M {
         return fields;
       }
     }
-    var name = Context.getLocalClass().get().name;
+    var cname = Context.getLocalClass().get().name;
+    var cpath = {name: cname, pack: [], params: []};
     var pos = Context.currentPos();
     fields.push({
          access: [AStatic, APublic]
         ,doc: null
         ,kind: FFun({
            args: []
-          ,expr: {
-            expr: ECall({
-              expr: EField({
-                 expr: EConst(CIdent("Platform"))
-                ,pos: pos
-              }, "boot")
-              ,pos: pos
-            }, [{
-              expr: EFunction(null,{
-                args: [], expr: {
-                  expr: ENew({
-                    name: name, pack: [], params: []
-                  }, [])
-                  ,pos: pos
-                }
-                ,params: [], ret: null
-              })
-              ,pos: pos
-            }])
-            ,pos: pos
-          }
+          ,expr: macro { sk.thenet.plat.Platform.boot(function() new $cpath()); }
           ,params: [], ret: null
         })
         ,meta: []
@@ -84,7 +65,7 @@ class M {
   
   public static function makeDocTypes():Void {
     for (t in [
-        for (d in 1...5) for (c in ["I", "F"]) 'sk.thenet.geom.Point${d}D${c}'
+        for (d in 2...4) for (c in ["I", "F"]) 'sk.thenet.geom.Point${d}D${c}'
       ]) {
       makeType(t, true);
     }
@@ -97,14 +78,10 @@ class M {
     var c = type.split(".");
     var ret = (switch (c) {
         case ["sk", "thenet", "geom", gp]:
-        if (!gp.startsWith("Point")
-            || (!gp.endsWith("DF") && !gp.endsWith("DI"))
-            || gp.length != 8
-            || gp.charCodeAt(5) < "1".code
-            || gp.charCodeAt(5) > "9".code) {
+        if (!Point.isPointClass(gp)) {
           null;
         } else {
-          sk.thenet.geom.PointMacro.buildPoint(
+          sk.thenet.geom.Point.buildPoint(
               gp.charCodeAt(5) - "0".code, gp.endsWith("DI")
             );
         }
@@ -318,7 +295,7 @@ class M {
           + (mins > 0 || hrs > 0 ? '$mins minutes, ' : "")
           + '$secs seconds';
         log('Build complete in: $diff');
-        Sys.println("");
+        if (!quiet) Sys.println("");
       });
   }
 #end
