@@ -3,6 +3,8 @@ package sk.thenet.bmp;
 import haxe.ds.Vector;
 import sk.thenet.U;
 
+using sk.thenet.FM;
+
 /**
 ##Colour##
 
@@ -18,8 +20,8 @@ There are three sets of channel properties available:
  - Float-based (`Colour.af`, `Colour.rf`, `Colour.gf`, `Colour.bf`) - floating
    point values in the range [0, 1].
  - Padded integer-based (`Colour.au`, `Colour.ru`, `Colour.gu`, `Colour.bu`) -
-   unsigned integer values in the range [0, 255], bitwise shifted to their place
-   in the ARGB scheme. E.g.:
+   unsigned integer values in the range [0, 255], bitwise shifted to their
+   place in the ARGB scheme. E.g.:
 ```haxe
     var colour = new Colour(0xAA99FF00);
     trace(colour.ai); // 0xAA
@@ -59,6 +61,19 @@ range [0, 255].
   }
   
   /**
+Creates a colour from individual ARGB channels, represented as integer values,
+which are clamped to the range [0, 255] before being used.
+   */
+  public static inline function fromARGBic(a:Int, r:Int, g:Int, b:Int):Colour {
+    return fromARGBi(
+         a.clampI(0, 255)
+        ,r.clampI(0, 255)
+        ,g.clampI(0, 255)
+        ,b.clampI(0, 255)
+      );
+  }
+  
+  /**
 Creates a colour from individual ARGB channels, represented as floating point
 values in the range [0, 1].
    */
@@ -75,26 +90,54 @@ values in the range [0, 1].
   
   /**
 Creates a colour from individual ARGB channels, represented as floating point
-values, which are clamped to the range [0, 1].
+values, which are clamped to the range [0, 1] before being used.
    */
   public static inline function fromARGBfc(
     a:Float, r:Float, g:Float, b:Float
   ):Colour {
     return fromARGBi(
-         FM.clampI(Std.int(a * 255), 0, 255)
-        ,FM.clampI(Std.int(r * 255), 0, 255)
-        ,FM.clampI(Std.int(g * 255), 0, 255)
-        ,FM.clampI(Std.int(b * 255), 0, 255)
+         Std.int(a * 255).clampI(0, 255)
+        ,Std.int(r * 255).clampI(0, 255)
+        ,Std.int(g * 255).clampI(0, 255)
+        ,Std.int(b * 255).clampI(0, 255)
       );
+  }
+  
+  public static function fromHSLf(
+    h:Float, s:Float, l:Float
+  ):Colour {
+    if (s <= 0) {
+      return fromARGBf(1, l, l, l);
+    }
+    function hue2rgb(p:Float, q:Float, t:Float) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    }
+    var q:Float = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p:Float = 2 * l - q;
+    return fromARGBf(
+         1
+        ,hue2rgb(p, q, h + 1 / 3)
+        ,hue2rgb(p, q, h)
+        ,hue2rgb(p, q, h - 1 / 3)
+      );
+  }
+  
+  public static function distance(c1:Colour, c2:Colour):Int {
+    return FM.absI(c1.ri - c2.ri)
+      + FM.absI(c1.gi - c2.gi)
+      + FM.absI(c1.bi - c2.bi);
   }
   
   public static function quantise(c:Colour, pal:Vector<Colour>):Int {
     var bestI    = 0;
-    var bestDist = 0x300;
+    var bestDist = distance(c, pal[0]);
     for (i in 1...pal.length) {
-      var dist = FM.absI(c.ri - pal[i].ri)
-        + FM.absI(c.gi - pal[i].gi)
-        + FM.absI(c.bi - pal[i].bi);
+      var dist = distance(c, pal[1]);
       if (dist < bestDist) {
         bestI = i;
         bestDist = dist;
