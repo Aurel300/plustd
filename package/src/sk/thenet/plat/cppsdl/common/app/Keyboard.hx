@@ -74,9 +74,18 @@ class Keyboard extends AppKeyboard {
     }
     keysHeld[key] = down;
     if (down) {
-      return new EKEvent.EKDown(source, key, "");
+      return new EKEvent.EKDown(source, key);
     }
-    return new EKEvent.EKUp(source, key, "");
+    return new EKEvent.EKUp(source, key);
+  }
+  
+  private function handleText(
+    source:Source, text:String
+  ):EText {
+    if (text.length == 0) {
+      return null;
+    }
+    return new EText(source, text);
   }
 }
 

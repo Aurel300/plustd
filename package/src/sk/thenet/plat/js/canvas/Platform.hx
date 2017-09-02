@@ -8,7 +8,7 @@ import js.html.Event as NativeEvent;
 import js.html.EventTarget;
 import js.html.KeyboardEvent;
 import js.html.MouseEvent;
-import sk.thenet.U;
+import sk.thenet.M;
 import sk.thenet.app.Application;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Surface;
@@ -72,11 +72,11 @@ class Platform extends sk.thenet.plat.PlatformBase {
   }
   
   private static inline function handleKeyDown(e:KeyboardEvent):Void {
-    U.callNotNull(source.fireEvent, keyboard.handleKey(source, e, true));
+    M.callDenull(source.fireEvent, keyboard.handleKey(source, e, true));
   }
   
   private static inline function handleKeyUp(e:KeyboardEvent):Void {
-    U.callNotNull(source.fireEvent, keyboard.handleKey(source, e, false));
+    M.callDenull(source.fireEvent, keyboard.handleKey(source, e, false));
   }
   
   public static inline function initMouse():Mouse {
@@ -93,7 +93,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   }
   
   private static inline function handleMouseDown(e:MouseEvent):Void {
-    U.callNotNull(
+    M.callDenull(
         source.fireEvent, mouse.handleButton(source, e, true, scale)
       );
   }
@@ -103,7 +103,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   }
   
   private static inline function handleMouseUp(e:MouseEvent):Void {
-    U.callNotNull(
+    M.callDenull(
         source.fireEvent, mouse.handleButton(source, e, false, scale)
       );
   }

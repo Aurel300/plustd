@@ -4,6 +4,9 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 
+using haxe.macro.ComplexTypeTools;
+using haxe.macro.TypeTools;
+
 /**
 Extending this class ensures platforms have the correct static fields declared.
 
@@ -13,21 +16,6 @@ Extending this class ensures platforms have the correct static fields declared.
 class PlatformBase {
   @:dox(hide)
   public static macro function check():Array<Field> {
-    //return null;
-    
-    function sameTypes(a:ComplexType, tb:TypePath):Bool {
-      switch (a) {
-        case TPath(ta):
-        if (ta.name != tb.name) return false;
-        /*if (ta.pack.length != tb.pack.length) return false;
-        for (i in 0...ta.pack.length) {
-          if (ta.pack[i] != tb.pack[i]) return false;
-        }*/
-        return true;
-        case _: return false;
-      }
-    }
-    
     var fields = Context.getBuildFields();
     var modified = false;
     var fieldNames = new Map<String, Field>();
@@ -41,71 +29,68 @@ class PlatformBase {
     for (init in [{
          name: "initFramerate"
         ,args: [
-          {type: {name: "Float", pack: [], params: []}, optional: false, value: null}
+          {type: macro : Float, optional: false, value: null}
         ]
-        ,ret: {name: "Void", pack: [], params: []}
+        ,ret: macro : Void
         ,retStrict: true
       }, {
          name: "initKeyboard"
         ,args: []
-        ,ret: {name: "Keyboard", pack: ["sk", "thenet", "app"], params: []}
+        ,ret: macro : sk.thenet.app.Keyboard
         ,retStrict: false
       }, {
          name: "initMouse"
         ,args: []
-        ,ret: {name: "Mouse", pack: ["sk", "thenet", "app"], params: []}
+        ,ret: macro : sk.thenet.app.Mouse
         ,retStrict: false
       }, {
          name: "initSurface"
         ,args: [
-           {type: {name: "Int", pack: [], params: []}, optional: false, value: null}
-          ,{type: {name: "Int", pack: [], params: []}, optional: false, value: null}
-          ,{type: {name: "Int", pack: [], params: []}, optional: true, value: {
-                expr: EConst(CInt("0"))
-               ,pos: Context.currentPos()
-             }}
+           {type: macro : Int, optional: false, value: null}
+          ,{type: macro : Int, optional: false, value: null}
+          ,{type: macro : Int, optional: true, value: macro 0}
         ]
-        ,ret: {name: "Surface", pack: ["sk", "thenet", "bmp"], params: []}
+        ,ret: macro : sk.thenet.bmp.Surface
         ,retStrict: false
       }, {
          name: "initWindow"
         ,args: [
-           {type: {name: "String", pack: [], params: []}, optional: false, value: null}
-          ,{type: {name: "Int", pack: [], params: []}, optional: false, value: null}
-          ,{type: {name: "Int", pack: [], params: []}, optional: false, value: null}
+           {type: macro : String, optional: false, value: null}
+          ,{type: macro : Int, optional: false, value: null}
+          ,{type: macro : Int, optional: false, value: null}
         ]
-        ,ret: {name: "Void", pack: [], params: []}
+        ,ret: macro : Void
         ,retStrict: true
       }, {
          name: "createBitmap"
         ,args: [
-           {type: {name: "Int", pack: [], params: []}, optional: false, value: null}
-          ,{type: {name: "Int", pack: [], params: []}, optional: false, value: null}
-          ,{type: {name: "Colour", pack: ["sk", "thenet", "bmp"], params: []}, optional: false, value: null}
+           {type: macro : Int, optional: false, value: null}
+          ,{type: macro : Int, optional: false, value: null}
+          ,{type: macro : sk.thenet.bmp.Colour, optional: false, value: null}
         ]
-        ,ret: {name: "Bitmap", pack: ["sk", "thenet", "bmp"], params: []}
+        ,ret: macro : sk.thenet.bmp.Bitmap
         ,retStrict: false
       }, {
          name: "createSocket"
         ,args: []
-        ,ret: {name: "Socket", pack: ["sk", "thenet", "net"], params: []}
+        ,ret: macro : sk.thenet.net.Socket
         ,retStrict: false
       }, {
          name: "createWebsocket"
         ,args: []
-        ,ret: {name: "Websocket", pack: ["sk", "thenet", "net", "ws"], params: []}
+        ,ret: macro : sk.thenet.net.ws.Websocket
         ,retStrict: false
       }]) {
       if (fieldNames.exists(init.name)) {
-        var field = fieldNames.get(init.name);
+        var field = fieldNames[init.name];
         switch (field.kind) {
           case FFun(func):
-          if (init.retStrict && !sameTypes(func.ret, init.ret)) {
+          if (init.retStrict && !func.ret.toType().unify(init.ret.toType())) {
             throw init.name + " has incorrect return type in " + className;
           }
           var argn:Int = 0;
           for (arg in func.args) {
-            if (!sameTypes(arg.type, init.args[argn].type)) {
+            if (!arg.type.toType().unify(init.args[argn].type.toType())) {
               throw init.name + " has incorrect arg type in " + className;
             }
             if (arg.opt != init.args[argn].optional) {
@@ -132,45 +117,26 @@ class PlatformBase {
                args: [ for (arg in init.args) {
                    meta: []
                   ,name: "arg_" + (argn++)
-                  ,type: TPath(arg.type)
+                  ,type: arg.type
                   ,opt: arg.optional
-                  ,value: (arg.optional ? arg.value : null)
+                  ,value: arg.value
                 } ]
-              ,expr: {
-                 expr: EBlock([{
-                   expr: EThrow({
-                     expr: EConst(CString("unsupported operation"))
-                    ,pos: Context.currentPos()
-                  })
-                  ,pos: Context.currentPos()
-                }])
-                ,pos: Context.currentPos()
-              }
+              ,expr: macro throw "unsupported operation"
               ,params: []
-              ,ret: TPath(init.ret)
+              ,ret: init.ret
             })
             ,pos: Context.currentPos()
           });
       }
     }
     for (support in [
-      /*
-         "isKeyboardCapable"
-        ,"isMouseCapable"
-        ,"isRealtimeCapable"
-        ,"isSocketCapable"
-        ,"isSocketServerCapable"
-        ,"isSurfaceCapable"
-        ,"isWebsocketCapable"
-        ,"isWindowCapable"
-      */
          "capabilities"
         ,"keyboard"
         ,"mouse"
         ,"source"
       ]) {
       if (fieldNames.exists(support)) {
-        var field = fieldNames.get(support);
+        var field = fieldNames[support];
         if (field.access.indexOf(AStatic) == -1) {
           throw support + " must be static in " + className;
         }
@@ -185,57 +151,17 @@ class PlatformBase {
       } else {
         modified = true;
         var tp = (switch(support) {
-            case "capabilities": {
-                 name: "Capabilities"
-                ,pack: ["sk", "thenet", "plat"]
-                ,params: []
-              };
-            case "keyboard": {
-                 name: "Keyboard"
-                ,pack: ["sk", "thenet", "app"]
-                ,params: []
-              };
-            case "mouse": {
-                 name: "Mouse"
-                ,pack: ["sk", "thenet", "app"]
-                ,params: []
-              };
-            case "source": {
-                 name: "Source"
-                ,pack: ["sk", "thenet", "event"]
-                ,params: []
-              };
-            case _: {
-                 name: "Bool"
-                ,pack: []
-                ,params: []
-              };
+            case "capabilities": macro : sk.thenet.plat.Capabilities;
+            case "keyboard": macro : sk.thenet.app.Keyboard;
+            case "mouse": macro : sk.thenet.app.Mouse;
+            case "source": macro : sk.thenet.event.Source;
+            case _: macro : Bool;
           });
         var np = (switch (support) {
-            case "capabilities": {
-                 expr: ENew({
-                     name: "Capabilities"
-                    ,pack: ["sk", "thenet", "plat"]
-                    ,params: []
-                  }, [])
-                ,pos: Context.currentPos()
-              };
-            case "keyboard" | "mouse": {
-                 expr: EConst(CIdent("null"))
-                ,pos: Context.currentPos()
-              };
-            case "source": {
-                 expr: ENew({
-                     name: "Source"
-                    ,pack: ["sk", "thenet", "event"]
-                    ,params: []
-                  }, [])
-                ,pos: Context.currentPos()
-              };
-            case _: {
-                 expr: EConst(CIdent("false"))
-                ,pos: Context.currentPos()
-              };
+            case "capabilities": macro new sk.thenet.plat.Capabilities();
+            case "keyboard" | "mouse": macro null;
+            case "source": macro new sk.thenet.event.Source();
+            case _: macro false;
           });
         fields.push({
              name: support
@@ -245,7 +171,7 @@ class PlatformBase {
             ,kind: FProp(
                  "default"
                 ,"never"
-                ,TPath(tp)
+                ,tp
                 ,np
               )
             ,pos: Context.currentPos()

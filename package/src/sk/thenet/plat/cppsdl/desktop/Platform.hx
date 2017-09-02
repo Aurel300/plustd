@@ -2,7 +2,7 @@ package sk.thenet.plat.cppsdl.desktop;
 
 #if cpp
 
-import sk.thenet.U;
+import sk.thenet.M;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Surface;
 import sk.thenet.event.ETick;
@@ -66,8 +66,14 @@ class Platform extends sk.thenet.plat.PlatformBase {
         switch (etype) {
           case (SDL.KEYDOWN | SDL.KEYUP) if (keyboard != null):
           var code:Int = untyped __cpp__("event.key.keysym.sym");
-          U.callNotNull(source.fireEvent, keyboard.handleKey(
+          M.callDenull(source.fireEvent, keyboard.handleKey(
               source, code, etype == SDL.KEYDOWN
+            ));
+          
+          case SDL.TEXTINPUT if (keyboard != null):
+          var text:String = cpp.NativeString.fromPointer(untyped __cpp__("event.text.text"));
+          M.callDenull(source.fireEvent, keyboard.handleText(
+              source, text
             ));
           
           case SDL.MOUSEMOTION if (mouse != null):
@@ -78,7 +84,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
           case (SDL.MOUSEBUTTONDOWN | SDL.MOUSEBUTTONUP) if (mouse != null):
           var x:Int = untyped __cpp__("event.button.x");
           var y:Int = untyped __cpp__("event.button.y");
-          U.callNotNull(source.fireEvent, mouse.handleButton(
+          M.callDenull(source.fireEvent, mouse.handleButton(
               source, x, y, etype == SDL.MOUSEBUTTONDOWN, scale
             ));
           if (etype == SDL.MOUSEBUTTONDOWN) {
@@ -121,6 +127,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   
   public static inline function initKeyboard():Keyboard {
     keyboard = new Keyboard();
+    SDL.startTextInput();
     return keyboard;
   }
   

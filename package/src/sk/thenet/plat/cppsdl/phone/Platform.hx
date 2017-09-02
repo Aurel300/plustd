@@ -2,7 +2,7 @@ package sk.thenet.plat.cppsdl.phone;
 
 #if cpp
 
-import sk.thenet.U;
+import sk.thenet.M;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Surface;
 import sk.thenet.event.ETick;
@@ -69,7 +69,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
         switch (etype) {
           case (SDL.KEYDOWN | SDL.KEYUP) if (keyboard != null):
           var code:Int = untyped __cpp__("event.key.keysym.sym");
-          U.callNotNull(source.fireEvent, keyboard.handleKey(
+          M.callDenull(source.fireEvent, keyboard.handleKey(
               source, code, etype == SDL.KEYDOWN
             ));
           
@@ -81,7 +81,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
           case (SDL.MOUSEBUTTONDOWN | SDL.MOUSEBUTTONUP) if (mouse != null):
           var x:Int = untyped __cpp__("event.button.x") << 1;
           var y:Int = untyped __cpp__("event.button.y") << 1;
-          U.callNotNull(source.fireEvent, mouse.handleButton(
+          M.callDenull(source.fireEvent, mouse.handleButton(
               source, x, y, etype == SDL.MOUSEBUTTONDOWN, scale
             ));
           if (etype == SDL.MOUSEBUTTONDOWN) {

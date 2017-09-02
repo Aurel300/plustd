@@ -9,7 +9,7 @@ import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.media.Sound as NativeSound;
-import sk.thenet.U;
+import sk.thenet.M;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Surface;
 import sk.thenet.event.ETick;
@@ -72,11 +72,12 @@ provided in the `-swf-header` haxe compiler option.
   }
   
   private static inline function handleKeyDown(e:KeyboardEvent):Void {
-    U.callNotNull(source.fireEvent, keyboard.handleKey(source, e, true));
+    M.callDenull(source.fireEvent, keyboard.handleKey(source, e, true));
   }
   
   private static inline function handleKeyUp(e:KeyboardEvent):Void {
-    U.callNotNull(source.fireEvent, keyboard.handleKey(source, e, false));
+    M.callDenull(source.fireEvent, keyboard.handleKey(source, e, false));
+    M.callDenull(source.fireEvent, keyboard.handleText(source, e));
   }
   
   public static inline function initMouse():Mouse {
@@ -93,7 +94,7 @@ provided in the `-swf-header` haxe compiler option.
   }
   
   private static inline function handleMouseDown(e:Dynamic):Void {
-    U.callNotNull(
+    M.callDenull(
         source.fireEvent, mouse.handleButton(source, e, true, scale)
       );
   }
@@ -103,7 +104,7 @@ provided in the `-swf-header` haxe compiler option.
   }
   
   private static inline function handleMouseUp(e:Dynamic):Void {
-    U.callNotNull(
+    M.callDenull(
         source.fireEvent, mouse.handleButton(source, e, false, scale)
       );
   }

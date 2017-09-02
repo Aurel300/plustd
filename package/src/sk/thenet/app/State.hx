@@ -109,7 +109,7 @@ application initialisation.
 
 @see `sk.thenet.event.EKEvent`
    */
-  public function keyDown(key:Key, char:String):Void {}
+  public function keyDown(key:Key):Void {}
   
   /**
 Called when a key is released.
@@ -119,5 +119,15 @@ application initialisation.
 
 @see `sk.thenet.event.EKEvent`
    */
-  public function keyUp(key:Key, char:String):Void {}
+  public function keyUp(key:Key):Void {}
+  
+  /**
+Called when text is input.
+
+Pre-requisite is `sk.thenet.app.ApplicationInit.Keyboard` passed to
+application initialisation.
+
+@see `sk.thenet.event.EText`
+   */
+  public function text(text:String):Void {}
 }

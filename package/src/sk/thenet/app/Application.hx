@@ -184,6 +184,7 @@ automatically.
         keyboard = Platform.initKeyboard();
         Platform.source.listen("kdown", handleKeyDown);
         Platform.source.listen("kup",   handleKeyUp  );
+        Platform.source.listen("text",  handleText   );
       }
       
       case Mouse if (mouse == null):
@@ -245,12 +246,17 @@ automatically.
   }
   
   private function handleKeyDown(event:EKDown):Bool {
-    currentState.keyDown(event.key, event.char);
+    currentState.keyDown(event.key);
     return true;
   }
   
   private function handleKeyUp(event:EKUp):Bool {
-    currentState.keyUp(event.key, event.char);
+    currentState.keyUp(event.key);
+    return true;
+  }
+  
+  private function handleText(event:EText):Bool {
+    currentState.text(event.text);
     return true;
   }
   

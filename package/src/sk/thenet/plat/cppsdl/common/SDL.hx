@@ -32,6 +32,7 @@ extern class SDL {
   @:native("SDL_MOUSEMOTION") static var MOUSEMOTION(default, never):EventType;
   @:native("SDL_MOUSEBUTTONDOWN") static var MOUSEBUTTONDOWN(default, never):EventType;
   @:native("SDL_MOUSEBUTTONUP") static var MOUSEBUTTONUP(default, never):EventType;
+  @:native("SDL_TEXTINPUT") static var TEXTINPUT(default, never):EventType;
   @:native("SDL_QUIT") static var QUIT(default, never):EventType;
   @:native("AUDIO_F32") static var AUDIO_F32:AudioFormat;
   @:native("SDL_PIXELFORMAT_ARGB8888") static var PIXELFORMAT_ARGB8888(default, null):PixelFormatEnum;
@@ -92,6 +93,7 @@ extern class SDL {
   @:native("SDL_SetRenderTarget") static function setRenderTarget(renderer:RendererPointer, texture:TexturePointer):Int;
   @:native("SDL_SetSurfaceBlendMode") static function setSurfaceBlendMode(surface:SurfacePointer, blendMode:BlendMode):Int;
   @:native("SDL_SetTextureBlendMode") static function setTextureBlendMode(texture:TexturePointer, blendMode:BlendMode):Int;
+  @:native("SDL_StartTextInput") static function startTextInput():Void;
   @:native("SDL_UnlockSurface") static function unlockSurface(surface:SurfacePointer):Void;
   @:native("SDL_UnlockTexture") static function unlockTexture(texture:TexturePointer):Void;
   @:native("SDL_UpdateTexture") static function updateTexture(texture:TexturePointer, rect:RectPointer, pixels:cpp.Star<Dynamic>, pitch:Int):Void;
