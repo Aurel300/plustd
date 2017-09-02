@@ -15,6 +15,13 @@ class M {
     return macro ($value != null ? $value : $def);
   }
   
+  public static macro function callDenull(func:Expr, value:Expr):Expr {
+    return macro {
+        var res = $value;
+        (res != null ? $func(res) : null);
+      };
+  }
+  
 #if macro
   public static function touchFields(fields:Array<Field>):Void {
     fields.push({
