@@ -390,4 +390,13 @@ Float-based blue channel of this colour.
   private inline function get_rgba():UInt {
     return ((this & 0xFFFFFF) << 8) | (this >>> 24);
   }
+  
+  /**
+`true` iff the alpha channel of this colour is 0.
+   */
+  public var isTransparent(get, never):Bool;
+  
+  private inline function get_isTransparent():Bool {
+    return !((this & 0xFF000000) != 0);
+  }
 }

@@ -1,5 +1,6 @@
 package sk.thenet;
 
+import haxe.ds.Vector;
 import sk.thenet.stream.prng.Generator;
 import sk.thenet.stream.prng.XORShift;
 
@@ -233,5 +234,19 @@ See above for note on `ceilZ` and `floorZ`.
    */
   public static inline function withinI(x:Int, min:Int, max:Int):Bool {
     return x >= min && x <= max;
+  }
+  
+  /**
+@return `true` iff `x` >= `0` and `x` < `arr.length`.
+   */
+  public static inline function withinA<T>(x:Int, arr:Array<T>):Bool {
+    return x >= 0 && x < arr.length;
+  }
+  
+  /**
+@return `true` iff `x` >= `0` and `x` < `vec.length`.
+   */
+  public static inline function withinV<T>(x:Int, vec:Vector<T>):Bool {
+    return x >= 0 && x < vec.length;
   }
 }
