@@ -249,4 +249,11 @@ See above for note on `ceilZ` and `floorZ`.
   public static inline function withinV<T>(x:Int, vec:Vector<T>):Bool {
     return x >= 0 && x < vec.length;
   }
+  
+  /**
+@return The square of `x`.
+   */
+  public static inline function square<T:Float>(x:T):T {
+    return x * x;
+  }
 }

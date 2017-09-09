@@ -7,6 +7,8 @@ import sk.thenet.FM;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.FluentBitmap;
 
+using sk.thenet.FM;
+
 /**
 Haxe implementation of `sk.thenet.bmp.IBitmap`.
 
@@ -44,11 +46,11 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
   }
   
   public inline function getVector():Vector<Colour> {
-    return native;
+    return native.copy();
   }
   
   public inline function setVector(vector:Vector<Colour>):Void {
-    native = vector;
+    Vector.blit(vector, 0, native, 0, native.length);
   }
   
   public function getVectorRect(
@@ -74,7 +76,11 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
-    
+    var ri = 0;
+    for (oy in 0...height) for (ox in 0...width) {
+      native[(x + ox) + (y + oy) * this.width] = vector[ri];
+      ri++;
+    }
   }
   
   public inline function fill(colour:Colour):Void {
@@ -90,27 +96,45 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
-    
+    for (oy in 0...height) for (ox in 0...width) {
+      native[(x + ox) + (y + oy) * this.width] = colour;
+    }
   }
   
   public inline function blit(src:Bitmap, x:Int, y:Int):Void {
-    
+    for (oy in y.maxI(0)...(y + src.height).minI(height - 1)) {
+      for (ox in x.maxI(0)...(x + src.width).minI(width - 1)) {
+        native[ox + oy * this.width] = src.native[(ox - x) + (oy - y) * src.width];
+      }
+    }
   }
   
   public inline function blitRect(
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
-    
+    for (oy in dstY.maxI(0)...(dstY + srcH).minI(height - 1)) {
+      for (ox in dstY.maxI(0)...(dstX + srcW).minI(width - 1)) {
+        native[ox + oy * this.width] = src.native[(ox - dstX) + (oy - dstY) * src.width];
+      }
+    }
   }
   
   public inline function blitAlpha(src:Bitmap, x:Int, y:Int):Void {
-    
+    for (oy in y.maxI(0)...(y + src.height).minI(height - 1)) {
+      for (ox in x.maxI(0)...(x + src.width).minI(width - 1)) {
+        native[ox + oy * this.width] = src.native[(ox - x) + (oy - y) * src.width].blendWith(native[ox + oy * this.width]);
+      }
+    }
   }
   
   public inline function blitAlphaRect(
     src:Bitmap, dstX:Int, dstY:Int, srcX:Int, srcY:Int, srcW:Int, srcH:Int
   ):Void {
-    
+    for (oy in dstY.maxI(0)...(dstY + srcH).minI(height - 1)) {
+      for (ox in dstY.maxI(0)...(dstX + srcW).minI(width - 1)) {
+        native[ox + oy * this.width] = src.native[(ox - dstX) + (oy - dstY) * src.width].blendWith(native[ox + oy * this.width]);
+      }
+    }
   }
 }
 
