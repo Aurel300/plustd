@@ -11,10 +11,22 @@ import sk.thenet.geom.Point;
 using StringTools;
 
 class M {
+  /**
+Checks whether `value` is `null`. If so, the expression evaluates to `def`,
+otherwise `value`.
+
+Generates an expression at compile time.
+   */
   public static macro function denull(value:Expr, def:Expr):Expr {
     return macro ($value != null ? $value : $def);
   }
   
+  /**
+Calls `func` iff `value` is not null. Evaluates to the result of the call if it
+happened, `null` otherwise.
+
+Generates an expression at compile time.
+   */
   public static macro function callDenull(func:Expr, value:Expr):Expr {
     return macro {
         var res = $value;
@@ -22,8 +34,21 @@ class M {
       };
   }
   
+  /**
+Swaps `a` and `b` using a temporary variable.
+
+Generates an expression at compile time.
+   */
+  public static macro function swap(a:Expr, b:Expr):Expr {
+    return macro {
+      var t = $a;
+      $a = $b;
+      $b = t;
+    };
+  }
+  
 #if macro
-  public static function touchFields(fields:Array<Field>):Void {
+  private static function touchFields(fields:Array<Field>):Void {
     fields.push({
          name: "__touch"
         ,pos: Context.currentPos()
@@ -34,7 +59,7 @@ class M {
       });
   }
   
-  public static macro function touch():Array<Field> {
+  private static macro function touch():Array<Field> {
     var fields = Context.getBuildFields();
     touchFields(fields);
     return fields;
@@ -45,6 +70,7 @@ class M {
     return null;
   }
   
+  @:dox(hide)
   public static macro function initApplication():Array<Field> {
     var fields = Context.getBuildFields();
     for (f in fields) {
@@ -70,6 +96,7 @@ class M {
     return fields; 
   }
   
+  @:dox(hide)
   public static macro function autoConstruct():Array<Field> {
     var fields = Context.getBuildFields();
     var code:Expr = null;
@@ -111,6 +138,7 @@ class M {
     return fields;
   }
   
+  @:dox(hide)
   public static function makeDocTypes():Void {
     for (t in [
         for (d in 2...4) for (c in ["I", "F"]) 'sk.thenet.geom.Point${d}D${c}'
@@ -119,6 +147,7 @@ class M {
     }
   }
   
+  @:dox(hide)
   public static function makeType(type:String, define:Bool):TypeDefinition {
     if (!type.startsWith("sk.thenet.")) {
       return null;
@@ -141,6 +170,7 @@ class M {
     return ret;
   }
   
+  @:dox(hide)
   public static macro function init():Void {
     var buildStart = Date.now();
     var quiet = Context.defined("PLUSTD_QUIET");
