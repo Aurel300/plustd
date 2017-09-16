@@ -163,7 +163,7 @@ as a static extension:
     
     addProperty("magnitude", macro : Float, Context.parse("{ return Math.sqrt(" + [
         for (i in 0...dim) DIMS[i] + " * " + DIMS[i]
-      ].join(" + ") + "); }", pos), "Magnitude of this point.");
+      ].join(" + ") + "); }", pos), "Magnitude of this vector.");
     addProperty("componentSum", coordType, Context.parse("{ return " + [
         for (i in 0...dim) DIMS[i]
       ].join(" + ") + "; }", pos), "The sum of the coordinates of this point.");
@@ -191,6 +191,30 @@ as a static extension:
           ,name: name
           ,pos: pos
         });
+    }
+    
+    function addFunctionCM(
+       name:String, args:Array<{name:String, type:ComplexType}>
+      ,dimF:String->String, docC:String, docM:String
+    ):Void {
+      addFunction(
+           name + "C"
+          ,args
+          ,ctype
+          ,Context.parse('{ return new ${cname}(' + [
+              for (i in 0...dim) dimF(DIMS[i])
+            ].join(", ") + "); }", pos)
+          ,docC
+        );
+      addFunction(
+           name + "M"
+          ,args
+          ,ctype
+          ,Context.parse("{ " + [
+              for (i in 0...dim) '${DIMS[i]} = ' + dimF(DIMS[i]) + ";"
+            ].join(" ") + " return this; }", pos)
+          ,docM + "\n\n@return This point after modification."
+        );
     }
     
     // constructor
@@ -275,7 +299,50 @@ as a static extension:
         ,macro { return Math.acos(dot(other) / (magnitude * other.magnitude)); }
         ,"@return Angle between this point and `other` (as vectors)."
       );
-    if (dim == 3) {
+    switch (dim) {
+      case 2:
+      addFunctionCM(
+           "normal", []
+          ,function(dim) return dim == DIMS[0] ? DIMS[1] : '-' + DIMS[0]
+          ,"@return Result of turning this point 90 degrees CCW."
+          ,"Turns this point 90 degrees CCW."
+        );
+      addFunction(
+           "projectCross"
+          ,[{name: "other", type: ctype}]
+          ,coordType
+          ,macro { return x * other.y - y * other.x; }
+          ,"@return The z-coordinate of the cross product of this point "
+            + "projected to 3D and `other` point projected to 3D. The absolute "
+            + "value of the result is numerically equivalent to the area of the "
+            + "parallelogram created by the two vectors. A positive sign of the "
+            + "result indicates that `other` is counter clockwise to this point "
+            + "and analogously for a negative result."
+        );
+      addFunction(
+           "reflectC"
+          ,[{name: "across", type: ctype}]
+          ,ctype
+          ,macro {
+            var norm = across.normalC();
+            return subtractC(norm.scaleM(dot(norm)));
+          }
+          ,"@return A vector which is the result of reflecting this point across "
+            + "the vector `across`."
+        );
+      addFunction(
+           "reflectM"
+          ,[{name: "across", type: ctype}]
+          ,ctype
+          ,macro {
+            var norm = across.normalC();
+            return subtractM(norm.scaleM(dot(norm)));
+          }
+          ,"Reflects this point across the vector `across`"
+            + "\n\n@return This point after modification."
+        );
+      
+      case 3:
       addFunction(
            "cross"
           ,[{name: "other", type: ctype}]
@@ -287,30 +354,8 @@ as a static extension:
           ,"@return Result of the cross product of this point with `other`. "
             + "Only defined for 3-dimensional points."
         );
-    }
-    
-    function addFunctionCM(
-       name:String, args:Array<{name:String, type:ComplexType}>
-      ,dimF:String->String, docC:String, docM:String
-    ):Void {
-      addFunction(
-           name + "C"
-          ,args
-          ,ctype
-          ,Context.parse('{ return new ${cname}(' + [
-              for (i in 0...dim) dimF(DIMS[i])
-            ].join(", ") + "); }", pos)
-          ,docC
-        );
-      addFunction(
-           name + "M"
-          ,args
-          ,ctype
-          ,Context.parse("{ " + [
-              for (i in 0...dim) '${DIMS[i]} = ' + dimF(DIMS[i]) + ";"
-            ].join(" ") + " return this; }", pos)
-          ,docM + "\n\n@return This point after modification."
-        );
+      
+      case _:
     }
     
     // clone / modify operations

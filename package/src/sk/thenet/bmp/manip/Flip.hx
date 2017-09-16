@@ -24,7 +24,7 @@ class Flip extends Manipulator {
       if (vertical) {
         oy = bitmap.height - oy - 1;
       } else {
-        ox = bitmap.height - ox - 1;
+        ox = bitmap.width - ox - 1;
       }
       vec[vi] = ovec[ox + oy * bitmap.width];
       vi++;

@@ -103,6 +103,10 @@ values, which are clamped to the range [0, 1] before being used.
       );
   }
   
+  /**
+Creates a colour from its HSL (hue, saturation, luminance) channels. The
+channels should be in the range [0, 1].
+   */
   public static function fromHSLf(
     h:Float, s:Float, l:Float
   ):Colour {
@@ -127,12 +131,22 @@ values, which are clamped to the range [0, 1] before being used.
       );
   }
   
+  /**
+Calculates the component-wise (R, G, B) distance between two colours.
+
+@return The distance, a number in [0, 768].
+   */
   public static function distance(c1:Colour, c2:Colour):Int {
     return FM.absI(c1.ri - c2.ri)
       + FM.absI(c1.gi - c2.gi)
       + FM.absI(c1.bi - c2.bi);
   }
   
+  /**
+Finds the closest index in the `pal` palette to the given colour `c`. Uses
+`distance()` as a metric. In case of ties, the colour with the lower index is
+chosen.
+   */
   public static function quantise(c:Colour, pal:Vector<Colour>):Int {
     var bestI    = 0;
     var bestDist = distance(c, pal[0]);
