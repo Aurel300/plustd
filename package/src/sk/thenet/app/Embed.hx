@@ -12,6 +12,8 @@ implementation.
 typedef Embed =
 #if ((PLUSTD_TARGET == "cppsdl.desktop") || (PLUSTD_TARGET == "cppsdl.phone"))
     sk.thenet.plat.cppsdl.common.app.Embed
+#elseif (PLUSTD_TARGET == "neko")
+    sk.thenet.plat.neko.app.Embed
 #elseif (PLUSTD_TARGET == "flash")
     sk.thenet.plat.flash.app.Embed
 #elseif (PLUSTD_TARGET == "js.canvas")
