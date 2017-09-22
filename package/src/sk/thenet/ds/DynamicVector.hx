@@ -3,20 +3,17 @@ package sk.thenet.ds;
 import haxe.ds.Vector;
 
 /**
-##Continuous vector##
+##Dynamic vector##
 
-A dynamic (auto-growing) vector which ensures continuity in its elements for
-fast iteration. The order of elements is not preserved when elements are
-removed from the middle - elements from the end automatically replace them to
-restore continuity.
+A dynamic (auto-growing) vector.
  */
-class ContinuousVector<T> {
+class DynamicVector<T> {
   public var vector  (default, null):Vector<T>;
   public var capacity(default, null):Int;
   public var count   (default, null):Int;
   
   /**
-Constructs a new continuous vector with the initial `capacity`.
+Constructs a new dynamic vector with the initial `capacity`.
    */
   public function new(capacity:Int) {
     vector = new Vector(capacity);
@@ -73,14 +70,11 @@ Looks up the index of an element. Returns `-1` if not found.
 Removes an element from the vector, by index.
    */
   public function removeIndex(i:Int):Void {
-    if (i == count - 1) {
-      vector[i] = null;
-      count--;
-      return;
+    for (j in 0...count - i - 1) {
+      vector[i + j] = vector[i + j + 1];
     }
-    vector[i] = vector[count - 1];
-    vector[count - 1] = null;
     count--;
+    vector[count] = null;
   }
   
   /**

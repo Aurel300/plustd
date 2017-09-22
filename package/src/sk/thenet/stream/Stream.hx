@@ -296,6 +296,34 @@ Adds a value at the beginning of the given stream.
     return min;
   }
   
+  public static function minEl<T, U:Float>(stream:Iterator<T>, func:T->U):T {
+    var minEl = stream.next();
+    var min = func(minEl);
+    for (e in stream) {
+      var val = func(e);
+      if (val < min) {
+        minEl = e;
+        min = val;
+      }
+    }
+    return minEl;
+  }
+  
+  public static function minIdx<T, U:Float>(stream:Iterator<T>, func:T->U):Int {
+    var minIdx = 0;
+    var min = func(stream.next());
+    var idx = 1;
+    for (e in stream) {
+      var val = func(e);
+      if (val < min) {
+        minIdx = idx;
+        min = val;
+      }
+      idx++;
+    }
+    return minIdx;
+  }
+  
   public static function max<T, U:Float>(stream:Iterator<T>, func:T->U):U {
     var max = func(stream.next());
     for (e in stream) {
