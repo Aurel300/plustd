@@ -7,6 +7,7 @@ import haxe.ds.Vector;
 
 A dynamic (auto-growing) vector.
  */
+@:generic
 class DynamicVector<T> {
   public var vector  (default, null):Vector<T>;
   public var capacity(default, null):Int;
@@ -16,7 +17,7 @@ class DynamicVector<T> {
 Constructs a new dynamic vector with the initial `capacity`.
    */
   public function new(capacity:Int) {
-    vector = new Vector(capacity);
+    vector = new Vector<T>(capacity);
     this.capacity = capacity;
     count = 0;
   }
