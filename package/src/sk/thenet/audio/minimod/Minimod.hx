@@ -71,8 +71,8 @@ class Minimod {
   private var patpos  :Int;
   private var channels:Vector<Int>;
   private var chanpos :Vector<Int>;
-  private var beat    :Int;
-  private var tempo   :Int;
+  public  var beat    :Int;
+  public  var tempo   :Int;
   private var repeat  :Bool;
   
   public function new(?channum:Int = 40) {

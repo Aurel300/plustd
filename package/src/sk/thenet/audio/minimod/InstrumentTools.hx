@@ -28,12 +28,12 @@ class InstrumentTools {
     return ret;
   }
   
-  public static function prepareA(a:Array<Float>):Vector<Float> {
+  public static function prepareA(a:Array<Float>, ?fin:Int = 100, ?fout:Int = 100):Vector<Float> {
     return prepareV(Vector.fromArrayCopy(a));
   }
   
-  public static function prepareV(a:Vector<Float>):Vector<Float> {
-    return fadeOut(fadeIn(pad(a, Minimod.SAMPLES), 100), 100);
+  public static function prepareV(a:Vector<Float>, ?fin:Int = 100, ?fout:Int = 100):Vector<Float> {
+    return fadeOut(fadeIn(pad(a, Minimod.SAMPLES), fin), fout);
   }
   
   public static inline function inv(a:Float):Float {
