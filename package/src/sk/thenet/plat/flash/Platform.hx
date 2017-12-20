@@ -9,6 +9,8 @@ import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.media.Sound as NativeSound;
+import flash.utils.ByteArray;
+import haxe.io.Bytes;
 import sk.thenet.M;
 import sk.thenet.bmp.Colour;
 import sk.thenet.bmp.Surface;
@@ -140,6 +142,10 @@ in favour of the ones  provided in the `-swf-header` haxe compiler option.
   
   public static inline function createBitmapNative(bd:BitmapData):Bitmap {
     return new Bitmap(bd);
+  }
+  
+  public static inline function createBinaryNative(arr:ByteArray):Bytes {
+    return Bytes.ofData(arr);
   }
   
   public static inline function createSocket():Socket {

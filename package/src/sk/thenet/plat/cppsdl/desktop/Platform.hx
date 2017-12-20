@@ -54,6 +54,7 @@ class Platform extends sk.thenet.plat.PlatformBase {
   private static var surface:Surface;
   private static var bitmap:Bitmap;
   private static var running:Bool = false;
+  private static var videoInit:Bool = false;
   
   public static inline function initFramerate(fps:Float):Void {
     SDL.initSubSystem(SDL.INIT_EVENTS);
@@ -118,7 +119,10 @@ class Platform extends sk.thenet.plat.PlatformBase {
   public static inline function initWindow(
     title:String, width:Int, height:Int
   ):Void {
-    SDL.initSubSystem(SDL.INIT_VIDEO);
+    if (!videoInit) {
+      SDL.initSubSystem(SDL.INIT_VIDEO);
+      videoInit = true;
+    }
     window = SDL.createWindow(
          title, SDL.WINDOWPOS_CENTERED, SDL.WINDOWPOS_CENTERED
         ,width, height, SDL.WINDOW_OPENGL
@@ -139,6 +143,13 @@ class Platform extends sk.thenet.plat.PlatformBase {
   public static inline function initSurface(
     width:Int, height:Int, ?scale:Int = 0
   ):Surface {
+    if (!videoInit) {
+      SDL.initSubSystem(SDL.INIT_VIDEO);
+      videoInit = true;
+      window = SDL.createWindow(
+          "", 0, 0, 1, 1, SDL.WINDOW_OPENGL | SDL.WINDOW_MINIMIZED
+        );
+    }
     Platform.scale = scale;
     ren = SDL.createRenderer(
         window, -1, SDL.RENDERER_ACCELERATED | SDL.RENDERER_TARGETTEXTURE

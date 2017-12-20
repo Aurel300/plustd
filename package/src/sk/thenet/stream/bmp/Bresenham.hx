@@ -33,6 +33,7 @@ class Bresenham {
   private var dx:Int;
   private var dy:Int;
   private var err:Float;
+  private var ret:Point2DI;
   
   public function new(from:Point2DI, to:Point2DI, ?ray:Bool = false) {
     this.ray = ray;
@@ -49,6 +50,7 @@ class Bresenham {
     yLong = dy > dx;
     
     err = (dx > dy ? dx : -dy) / 2;
+    ret = new Point2DI(0, 0);
   }
   
   public function hasNext():Bool {
@@ -56,7 +58,9 @@ class Bresenham {
   }
   
   public function next():Point2DI {
-    var ret = new Point2DI(x, y);
+    ret.x = x;
+    ret.y = y;
+    //var ret = new Point2DI(x, y);
     if (x == to.x && y == to.y) {
       finished = !ray;
     } else {

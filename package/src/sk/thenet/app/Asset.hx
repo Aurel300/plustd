@@ -91,4 +91,5 @@ enum AssetType {
   Trigger;
   Bitmap;
   Sound;
+  Binary;
 }

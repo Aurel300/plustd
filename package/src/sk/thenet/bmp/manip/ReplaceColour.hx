@@ -1,21 +1,27 @@
 package sk.thenet.bmp.manip;
 
 import haxe.ds.Vector;
+import sk.thenet.bmp.Colour;
 import sk.thenet.plat.Platform;
+import sk.thenet.bmp.Bitmap;
 import sk.thenet.bmp.Bitmap;
 
 /**
-##Bitmap manipulator - Invert##
-
-Inverts the RGB channels.
+##Bitmap manipulator - Replace colour##
  */
-class Invert extends VectorManipulator {
-  public function new() {}
+class ReplaceColour extends VectorManipulator {
+  public var find:Colour;
+  public var replace:Colour;
+  
+  public function new(find:Colour, replace:Colour) {
+    this.find    = find;
+    this.replace = replace;
+  }
   
   override private inline function manipulatePixel(
     vector:Vector<UInt>, i:Int, original:UInt
   ):UInt {
-    return (original & 0xFF000000) | (0xFFFFFF - (original & 0xFFFFFF));
+    return (original == find ? replace : original);
   }
   
   override public function extract(bitmap:Bitmap):Bitmap {

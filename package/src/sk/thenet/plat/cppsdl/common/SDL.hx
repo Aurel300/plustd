@@ -19,6 +19,8 @@ extern class SDL {
   @:native("SDL_INIT_NOPARACHUTE") static var INIT_NOPARACHUTE(default, null):cpp.UInt32;
   
   @:native("SDL_WINDOW_OPENGL") static var WINDOW_OPENGL(default, null):cpp.UInt32;
+  @:native("SDL_WINDOW_HIDDEN") static var WINDOW_HIDDEN(default, null):cpp.UInt32;
+  @:native("SDL_WINDOW_MINIMIZED") static var WINDOW_MINIMIZED(default, null):cpp.UInt32;
   @:native("SDL_WINDOW_ALLOW_HIGHDPI") static var WINDOW_ALLOW_HIGHDPI(default, null):cpp.UInt32;
   
   @:native("SDL_RENDERER_SOFTWARE") static var RENDERER_SOFTWARE(default, null):cpp.UInt32;

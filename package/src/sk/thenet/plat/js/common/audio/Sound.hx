@@ -5,6 +5,8 @@ package sk.thenet.plat.js.common.audio;
 import js.html.Audio;
 import sk.thenet.audio.Sound.LoopMode;
 
+using sk.thenet.FM;
+
 /**
 JavaScript implementation of `sk.thenet.audio.ISound`.
 
@@ -19,7 +21,7 @@ class Sound implements sk.thenet.audio.ISound {
   }
   
   private var sound:Audio;
-  private var channels:Array<Audio>;
+  private var channels:Array<Channel>;
   private var pool:Array<Audio>;
   
   private function new(sound:Audio) {
@@ -28,19 +30,20 @@ class Sound implements sk.thenet.audio.ISound {
     pool = [];
   }
   
-  public function play(?mode:LoopMode, ?volume:Float = 1):Void {
-    var channel:Audio = null;
+  public function play(?mode:LoopMode, ?volume:Float = 1):sk.thenet.audio.IChannel {
+    var native:Audio = null;
     if (pool.length > 0) {
-      channel = pool.shift();
+      native = pool.shift();
     } else {
-      channel = (cast (sound.cloneNode()):Audio);
+      native = (cast (sound.cloneNode()):Audio);
     }
-    channel.volume = volume;
-    channel.onended = (switch (mode) {
+    var channel = new Channel(native, this);
+    channel.setVolume(volume);
+    native.onended = (switch (mode) {
         case Forever:
         function() {
-          channel.currentTime = 0;
-          channel.play();
+          native.currentTime = 0;
+          native.play();
         };
         
         case Loop(amount):
@@ -48,29 +51,64 @@ class Sound implements sk.thenet.audio.ISound {
         function() {
           counter--;
           if (counter > 0) {
-            channel.currentTime = 0;
-            channel.play();
+            native.currentTime = 0;
+            native.play();
           } else {
-            channels.remove(channel);
-            pool.push(channel);
+            channel.stop();
           }
         };
         
         case _:
-        null;
+        function() {
+          channel.stop();
+        };
       });
-    channel.play();
+    native.play();
     channels.push(channel);
+    return channel;
   }
   
   public function stop():Void {
     for (channel in channels) {
-      channel.onended = null;
-      channel.pause();
-      channel.currentTime = 0;
-      pool.push(channel);
+      channel.stop();
     }
     channels = [];
+  }
+}
+
+@:allow(sk.thenet.plat.js)
+class Channel implements sk.thenet.audio.IChannel {
+  public var playing:Bool = true;
+  
+  private var native:Audio;
+  private var sound:Sound;
+  
+  private var volume:Float = 1.0;
+  private var pan:Float = 0.0;
+  
+  private function new(native:Audio, sound:Sound) {
+    this.native = native;
+    this.sound = sound;
+  }
+  
+  public function setVolume(volume:Float):Void {
+    this.volume = volume.clampF(0, 1);
+    native.volume = volume;
+  }
+  
+  public function setPan(pan:Float):Void {
+    this.pan = pan.clampF(-1, 1);
+    //native.soundTransform = new SoundTransform(volume, this.pan);
+  }
+  
+  public function stop():Void {
+    if (playing) {
+      playing = false;
+      native.onended = null;
+      native.pause();
+      native.currentTime = 0;
+      sound.pool.push(native);
+    }
   }
 }
 

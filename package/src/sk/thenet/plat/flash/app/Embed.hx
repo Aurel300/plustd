@@ -11,6 +11,42 @@ Flash implementation of `sk.thenet.app.Embed`.
 class Embed {
   private static var counter:Int = 0;
   
+  public static macro function getBinary(
+    id:ExprOf<String>, file:ExprOf<String>
+  ):Expr {
+    var ctype:TypeDefinition = {
+         fields: []
+        //,isExtern: false
+        ,kind: TypeDefKind.TDClass({
+             name: "ByteArray"
+            ,pack: ["flash", "utils"]
+            //,params
+            //,sub
+          }, [], false)
+        ,meta: [{
+             name: ":file"
+            ,params: [macro $file]
+            ,pos: Context.currentPos()
+          }]
+        ,name: "EmbeddedBinary" + counter
+        ,pack: []
+        //,params: []
+        ,pos: Context.currentPos()
+      };
+    Context.defineType(ctype);
+    var ctpath:TypePath = {
+         name: "EmbeddedBinary" + counter++
+        ,pack: []
+        //,params
+        //,sub
+      };
+    return macro {
+      new sk.thenet.app.asset.Binary(
+          $id, $file, sk.thenet.plat.flash.Platform.createBinaryNative(new $ctpath())
+        );
+    };
+  }
+  
   public static macro function getBitmap(
     id:ExprOf<String>, file:ExprOf<String>
   ):Expr {

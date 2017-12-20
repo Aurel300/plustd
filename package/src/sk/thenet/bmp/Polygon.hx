@@ -33,8 +33,8 @@ colour `c`. The polygon will always be rendered convex on the x axis.
     }
     xmin = xmin.maxI(0);
     ymin = ymin.maxI(0);
-    xmax = to.width.minI(xmax + 1);
-    ymax = to.height.minI(ymax + 1);
+    xmax = (to.width - 1).minI(xmax + 1);
+    ymax = (to.height - 1).minI(ymax + 1);
     var j = ymin << 1;
     for (i in ymin...ymax) {
       fill[j]     = xmax;
@@ -52,7 +52,7 @@ colour `c`. The polygon will always be rendered convex on the x axis.
     j = ymin << 1;
     for (i in ymin...ymax) {
       fill[j]     = fill[j].maxI(0);
-      fill[j + 1] = fill[j + 1].minI(to.width);
+      fill[j + 1] = fill[j + 1].minI(to.width - 1);
       j += 2;
     }
     var ret = 0;

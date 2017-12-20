@@ -1,20 +1,21 @@
 package sk.thenet.app;
 
-import sk.thenet.FM;
 import sk.thenet.app.Keyboard;
 import sk.thenet.app.Keyboard.Key;
 import sk.thenet.app.asset.Bind as AssetBind;
 import sk.thenet.bmp.Bitmap;
 import sk.thenet.bmp.Colour;
-import sk.thenet.bmp.Font;
 import sk.thenet.bmp.Surface;
 import sk.thenet.bmp.manip.*;
 import sk.thenet.event.EData;
+import sk.thenet.event.EText;
 import sk.thenet.event.EKEvent.EKUp;
 import sk.thenet.event.Event;
 import sk.thenet.event.Source;
 import sk.thenet.net.ws.ConsoleLink;
 import sk.thenet.plat.Platform;
+
+using sk.thenet.FM;
 
 /**
 ##Debugging console##
@@ -22,47 +23,16 @@ import sk.thenet.plat.Platform;
 This class provides an interactive console to debug your application. It is
 entered by pressing `Enter`.
 
-For now, this class requires a `"console_font"` bitmap asset to work.
+For now, this class requires `Main.consoleFont` to be a bmp.Font.
  */
 @:allow(sk.thenet.app)
 class Console extends Source {
   private static inline var HISTORY_SIZE:Int = 20;
   
+  public static var commands:Map<String, Array<String>->Array<String>> = new Map();
+  
   public var applicationInits:Array<sk.thenet.app.ApplicationInit>;
   public var applicationTick(default, null):Bool = true;
-  
-  public var assetManager(default, set):AssetManager;
-  
-  private function set_assetManager(assetManager:AssetManager):AssetManager {
-    if (assetManager == null) {
-      return null;
-    }
-    this.assetManager = assetManager;
-    assetManager.add(new AssetBind(
-       ["console_font"]
-      ,function(assetManager:AssetManager, event:Event):Bool {
-        var fluent = assetManager.getBitmap("console_font").fluent;
-        fluent = Font.spreadGrid(
-             fluent
-            ,8, 16
-            ,1, 1, 1, 1
-          );
-        fluent
-          << (new Recolour(0xEEEEEE))
-          << (new Shadow(0xFF666666, 1, 0))
-          << (new Glow(0x99333333));
-        font = Font.makeMonospaced(
-             fluent
-            ,32, 160
-            ,10, 18
-            ,32
-            ,-3, 0
-          );
-        renderHistory();
-        return true;
-      }));
-    return assetManager;
-  }
   
   public var keyboard(default, set):Keyboard;
   
@@ -72,6 +42,7 @@ class Console extends Source {
     }
     this.keyboard = keyboard;
     Platform.source.listen("kup", handleKey, true);
+    Platform.source.listen("text", handleText, true);
     return keyboard;
   }
   
@@ -92,7 +63,6 @@ class Console extends Source {
   private var frameCount:Int;
   private var frameSlow:Int = 0;
   
-  private var font:Font;
   private var bg:Bitmap;
   private var historyCache:Bitmap;
   private var lastFrame:Bitmap;
@@ -150,7 +120,7 @@ class Console extends Source {
   }
   
   private function renderHistory():Void {
-    if (font == null || surface == null) {
+    if (Main.consoleFont == null || surface == null) {
       return;
     }
     if (history.length > HISTORY_SIZE) {
@@ -160,7 +130,7 @@ class Console extends Source {
     var cy:Int = height - 24;
     for (i in 0...history.length) {
       var ri:Int = history.length - i - 1;
-      font.render(historyCache, 0, cy, history[ri]);
+      Main.consoleFont.render(historyCache, 0, cy, history[ri]);
       cy -= 12;
       if (cy < -12) break;
     }
@@ -168,7 +138,7 @@ class Console extends Source {
   
   private function handleKey(e:EKUp):Bool {
     if (!show) {
-      if (e.key == Key.Enter) {
+      if (e.key == Enter) {
         show = true;
         return true;
       }
@@ -183,16 +153,21 @@ class Console extends Source {
       switch (words[0]) {
         case "inits" | "init" | "app":
         if (applicationInits != null) {
-          response = [ for (init in applicationInits) switch (init) {
+          function showInit(i:ApplicationInit):String {
+            return (switch (i) {
                 case Assets(_): "- assets";
                 case Console: "- console";
+                case ConsoleRemote(h, p): '- console remote($h, $p)';
                 case Framerate(f): '- framerate($f)';
                 case Keyboard: "- keyboard";
                 case Mouse: "- mouse";
                 case Surface(w, h, s): '- surface($w, $h, $s)';
                 case Window(t, w, h): '- window($t, $w, $h)';
+                case Optional(i): '- (opt) ' + showInit(i);
                 case _: '- ???';
-              } ];
+              });
+          }
+          response = applicationInits.map(showInit);
         } else {
           response = ["Inits unknown!"];
         }
@@ -247,7 +222,11 @@ class Console extends Source {
         }
         
         case _:
-        response = ["Unknown command!"];
+        if (commands.exists(words[0])) {
+          response = commands[words[0]](words.slice(1));
+        } else {
+          response = ["Unknown command!"];
+        }
       }
       if (showCommand) {
         history.push("> " + trimmed);
@@ -260,8 +239,18 @@ class Console extends Source {
       command.substr(0, FM.maxI(command.length - 1, 0));
       
       case _:
-      command + Keyboard.getCharacter(e.key);
+      command;
     });
+    return true;
+  }
+  
+  private function handleText(e:EText):Bool {
+    if (!show) {
+      return false;
+    }
+    if (e.text.charCodeAt(0).withinI(32, 127)) {
+      command = command + e.text;
+    }
     return true;
   }
   
@@ -285,7 +274,7 @@ class Console extends Source {
       }
       surface.bitmap.blitAlpha(bg, 0, 0);
       surface.bitmap.blitAlpha(historyCache, 0, 0);
-      font.render(surface.bitmap, 0, height - 12, "> " + command + "_");
+      Main.consoleFont.render(surface.bitmap, 0, height - 12, "> " + command + "_");
     }
     applicationTick = (if (pause) {
         false;

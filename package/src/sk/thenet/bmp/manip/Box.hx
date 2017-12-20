@@ -12,8 +12,8 @@ Expands a box with specified borders to the given dimensions.
 class Box extends Manipulator {
   public var cut1  (default, null):Point2DI;
   public var cut2  (default, null):Point2DI;
-  public var width (default, null):Int;
-  public var height(default, null):Int;
+  public var width :Int;
+  public var height:Int;
   
   var midw:Int;
   var midh:Int;

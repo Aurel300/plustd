@@ -208,7 +208,7 @@ automatically.
       if (checkFeature(Platform.capabilities.websocket)) {
         console.attachRemote(host, port);
         if (assetManager != null) {
-          console.assetManager = assetManager;
+          //console.assetManager = assetManager;
           assetManager.attachConsole(console);
         }
       }

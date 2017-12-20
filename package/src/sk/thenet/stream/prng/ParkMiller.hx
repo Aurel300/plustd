@@ -40,6 +40,6 @@ Creates a generator seeded with the given `seed`.
   }
   
   public function next():UInt {
-    return s = (s * PARAM) % 2147483647;
+    return s = (s * PARAM); // % 2147483647;
   }
 }

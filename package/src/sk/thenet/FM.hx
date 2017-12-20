@@ -23,7 +23,7 @@ FM.ceil(-2.5) == -2
 FM.ceilZ(-2.5) == -3
 ```
 
-Likewise, `floor` returns the the nearest integer closer to 0.
+Likewise, `floor` returns the the nearest integer closer to 0. (Truncation.)
 
 ```haxe
 Math.floor(-2.5) == -3
@@ -74,7 +74,8 @@ Shorthand for a pseudo-random number generator. Initialised by default to
    */
   public static inline function ceil(x:Float):Int {
 #if flash
-    return (x < 0 ? untyped __global__["int"](x) : untyped __global__["int"](x) + 1);
+    //return untyped __global__["int"](x);
+    return Math.ceil(x);
 #else
     return Math.ceil(x);
 #end
@@ -114,7 +115,8 @@ and `clamped` <= `max`.
    */
   public static inline function floor(x:Float):Int {
 #if flash
-    return (x < 0 ? untyped __global__["int"](x) - 1 : untyped __global__["int"](x));
+    //return (x < 0 ? untyped __global__["int"](x) - 1 : untyped __global__["int"](x));
+    return Math.floor(x);
 #else
     return Math.floor(x);
 #end
@@ -202,7 +204,8 @@ See above for note on `ceilZ` and `floorZ`.
    */
   public static inline function round(x:Float):Int {
 #if flash
-    return untyped __global__["int"](x + .5);
+    return untyped __global__["int"](x < 0 ? x : (x + .5));
+    //return Math.round(x);
 #else
     return Math.floor(x + .5);
 #end

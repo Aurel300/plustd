@@ -1,6 +1,8 @@
 package sk.thenet.app;
 
+import haxe.io.Bytes;
 import sk.thenet.M;
+import sk.thenet.app.asset.Binary as AssetBinary;
 import sk.thenet.app.asset.Bind as AssetBind;
 import sk.thenet.app.asset.Bitmap as AssetBitmap;
 import sk.thenet.app.asset.Sound as AssetSound;
@@ -128,6 +130,16 @@ Throws an error if the given asset is not a sound asset.
     return (cast (assetsMap.get(id)):AssetSound).current;
   }
   
+  public function getBinary(id:String):Bytes {
+    if (!isLoaded(id)) {
+      return null;
+    }
+    if (assetsMap.get(id).type != Binary) {
+      throw "asset type mismatch";
+    }
+    return (cast (assetsMap.get(id)):AssetBinary).current;
+  }
+  
   private function attachConsole(console:Console):Void {
     console.listen("file", handleFile);
     for (a in assets) {
@@ -148,7 +160,6 @@ Throws an error if the given asset is not a sound asset.
   }
   
   private function handleFile(ev:EFile):Bool {
-    trace("handling " + ev.name);
     for (asset in assets) {
       if (asset.filename != null && asset.filename == ev.name) {
         asset.update(ev.data);

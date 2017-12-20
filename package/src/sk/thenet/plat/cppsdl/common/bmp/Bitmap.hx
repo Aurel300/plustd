@@ -66,21 +66,21 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     }
     //y = height - y - 1;
     var ret = new Vector<Colour>(1);
-    untyped __cpp__("SDL_Rect rect");
+    untyped __cpp__("SDL_Rect rect");/*
     if (main && scale != 0) {
       untyped __cpp__(
            "rect.x = {0} << {2}; rect.y = {1} << {2}; rect.w = 1 << {2}; rect.h = 1 << {2}"
           ,x, y, scale
         );
-    } else {
+    } else {*/
       untyped __cpp__(
            "rect.x = {0}; rect.y = {1}; rect.w = 1; rect.h = 1"
           ,x, y
         );
-    }
+    //}
     SDL.setRenderTarget(Platform.ren, main ? untyped __cpp__("NULL") : tex);
     SDL.renderReadPixels(
-         Platform.ren, untyped __cpp__("&rect"), 0 //(cast SDL.PIXELFORMAT_ARGB8888:Int)
+         Platform.ren, untyped __cpp__("&rect"), (cast SDL.PIXELFORMAT_ARGB8888:Int)
         ,cpp.Pointer.ofArray(ret.toData()).ptr, 4
       );
     if (debug) {
@@ -129,7 +129,7 @@ class Bitmap implements sk.thenet.bmp.IBitmap {
     y = FM.clampI(y, 0, this.height);
     width = FM.clampI(width, 1, this.width - x);
     height = FM.clampI(height, 1, this.height - y);
-    y = this.height - y - height;
+    //y = this.height - y - height;
     untyped __cpp__("SDL_Rect rect");
     if (main && scale != 0) {
       untyped __cpp__(
