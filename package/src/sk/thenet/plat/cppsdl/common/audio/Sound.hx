@@ -51,7 +51,7 @@ class Sound implements sk.thenet.audio.ISound {
     channels = [];
   }
   
-  public function play(?mode:LoopMode, ?volume:Float = 1):Void {
+  public function play(?mode:LoopMode, ?volume:Float = 1):sk.thenet.audio.IChannel {
     var channel = SDL.Mixer.playChannel(-1, chunk, (switch (mode) {
         case Forever: -1;
         case Loop(amount): amount - 1;
@@ -60,6 +60,7 @@ class Sound implements sk.thenet.audio.ISound {
     SDL.Mixer.volume(channel, Std.int(volume * SDL.Mixer.MAX_VOLUME));
     channels.push(channel);
     channelsMap.set(channel, this);
+    return null;
   }
   
   public function stop():Void {
