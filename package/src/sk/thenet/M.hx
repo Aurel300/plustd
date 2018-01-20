@@ -73,26 +73,39 @@ Generates an expression at compile time.
   @:dox(hide)
   public static macro function initApplication():Array<Field> {
     var fields = Context.getBuildFields();
+    var hasMain = false;
+    var hasFont = false;
     for (f in fields) {
-      if (f.name == "main") {
-        return null;
-      }
+      if (f.name == "main") hasMain = true;
+      if (f.name == "consoleFont") hasFont = true;
     }
     var cname = Context.getLocalClass().get().name;
     var cpath = {name: cname, pack: [], params: []};
     var pos = Context.currentPos();
-    fields.push({
-         access: [AStatic, APublic]
-        ,doc: null
-        ,kind: FFun({
-           args: []
-          ,expr: macro { sk.thenet.plat.Platform.boot(function() new $cpath()); }
-          ,params: [], ret: null
-        })
-        ,meta: []
-        ,name: "main"
-        ,pos: pos
-      });
+    if (!hasMain) {
+      fields.push({
+           access: [AStatic, APublic]
+          ,doc: null
+          ,kind: FFun({
+             args: []
+            ,expr: macro { sk.thenet.plat.Platform.boot(function() new $cpath()); }
+            ,params: [], ret: null
+          })
+          ,meta: []
+          ,name: "main"
+          ,pos: pos
+        });
+    }
+    if (!hasFont) {
+      fields.push({
+           access: [AStatic, APublic]
+          ,doc: null
+          ,kind: FVar(macro : sk.thenet.bmp.Font, null)
+          ,meta: []
+          ,name: "consoleFont"
+          ,pos: pos
+        });
+    }
     return fields; 
   }
   
