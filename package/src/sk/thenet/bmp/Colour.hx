@@ -151,7 +151,7 @@ chosen.
     var bestI    = 0;
     var bestDist = distance(c, pal[0]);
     for (i in 1...pal.length) {
-      var dist = distance(c, pal[1]);
+      var dist = distance(c, pal[i]);
       if (dist < bestDist) {
         bestI = i;
         bestDist = dist;

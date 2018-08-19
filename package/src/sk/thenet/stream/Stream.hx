@@ -335,6 +335,21 @@ Adds a value at the beginning of the given stream.
     return max;
   }
   
+  public static function maxIdx<T, U:Float>(stream:Iterator<T>, func:T->U):Int {
+    var maxIdx = 0;
+    var max = func(stream.next());
+    var idx = 1;
+    for (e in stream) {
+      var val = func(e);
+      if (val > max) {
+        maxIdx = idx;
+        max = val;
+      }
+      idx++;
+    }
+    return maxIdx;
+  }
+  
   public static function sum<T, U:Float>(stream:Iterator<T>, func:T->U):U {
     var sum:U = (cast 0:U);
     for (e in stream) {

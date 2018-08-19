@@ -2,10 +2,13 @@ package sk.thenet.plat.js.canvas.app;
 
 #if js
 
+import haxe.io.Bytes;
 import js.Browser;
 import js.html.Audio;
 import js.html.CanvasElement;
 import js.html.Image;
+import js.html.XMLHttpRequest;
+import sk.thenet.app.asset.Binary as AssetBinary;
 import sk.thenet.app.asset.Bitmap as AssetBitmap;
 import sk.thenet.app.asset.Sound as AssetSound;
 import sk.thenet.audio.Sound;
@@ -17,6 +20,19 @@ JavaScript / Canvas implementation of `sk.thenet.app.Embed`.
 @see `sk.thenet.app.Embed`
  */
 class Embed {
+  public static function getBinary(id:String, file:String):AssetBinary {
+    var ret = new AssetBinary(id, file);
+    ret.preload = function():Void {
+      var req = new XMLHttpRequest();
+      req.addEventListener("load", function() {
+        ret.update(Bytes.ofString(req.response));
+      });
+      req.open("GET", file);
+      req.send();
+    };
+    return ret;
+  }
+  
   public static function getBitmap(id:String, file:String):AssetBitmap {
     var ret = new AssetBitmap(id, file);
     ret.preload = function():Void {

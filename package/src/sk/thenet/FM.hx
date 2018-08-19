@@ -4,6 +4,12 @@ import haxe.ds.Vector;
 import sk.thenet.stream.prng.Generator;
 import sk.thenet.stream.prng.XORShift;
 
+#if macro
+import haxe.macro.Expr;
+import haxe.macro.Compiler;
+import haxe.macro.Context;
+#end
+
 /**
 ##Fast Math: optimised math methods##
 
@@ -40,6 +46,17 @@ Shorthand for a pseudo-random number generator. Initialised by default to
 `sk.thenet.stream.prng.XORShift` with a seed of `0xFAB74573`.
    */
   public static var prng:Generator = new Generator(new XORShift(0xFAB74573));
+  
+  public static macro function target(a:Expr, b:Expr, ratio:Expr):Expr {
+    return macro $a = ($a * $ratio + $b) / ($ratio + 1);
+  }
+  
+  public static macro function targetMin(a:Expr, b:Expr, ratio:Expr, min:Expr):Expr {
+    return macro {
+        $a = ($a * $ratio + $b) / ($ratio + 1);
+        if (sk.thenet.FM.absF($a - $b) < $min) $a = $b;
+      };
+  }
   
   /**
 @return Absolute value of `x`.

@@ -44,17 +44,19 @@ class Platform extends sk.thenet.plat.PlatformBase {
   
   private static var scale:Int = 0;
   private static var canvas:CanvasElement;
+  private static var tickEvent:ETick;
   
   // prevent instantiation
   private function new() {}
   
   public static inline function initFramerate(fps:Float):Void {
+    tickEvent = new ETick(source);
     //Browser.window.setInterval(handleFrame, 1000 / fps);
     Browser.window.requestAnimationFrame(handleFrame);
   }
   
   private static function handleFrame(v):Void {
-    source.fireEvent(new ETick(source));
+    source.fireEvent(tickEvent);
     Browser.window.requestAnimationFrame(handleFrame);
   }
   
@@ -66,8 +68,9 @@ class Platform extends sk.thenet.plat.PlatformBase {
   
   public static inline function initKeyboard():Keyboard {
     keyboard = new Keyboard();
-    addEventListener(Browser.document.body, "keydown", handleKeyDown);
-    addEventListener(Browser.document.body, "keyup",   handleKeyUp  );
+    addEventListener(Browser.document.body, "keydown",  handleKeyDown );
+    addEventListener(Browser.document.body, "keyup",    handleKeyUp   );
+    addEventListener(Browser.document.body, "keypress", handleKeyPress);
     return keyboard;
   }
   
@@ -77,6 +80,10 @@ class Platform extends sk.thenet.plat.PlatformBase {
   
   private static inline function handleKeyUp(e:KeyboardEvent):Void {
     M.callDenull(source.fireEvent, keyboard.handleKey(source, e, false));
+  }
+  
+  private static inline function handleKeyPress(e:KeyboardEvent):Void {
+    M.callDenull(source.fireEvent, keyboard.handleText(source, e));
   }
   
   public static inline function initMouse():Mouse {

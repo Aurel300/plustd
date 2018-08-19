@@ -71,6 +71,7 @@ class Keyboard extends AppKeyboard {
     if (!lookup.exists(code)) {
       return null;
     }
+    if (code == "Backspace") e.preventDefault();
     var key:Key = lookup.get(code);
     if (keysHeld[key] == down) {
       return null;
@@ -80,6 +81,16 @@ class Keyboard extends AppKeyboard {
       return new EKEvent.EKDown(source, key);
     }
     return new EKEvent.EKUp(source, key);
+  }
+  
+  private function handleText(
+    source:Source, e:KeyboardEvent
+  ):EText {
+    var code:Int = untyped __js__("{0}.which", e);
+    if (code == 0) {
+      return null;
+    }
+    return new EText(source, String.fromCharCode(code));
   }
 }
 

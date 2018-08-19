@@ -16,13 +16,12 @@ The current data.
   public function new(id:String, ?filename:String, ?initial:Bytes) {
     super(AssetType.Binary, id, filename);
     current = initial;
-    status = Loaded;
-    /*
+    //status = Loaded;
     if (initial == null) {
       status = Loading(0);
     } else {
       status = Loaded;
-    }*/
+    }
   }
   
   override public function update(data:Bytes):Void {

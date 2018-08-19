@@ -53,4 +53,8 @@ class ConsoleLink extends Source {
     o.blit(1, data, 0, data.length);
     socket.send(o, true);
   }
+  
+  public function sendCommand(command:String):Void {
+    socket.send(Bytes.ofString("\x04" + command));
+  }
 }
